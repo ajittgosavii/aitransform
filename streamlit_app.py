@@ -932,15 +932,26 @@ with tab1:
             labels=savings_data['Category'],
             values=savings_data['Savings'],
             hole=.4,
-            marker_colors=['#10B981', '#22C55E', '#34D399', '#6EE7B7', '#A7F3D0']
+            marker_colors=['#10B981', '#22C55E', '#34D399', '#6EE7B7', '#A7F3D0'],
+            textinfo='percent',
+            textfont=dict(color='#FFFFFF', size=12),
+            insidetextfont=dict(color='#FFFFFF'),
+            outsidetextfont=dict(color='#FFFFFF')
         )])
         fig_pie.update_layout(
             template='plotly_dark',
             paper_bgcolor='rgba(0,0,0,0)',
+            plot_bgcolor='rgba(0,0,0,0)',
             height=300,
             showlegend=True,
-            legend=dict(orientation='h', yanchor='bottom', y=-0.3),
-            font=dict(color='#F1F5F9')
+            legend=dict(
+                orientation='h', 
+                yanchor='bottom', 
+                y=-0.3,
+                font=dict(color='#FFFFFF', size=11),
+                bgcolor='rgba(0,0,0,0)'
+            ),
+            font=dict(color='#FFFFFF')
         )
         st.plotly_chart(fig_pie, use_container_width=True)
         
@@ -1135,9 +1146,20 @@ with tab7:
                 labels=services,
                 values=costs,
                 hole=0.4,
-                marker_colors=['#A3BE8C', '#88C0D0', '#EBCB8B', '#B48EAD', '#5E81AC', '#D08770', '#81A1C1', '#BF616A', '#4C566A']
+                marker_colors=['#A3BE8C', '#88C0D0', '#EBCB8B', '#B48EAD', '#5E81AC', '#D08770', '#81A1C1', '#BF616A', '#4C566A'],
+                textinfo='percent',
+                textfont=dict(color='#FFFFFF', size=11),
+                insidetextfont=dict(color='#FFFFFF'),
+                outsidetextfont=dict(color='#FFFFFF')
             )])
-            fig.update_layout(template='plotly_dark', height=350)
+            fig.update_layout(
+                template='plotly_dark', 
+                height=350,
+                paper_bgcolor='rgba(0,0,0,0)',
+                plot_bgcolor='rgba(0,0,0,0)',
+                legend=dict(font=dict(color='#FFFFFF', size=11)),
+                font=dict(color='#FFFFFF')
+            )
             st.plotly_chart(fig, use_container_width=True)
         
         with col2:
@@ -2411,14 +2433,22 @@ with tab4:
                 labels=container_summary['Severity'],
                 values=container_summary['Count'],
                 marker_colors=['#BF616A', '#D08770', '#EBCB8B', '#5E81AC'],
-                hole=0.4
+                hole=0.4,
+                textinfo='percent',
+                textfont=dict(color='#FFFFFF', size=11),
+                insidetextfont=dict(color='#FFFFFF'),
+                outsidetextfont=dict(color='#FFFFFF')
             )])
             
             fig.update_layout(
                 template='plotly_dark',
                 height=250,
                 showlegend=True,
-                title='Container Vulnerabilities'
+                title=dict(text='Container Vulnerabilities', font=dict(color='#FFFFFF')),
+                paper_bgcolor='rgba(0,0,0,0)',
+                plot_bgcolor='rgba(0,0,0,0)',
+                legend=dict(font=dict(color='#FFFFFF', size=11)),
+                font=dict(color='#FFFFFF')
             )
             
             st.plotly_chart(fig, use_container_width=True)
@@ -2840,7 +2870,15 @@ with tab9:
     
     fig = px.bar(region_data, x='Region', y='Cost', color='Resources',
                  color_continuous_scale='tealgrn')
-    fig.update_layout(template='plotly_dark', height=350)
+    fig.update_layout(
+        template='plotly_dark', 
+        height=350,
+        paper_bgcolor='rgba(0,0,0,0)',
+        font=dict(color='#FFFFFF'),
+        legend=dict(font=dict(color='#FFFFFF')),
+        xaxis=dict(tickfont=dict(color='#FFFFFF'), title=dict(font=dict(color='#FFFFFF'))),
+        yaxis=dict(tickfont=dict(color='#FFFFFF'), title=dict(font=dict(color='#FFFFFF')))
+    )
     st.plotly_chart(fig, use_container_width=True)
 
 with tab10:
@@ -3175,8 +3213,12 @@ with tab3:
             template='plotly_dark',
             paper_bgcolor='rgba(0,0,0,0)',
             plot_bgcolor='rgba(0,0,0,0)',
-            title='Security Threats: Detection vs Remediation (30 days)',
-            height=400
+            title=dict(text='Security Threats: Detection vs Remediation (30 days)', font=dict(color='#FFFFFF')),
+            height=400,
+            legend=dict(font=dict(color='#FFFFFF', size=12)),
+            font=dict(color='#FFFFFF'),
+            xaxis=dict(title=dict(text='Date', font=dict(color='#FFFFFF')), tickfont=dict(color='#FFFFFF')),
+            yaxis=dict(title=dict(text='Count', font=dict(color='#FFFFFF')), tickfont=dict(color='#FFFFFF'))
         )
         st.plotly_chart(fig, use_container_width=True)
         
@@ -3184,11 +3226,23 @@ with tab3:
         col1, col2 = st.columns(2)
         with col1:
             threat_counts = {'S3 Exposure': 23, 'IAM Issues': 45, 'Unpatched': 18, 'Credentials': 12, 'Network': 8}
-            fig_pie = go.Figure(data=[go.Pie(labels=list(threat_counts.keys()), 
-                                            values=list(threat_counts.values()),
-                                            hole=.4)])
-            fig_pie.update_layout(template='plotly_dark', paper_bgcolor='rgba(0,0,0,0)',
-                                 title='Threats by Category')
+            fig_pie = go.Figure(data=[go.Pie(
+                labels=list(threat_counts.keys()), 
+                values=list(threat_counts.values()),
+                hole=.4,
+                textinfo='percent',
+                textfont=dict(color='#FFFFFF', size=11),
+                insidetextfont=dict(color='#FFFFFF'),
+                outsidetextfont=dict(color='#FFFFFF')
+            )])
+            fig_pie.update_layout(
+                template='plotly_dark', 
+                paper_bgcolor='rgba(0,0,0,0)',
+                plot_bgcolor='rgba(0,0,0,0)',
+                title=dict(text='Threats by Category', font=dict(color='#FFFFFF')),
+                legend=dict(font=dict(color='#FFFFFF', size=11)),
+                font=dict(color='#FFFFFF')
+            )
             st.plotly_chart(fig_pie, use_container_width=True)
         
         with col2:
@@ -3516,8 +3570,16 @@ with tab6:
             fig = go.Figure()
             fig.add_trace(go.Scatter(x=hours, y=query_times, name='Avg Query Time (ms)',
                                     line=dict(color='#00D9FF', width=3), fill='tozeroy'))
-            fig.update_layout(template='plotly_dark', paper_bgcolor='rgba(0,0,0,0)',
-                             title='Average Query Time (24h)', height=300)
+            fig.update_layout(
+                template='plotly_dark', 
+                paper_bgcolor='rgba(0,0,0,0)',
+                title=dict(text='Average Query Time (24h)', font=dict(color='#FFFFFF')), 
+                height=300,
+                font=dict(color='#FFFFFF'),
+                legend=dict(font=dict(color='#FFFFFF')),
+                xaxis=dict(tickfont=dict(color='#FFFFFF')),
+                yaxis=dict(tickfont=dict(color='#FFFFFF'))
+            )
             st.plotly_chart(fig, use_container_width=True)
         
         with col2:
@@ -3528,8 +3590,15 @@ with tab6:
             fig = go.Figure(data=[go.Bar(x=list(connections.keys()), 
                                         y=list(connections.values()),
                                         marker_color='#00FF88')])
-            fig.update_layout(template='plotly_dark', paper_bgcolor='rgba(0,0,0,0)',
-                             title='Connection Pool Usage (%)', height=300)
+            fig.update_layout(
+                template='plotly_dark', 
+                paper_bgcolor='rgba(0,0,0,0)',
+                title=dict(text='Connection Pool Usage (%)', font=dict(color='#FFFFFF')), 
+                height=300,
+                font=dict(color='#FFFFFF'),
+                xaxis=dict(tickfont=dict(color='#FFFFFF')),
+                yaxis=dict(tickfont=dict(color='#FFFFFF'))
+            )
             st.plotly_chart(fig, use_container_width=True)
         
         # Optimization recommendations
@@ -3739,9 +3808,17 @@ with tab8:
                                 name='Policy Effectiveness %',
                                 line=dict(color='#00FF88', width=3)))
         fig.add_hline(y=95, line_dash="dash", line_color="#FFD700", 
-                     annotation_text="Target: 95%")
-        fig.update_layout(template='plotly_dark', paper_bgcolor='rgba(0,0,0,0)',
-                         title='Overall Policy Effectiveness (12 weeks)', height=400)
+                     annotation_text="Target: 95%", annotation_font_color="#FFFFFF")
+        fig.update_layout(
+            template='plotly_dark', 
+            paper_bgcolor='rgba(0,0,0,0)',
+            title=dict(text='Overall Policy Effectiveness (12 weeks)', font=dict(color='#FFFFFF')), 
+            height=400,
+            font=dict(color='#FFFFFF'),
+            legend=dict(font=dict(color='#FFFFFF')),
+            xaxis=dict(tickfont=dict(color='#FFFFFF')),
+            yaxis=dict(tickfont=dict(color='#FFFFFF'))
+        )
         st.plotly_chart(fig, use_container_width=True)
         
         # Policy performance breakdown
