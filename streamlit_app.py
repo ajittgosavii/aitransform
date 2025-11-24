@@ -33,11 +33,18 @@ st.markdown("""
         background-color: #0F172A !important;
     }
     
-    /* AGGRESSIVE: ALL TEXT WHITE */
+    /* AGGRESSIVE: ALL TEXT WHITE - EXCEPT DROPDOWNS */
     .stMarkdown, .stMarkdown p, .stMarkdown span, .stMarkdown div,
-    .stMarkdown li, .element-container, .stText, p, span, li {
+    .stMarkdown li, .element-container, .stText {
         color: #FFFFFF !important;
         opacity: 1 !important;
+    }
+    
+    /* Body text - exclude popover/dropdown elements */
+    .stApp p:not([data-baseweb] p):not([role="listbox"] p),
+    .stApp span:not([data-baseweb] span):not([role="listbox"] span):not([role="option"] span),
+    .stApp li:not([data-baseweb] li):not([role="listbox"] li):not([role="option"]) {
+        color: #FFFFFF !important;
     }
     
     h1, h2, h3, h4, h5, h6 {
@@ -209,20 +216,87 @@ st.markdown("""
         fill: #000000 !important;
     }
     
-    /* Dropdown menu */
-    [data-baseweb="popover"], [data-baseweb="menu"] {
+    /* ============ DROPDOWN MENU - CRITICAL FIX ============ */
+    /* Popover container */
+    [data-baseweb="popover"] {
         background-color: #FFFFFF !important;
     }
+    
+    /* Menu container */
+    [data-baseweb="menu"] {
+        background-color: #FFFFFF !important;
+    }
+    
+    /* All list items in menu - BLACK TEXT */
     [data-baseweb="menu"] li {
         color: #000000 !important;
         background-color: #FFFFFF !important;
     }
+    [data-baseweb="menu"] li * {
+        color: #000000 !important;
+    }
+    [data-baseweb="menu"] li span {
+        color: #000000 !important;
+    }
+    [data-baseweb="menu"] li div {
+        color: #000000 !important;
+    }
+    [data-baseweb="menu"] li p {
+        color: #000000 !important;
+    }
+    
+    /* Hover state */
     [data-baseweb="menu"] li:hover {
         background-color: #E2E8F0 !important;
+        color: #000000 !important;
     }
+    [data-baseweb="menu"] li:hover * {
+        color: #000000 !important;
+    }
+    
+    /* Selected/highlighted item */
     [data-baseweb="menu"] [aria-selected="true"] {
         background-color: #10B981 !important;
         color: #FFFFFF !important;
+    }
+    [data-baseweb="menu"] [aria-selected="true"] * {
+        color: #FFFFFF !important;
+    }
+    
+    /* Listbox specific (another Streamlit dropdown type) */
+    [role="listbox"] {
+        background-color: #FFFFFF !important;
+    }
+    [role="listbox"] [role="option"] {
+        color: #000000 !important;
+        background-color: #FFFFFF !important;
+    }
+    [role="listbox"] [role="option"] * {
+        color: #000000 !important;
+    }
+    [role="listbox"] [role="option"]:hover {
+        background-color: #E2E8F0 !important;
+    }
+    [role="listbox"] [aria-selected="true"] {
+        background-color: #10B981 !important;
+        color: #FFFFFF !important;
+    }
+    
+    /* Option container */
+    [data-baseweb="select"] [role="option"] {
+        color: #000000 !important;
+    }
+    [data-baseweb="select"] [role="option"] * {
+        color: #000000 !important;
+    }
+    
+    /* Dropdown list */
+    ul[role="listbox"] li {
+        color: #000000 !important;
+        background-color: #FFFFFF !important;
+    }
+    ul[role="listbox"] li * {
+        color: #000000 !important;
     }
     
     /* ============ RADIO - VISIBLE TEXT ============ */
@@ -325,6 +399,88 @@ st.markdown("""
         max-width: 100%;
     }
     hr { border-color: #334155 !important; }
+    
+    /* ============ FINAL OVERRIDE - DROPDOWN ITEMS BLACK TEXT ============ */
+    /* These are the nuclear options to force dropdown text black */
+    div[data-baseweb="popover"] * {
+        color: #000000 !important;
+    }
+    div[data-baseweb="popover"] li {
+        color: #000000 !important;
+        background: #FFFFFF !important;
+    }
+    div[data-baseweb="popover"] [role="option"] {
+        color: #000000 !important;
+        background: #FFFFFF !important;
+    }
+    div[data-baseweb="popover"] [role="option"] span {
+        color: #000000 !important;
+    }
+    div[data-baseweb="popover"] [role="option"] div {
+        color: #000000 !important;
+    }
+    
+    /* Target the floating dropdown specifically */
+    body > div[data-baseweb="popover"] {
+        background: #FFFFFF !important;
+    }
+    body > div[data-baseweb="popover"] * {
+        color: #000000 !important;
+    }
+    body > div[data-baseweb="popover"] [aria-selected="true"],
+    body > div[data-baseweb="popover"] [aria-selected="true"] * {
+        background: #10B981 !important;
+        color: #FFFFFF !important;
+    }
+    
+    /* SUPER AGGRESSIVE - Target ANY dropdown/listbox anywhere in the document */
+    [data-baseweb="popover"],
+    [data-baseweb="menu"],
+    [data-baseweb="list"],
+    [data-baseweb="listbox"],
+    [role="listbox"] {
+        background-color: #FFFFFF !important;
+        color: #000000 !important;
+    }
+    
+    [data-baseweb="popover"] li,
+    [data-baseweb="menu"] li,
+    [data-baseweb="list"] li,
+    [data-baseweb="listbox"] li,
+    [role="listbox"] li,
+    [role="option"] {
+        color: #000000 !important;
+        background-color: #FFFFFF !important;
+    }
+    
+    [data-baseweb="popover"] li span,
+    [data-baseweb="popover"] li div,
+    [data-baseweb="popover"] li p,
+    [data-baseweb="menu"] li span,
+    [data-baseweb="menu"] li div,
+    [role="option"] span,
+    [role="option"] div,
+    [role="option"] p {
+        color: #000000 !important;
+    }
+    
+    /* Hover states */
+    [data-baseweb="popover"] li:hover,
+    [data-baseweb="menu"] li:hover,
+    [role="option"]:hover {
+        background-color: #E2E8F0 !important;
+        color: #000000 !important;
+    }
+    
+    /* Selected states */
+    [aria-selected="true"] {
+        background-color: #10B981 !important;
+    }
+    [aria-selected="true"],
+    [aria-selected="true"] span,
+    [aria-selected="true"] div {
+        color: #FFFFFF !important;
+    }
 </style>
 """, unsafe_allow_html=True)
 
