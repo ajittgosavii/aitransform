@@ -25,30 +25,19 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# ============ ENTERPRISE PROFESSIONAL CSS ============
-# Color Scheme: Emerald Green + Slate + Gold Accents
-# Designed for maximum visibility and corporate presentation
+# ============ FIXED CSS - ALL TEXT VISIBLE ============
 st.markdown("""
 <style>
-    /* ============ ENTERPRISE COLOR PALETTE ============ */
-    /* Primary: #10B981 (Emerald) - Professional, enterprise */
-    /* Secondary: #3B82F6 (Blue) - Links, secondary actions */
-    /* Accent: #F59E0B (Amber/Gold) - Highlights, warnings */
-    /* Success: #22C55E (Green) - Positive metrics */
-    /* Error: #EF4444 (Red) - Critical issues */
-    /* Background: #0F172A (Slate 900) - Deep professional dark */
-    /* Surface: #1E293B (Slate 800) - Cards, panels */
-    /* Text: #F8FAFC (Slate 50) - Primary text - MAXIMUM CONTRAST */
-    
-    /* ============ GLOBAL STYLES ============ */
-    .main {
-        background-color: #0F172A;
+    /* ============ FORCE ALL TEXT WHITE ============ */
+    .stApp, .main {
+        background-color: #0F172A !important;
     }
     
-    /* ALL TEXT - Maximum visibility */
-    p, span, div, label, li {
-        color: #F8FAFC !important;
-        font-weight: 500;
+    /* ALL TEXT WHITE */
+    .stMarkdown, .stMarkdown p, .stMarkdown span, .stMarkdown div,
+    .stMarkdown li, .element-container, .stText, p, span, li {
+        color: #FFFFFF !important;
+        opacity: 1 !important;
     }
     
     h1, h2, h3, h4, h5, h6 {
@@ -56,27 +45,13 @@ st.markdown("""
         font-weight: 700 !important;
     }
     
-    /* Main Header - Enterprise Style */
-    .main-header {
-        font-size: 2.8rem;
-        font-weight: 800;
-        background: linear-gradient(135deg, #10B981 0%, #059669 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-        text-align: center;
-        margin-bottom: 0.5rem;
-        letter-spacing: 0.5px;
-    }
-    .sub-header {
-        font-size: 1.15rem;
-        color: #CBD5E1 !important;
-        text-align: center;
-        margin-bottom: 2rem;
-        font-weight: 500;
+    /* Labels */
+    label, .stSelectbox label, .stRadio label, .stTextInput label {
+        color: #FFFFFF !important;
+        font-weight: 600 !important;
     }
     
-    /* ============ TABS - ENTERPRISE PROFESSIONAL ============ */
+    /* ============ TABS ============ */
     .stTabs [data-baseweb="tab-list"] {
         gap: 6px;
         background: linear-gradient(180deg, #1E293B 0%, #0F172A 100%);
@@ -84,7 +59,6 @@ st.markdown("""
         border-radius: 12px;
         margin-bottom: 24px;
         border: 2px solid #334155;
-        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
     }
     .stTabs [data-baseweb="tab"] {
         height: 52px;
@@ -93,362 +67,134 @@ st.markdown("""
         padding: 12px 18px;
         font-size: 14px;
         font-weight: 700;
-        color: #E2E8F0 !important;
+        color: #FFFFFF !important;
         border: 1px solid #475569;
-        transition: all 0.25s ease;
         text-transform: uppercase;
-        letter-spacing: 0.5px;
     }
     .stTabs [data-baseweb="tab"]:hover {
         background: linear-gradient(180deg, #475569 0%, #334155 100%);
         border-color: #10B981;
-        color: #10B981 !important;
-        transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
     }
     .stTabs [aria-selected="true"] {
         background: linear-gradient(135deg, #10B981 0%, #059669 100%) !important;
         color: #FFFFFF !important;
         border-color: #34D399 !important;
-        box-shadow: 0 4px 16px rgba(16, 185, 129, 0.4);
-        font-weight: 800;
     }
     
-    /* ============ METRICS - HIGH VISIBILITY ============ */
+    /* ============ METRICS ============ */
     [data-testid="stMetricValue"] {
         font-size: 2.2rem;
         font-weight: 800;
         color: #10B981 !important;
     }
     [data-testid="stMetricLabel"] {
-        color: #F1F5F9 !important;
+        color: #FFFFFF !important;
         font-weight: 600;
-        font-size: 1rem;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-    }
-    [data-testid="stMetricDelta"] {
-        font-weight: 700;
-        font-size: 0.9rem;
     }
     
-    /* Metric Cards */
-    .metric-card {
-        background: linear-gradient(135deg, #1E293B 0%, #0F172A 100%);
-        padding: 1.5rem;
-        border-radius: 12px;
-        border: 1px solid #334155;
-        margin-bottom: 1rem;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-    }
-    
-    /* ============ STATUS BADGES ============ */
-    .agent-status {
-        padding: 8px 16px;
-        border-radius: 6px;
-        font-weight: 700;
-        display: inline-block;
-        margin: 4px;
-        font-size: 13px;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-    }
-    .status-active {
-        background: linear-gradient(135deg, #22C55E 0%, #16A34A 100%);
-        color: #FFFFFF;
-        box-shadow: 0 2px 8px rgba(34, 197, 94, 0.4);
-    }
-    .status-warning {
-        background: linear-gradient(135deg, #F59E0B 0%, #D97706 100%);
-        color: #FFFFFF;
-        box-shadow: 0 2px 8px rgba(245, 158, 11, 0.4);
-    }
-    .status-critical {
-        background: linear-gradient(135deg, #EF4444 0%, #DC2626 100%);
-        color: #FFFFFF;
-        box-shadow: 0 2px 8px rgba(239, 68, 68, 0.4);
-    }
-    .status-idle {
-        background: linear-gradient(135deg, #64748B 0%, #475569 100%);
-        color: #FFFFFF;
-    }
-    
-    /* ============ ALERTS - ENTERPRISE ============ */
-    .stSuccess {
-        background-color: #0D3D2E !important;
-        border-left: 4px solid #22C55E !important;
-        color: #FFFFFF !important;
-    }
-    .stWarning {
-        background-color: #3D2E0D !important;
-        border-left: 4px solid #F59E0B !important;
-        color: #FFFFFF !important;
-    }
-    .stError {
-        background-color: #3D0D0D !important;
-        border-left: 4px solid #EF4444 !important;
-        color: #FFFFFF !important;
-    }
-    .stInfo {
-        background-color: #0D2D3D !important;
-        border-left: 4px solid #3B82F6 !important;
-        color: #FFFFFF !important;
-    }
-    
-    /* ============ SIDEBAR - ENTERPRISE ============ */
+    /* ============ SIDEBAR ============ */
     section[data-testid="stSidebar"] {
         background: linear-gradient(180deg, #1E293B 0%, #0F172A 100%);
         border-right: 2px solid #334155;
     }
     section[data-testid="stSidebar"] * {
-        color: #F1F5F9 !important;
-    }
-    section[data-testid="stSidebar"] h1,
-    section[data-testid="stSidebar"] h2,
-    section[data-testid="stSidebar"] h3 {
-        color: #10B981 !important;
+        color: #FFFFFF !important;
     }
     
-    /* ============ BUTTONS - ENTERPRISE ============ */
+    /* ============ BUTTONS ============ */
     .stButton > button {
         border-radius: 8px;
         font-weight: 700;
-        transition: all 0.25s ease;
         border: 2px solid #10B981;
         background: linear-gradient(135deg, #10B981 0%, #059669 100%);
         color: #FFFFFF !important;
-        font-size: 14px;
-        padding: 10px 20px;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
     }
     .stButton > button:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 16px rgba(16, 185, 129, 0.4);
         background: linear-gradient(135deg, #34D399 0%, #10B981 100%);
-        border-color: #34D399;
     }
     
-    /* Secondary buttons */
-    .stButton > button[kind="secondary"] {
-        background: transparent;
-        border: 2px solid #475569;
-        color: #E2E8F0 !important;
-    }
-    .stButton > button[kind="secondary"]:hover {
-        border-color: #10B981;
-        color: #10B981 !important;
-    }
-    
-    /* ============ DATA TABLES ============ */
-    .dataframe {
-        color: #F1F5F9 !important;
-        background-color: #1E293B !important;
-        border: 1px solid #334155 !important;
-    }
-    .dataframe th {
-        background: linear-gradient(180deg, #334155 0%, #1E293B 100%) !important;
-        color: #F1F5F9 !important;
-        font-weight: 700 !important;
-        padding: 12px !important;
-        border-bottom: 2px solid #10B981 !important;
-        text-transform: uppercase;
-        font-size: 12px;
-        letter-spacing: 0.5px;
-    }
-    .dataframe td {
-        color: #E2E8F0 !important;
-        border-color: #334155 !important;
-        padding: 10px !important;
-    }
-    .dataframe tr:hover td {
-        background-color: #334155 !important;
-    }
-    
-    /* ============ INPUTS - BLACK TEXT FOR VISIBILITY ============ */
-    /* Force dark text on all input elements */
-    input, textarea {
-        background-color: #FFFFFF !important;
-        color: #0F172A !important;
-        border: 2px solid #334155 !important;
-        border-radius: 8px !important;
-    }
-    input::placeholder, textarea::placeholder {
-        color: #64748B !important;
-    }
-    input:focus, textarea:focus {
-        border-color: #10B981 !important;
-        box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2) !important;
-        outline: none !important;
-    }
-    
-    /* ============ SELECTBOX/DROPDOWN - BLACK TEXT ============ */
-    /* Main selectbox container */
-    .stSelectbox > div > div {
-        background-color: #FFFFFF !important;
-        color: #0F172A !important;
-        border: 2px solid #334155 !important;
-        border-radius: 8px !important;
-    }
-    .stSelectbox label {
-        color: #F1F5F9 !important;
-        font-weight: 600 !important;
-    }
-    
-    /* Selectbox value display - BLACK TEXT */
-    .stSelectbox [data-baseweb="select"] {
-        background-color: #FFFFFF !important;
-    }
+    /* ============ SELECTBOX - BLACK TEXT ON WHITE ============ */
+    .stSelectbox > div > div,
+    .stSelectbox [data-baseweb="select"],
     .stSelectbox [data-baseweb="select"] > div {
         background-color: #FFFFFF !important;
-        color: #0F172A !important;
     }
-    .stSelectbox [data-baseweb="select"] span {
-        color: #0F172A !important;
+    .stSelectbox [data-baseweb="select"] span,
+    .stSelectbox [data-baseweb="select"] div {
+        color: #000000 !important;
+    }
+    .stSelectbox svg {
+        fill: #000000 !important;
     }
     
-    /* Dropdown menu items */
-    [data-baseweb="menu"] {
+    /* Dropdown menu */
+    [data-baseweb="popover"], [data-baseweb="menu"] {
         background-color: #FFFFFF !important;
     }
     [data-baseweb="menu"] li {
-        color: #0F172A !important;
+        color: #000000 !important;
         background-color: #FFFFFF !important;
     }
     [data-baseweb="menu"] li:hover {
         background-color: #E2E8F0 !important;
-        color: #0F172A !important;
     }
-    
-    /* Selected option in dropdown */
     [data-baseweb="menu"] [aria-selected="true"] {
         background-color: #10B981 !important;
         color: #FFFFFF !important;
     }
     
-    /* ============ RADIO BUTTONS - BLACK TEXT ============ */
-    .stRadio label {
-        color: #F1F5F9 !important;
-    }
-    .stRadio [data-baseweb="radio"] span {
-        color: #0F172A !important;
-    }
+    /* ============ RADIO - BLACK TEXT ON WHITE ============ */
     .stRadio > div {
-        background-color: transparent !important;
-    }
-    .stRadio > div > div > label {
-        color: #0F172A !important;
         background-color: #FFFFFF !important;
-        padding: 8px 12px !important;
-        border-radius: 6px !important;
-        border: 1px solid #CBD5E1 !important;
+        padding: 10px !important;
+        border-radius: 8px !important;
     }
-    .stRadio > div > div > label:hover {
-        background-color: #F1F5F9 !important;
+    .stRadio [role="radiogroup"] label,
+    .stRadio [role="radiogroup"] label span,
+    .stRadio [data-baseweb="radio"] div {
+        color: #000000 !important;
     }
     
-    /* ============ MULTISELECT - BLACK TEXT ============ */
-    .stMultiSelect [data-baseweb="tag"] {
-        background-color: #10B981 !important;
-        color: #FFFFFF !important;
-    }
-    .stMultiSelect [data-baseweb="select"] {
+    /* ============ TEXT INPUT ============ */
+    .stTextInput input, .stNumberInput input, .stTextArea textarea {
         background-color: #FFFFFF !important;
-    }
-    .stMultiSelect [data-baseweb="select"] span {
-        color: #0F172A !important;
-    }
-    
-    /* ============ TEXT INPUT - BLACK TEXT ============ */
-    .stTextInput input {
-        background-color: #FFFFFF !important;
-        color: #0F172A !important;
+        color: #000000 !important;
         border: 2px solid #334155 !important;
     }
-    .stTextInput label {
-        color: #F1F5F9 !important;
-    }
     
-    /* ============ NUMBER INPUT - BLACK TEXT ============ */
-    .stNumberInput input {
-        background-color: #FFFFFF !important;
-        color: #0F172A !important;
-    }
-    
-    /* ============ DATE INPUT - BLACK TEXT ============ */
-    .stDateInput input {
-        background-color: #FFFFFF !important;
-        color: #0F172A !important;
-    }
-    
-    /* ============ SLIDER LABELS ============ */
-    .stSlider label {
-        color: #F1F5F9 !important;
-    }
-    .stSlider [data-baseweb="slider"] div {
-        color: #0F172A !important;
-    }
-    
-    /* ============ CHECKBOX - BLACK TEXT ============ */
-    .stCheckbox label {
-        color: #F1F5F9 !important;
-    }
-    .stCheckbox span {
-        color: #F1F5F9 !important;
-    }
-    
-    /* ============ CODE BLOCKS - Ensure readable ============ */
-    pre, code {
-        background-color: #1E293B !important;
-        color: #34D399 !important;
-    }
-    .stCodeBlock {
+    /* ============ DATA TABLES ============ */
+    .dataframe, .dataframe th, .dataframe td {
+        color: #FFFFFF !important;
         background-color: #1E293B !important;
     }
-    .stCodeBlock code {
-        color: #34D399 !important;
+    .dataframe th {
+        background-color: #334155 !important;
     }
     
     /* ============ EXPANDERS ============ */
     .streamlit-expanderHeader {
         background-color: #1E293B !important;
         color: #10B981 !important;
-        font-weight: 700 !important;
-        border: 1px solid #334155 !important;
-        border-radius: 8px;
     }
-    .streamlit-expanderContent {
-        background-color: #0F172A !important;
-        border: 1px solid #334155 !important;
-        border-top: none !important;
+    details, details * {
+        color: #FFFFFF !important;
     }
     
-    /* ============ CODE BLOCKS ============ */
-    code {
+    /* ============ CODE ============ */
+    code, pre {
         background-color: #1E293B !important;
         color: #34D399 !important;
-        padding: 4px 8px;
-        border-radius: 4px;
-        border: 1px solid #334155;
-        font-family: 'Monaco', 'Consolas', monospace;
-    }
-    pre {
-        background-color: #1E293B !important;
-        border: 1px solid #334155 !important;
-        border-radius: 8px;
-        padding: 16px !important;
     }
     
-    /* ============ PROGRESS BARS ============ */
+    /* ============ ALERTS ============ */
+    .stSuccess { background-color: #0D3D2E !important; border-left: 4px solid #22C55E !important; }
+    .stWarning { background-color: #3D2E0D !important; border-left: 4px solid #F59E0B !important; }
+    .stError { background-color: #3D0D0D !important; border-left: 4px solid #EF4444 !important; }
+    .stInfo { background-color: #0D2D3D !important; border-left: 4px solid #3B82F6 !important; }
+    
+    /* ============ PROGRESS ============ */
     .stProgress > div > div {
         background: linear-gradient(90deg, #10B981 0%, #34D399 100%) !important;
-        border-radius: 4px;
-    }
-    
-    /* ============ DIVIDERS ============ */
-    hr {
-        border-color: #334155 !important;
-        margin: 24px 0 !important;
     }
     
     /* ============ LAYOUT ============ */
@@ -457,63 +203,7 @@ st.markdown("""
         padding-bottom: 2rem;
         max-width: 100%;
     }
-    
-    /* ============ CHARTS ============ */
-    .js-plotly-plot {
-        background-color: transparent !important;
-    }
-    
-    /* ============ DASHBOARD CARDS ============ */
-    .dashboard-card {
-        background: linear-gradient(135deg, #1E293B 0%, #0F172A 100%);
-        border: 1px solid #334155;
-        border-radius: 12px;
-        padding: 20px;
-        margin: 8px 0;
-        transition: all 0.25s ease;
-    }
-    .dashboard-card:hover {
-        border-color: #10B981;
-        box-shadow: 0 4px 16px rgba(16, 185, 129, 0.2);
-        transform: translateY(-2px);
-    }
-    .dashboard-card-header {
-        font-size: 1.1rem;
-        font-weight: 700;
-        color: #10B981 !important;
-        margin-bottom: 12px;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-    }
-    .dashboard-card-value {
-        font-size: 2rem;
-        font-weight: 800;
-        color: #FFFFFF !important;
-    }
-    .dashboard-card-subtitle {
-        font-size: 0.85rem;
-        color: #94A3B8 !important;
-        margin-top: 8px;
-    }
-    
-    /* ============ AGENT STATUS CARDS ============ */
-    .agent-card {
-        background: linear-gradient(135deg, #1E293B 0%, #0F172A 100%);
-        border: 1px solid #334155;
-        border-left: 4px solid #10B981;
-        border-radius: 8px;
-        padding: 16px;
-        margin: 8px 0;
-    }
-    .agent-card-active {
-        border-left-color: #22C55E;
-    }
-    .agent-card-warning {
-        border-left-color: #F59E0B;
-    }
-    .agent-card-critical {
-        border-left-color: #EF4444;
-    }
+    hr { border-color: #334155 !important; }
 </style>
 """, unsafe_allow_html=True)
 
