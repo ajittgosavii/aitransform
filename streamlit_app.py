@@ -1191,44 +1191,164 @@ with tab2:
     
     st.markdown("---")
     
-    # Agent selector
+    # ============ ALL 6 TECHGUARD RAILS AGENTS ============
+    st.subheader("🛡️ TechGuard Rails - 6 AI Agents Overview")
+    
+    # Agent selector - NOW WITH ALL 6 TECHGUARD RAILS AGENTS
     agent_choice = st.selectbox(
         "Select Agent to Explore:",
-        ["Cost Optimization Agent", "Commitment Agent", "Anomaly Detection Agent", 
-         "Forecast Agent", "Storage Optimizer", "Placement Agent"]
+        ["🛡️ Security Agent", "⚖️ Compliance Agent", "⚙️ DevOps Agent", 
+         "🗄️ Database Agent", "💰 FinOps Agent", "📋 Policy Engine"]
     )
     
-    # Simulate decision-making
-    st.subheader(f"💡 {agent_choice} - Decision Simulation")
+    st.markdown("---")
     
+    # Display agent details based on selection
     col1, col2 = st.columns([1, 1])
     
     with col1:
         st.markdown("### Agent Configuration")
-        st.code("""
-Agent: Cost Optimization
+        
+        if "Security" in agent_choice:
+            st.code("""
+Agent: Security Agent
+Runtime: Lambda Python 3.12
+Memory: 1024MB
+Timeout: 5 minutes
+Trigger: EventBridge (real-time) + CloudTrail
+Model: Claude 4 Sonnet
+Context Window: 200K tokens
+Temperature: 0.2 (deterministic)
+Tools: GuardDuty API, Security Hub, IAM API,
+       S3 API, Config API, Inspector API
+            """, language="yaml")
+            st.markdown("### Autonomous Capabilities")
+            st.success("✅ Block public S3 buckets")
+            st.success("✅ Revoke compromised credentials")
+            st.success("✅ Isolate compromised instances")
+            st.success("✅ Auto-patch critical vulnerabilities")
+            st.warning("⚠️ Security group changes (requires approval)")
+            
+        elif "Compliance" in agent_choice:
+            st.code("""
+Agent: Compliance Agent
+Runtime: Lambda Python 3.12
+Memory: 512MB
+Timeout: 10 minutes
+Trigger: Config Rules + EventBridge (hourly)
+Model: Claude 4 Sonnet
+Context Window: 200K tokens
+Temperature: 0.1 (deterministic)
+Tools: AWS Config, Security Hub, Audit Manager,
+       CloudTrail, Organizations API
+            """, language="yaml")
+            st.markdown("### Autonomous Capabilities")
+            st.success("✅ Auto-remediate Config violations")
+            st.success("✅ Generate compliance reports")
+            st.success("✅ Tag non-compliant resources")
+            st.success("✅ Enable required encryption")
+            st.warning("⚠️ Policy exceptions (requires approval)")
+            
+        elif "DevOps" in agent_choice:
+            st.code("""
+Agent: DevOps Agent
+Runtime: Lambda Python 3.12
+Memory: 512MB
+Timeout: 15 minutes
+Trigger: CodePipeline + GitHub Webhooks
+Model: Claude 4 Sonnet
+Context Window: 200K tokens
+Temperature: 0.3
+Tools: CodePipeline, CodeBuild, ECR,
+       GitHub API, Terraform, CloudFormation
+            """, language="yaml")
+            st.markdown("### Autonomous Capabilities")
+            st.success("✅ Optimize CI/CD pipelines")
+            st.success("✅ Auto-fix build failures")
+            st.success("✅ Security scan remediation")
+            st.success("✅ Infrastructure drift detection")
+            st.warning("⚠️ Production deployments (requires approval)")
+            
+        elif "Database" in agent_choice:
+            st.code("""
+Agent: Database Agent
 Runtime: Lambda Python 3.12
 Memory: 512MB
 Timeout: 5 minutes
-Trigger: EventBridge (hourly)
+Trigger: EventBridge + IAM Events
 Model: Claude 4 Sonnet
 Context Window: 200K tokens
-Temperature: 0.3 (deterministic)
-Tools: EC2 API, RDS API, Cost Explorer
-        """, language="yaml")
-        
-        st.markdown("### Autonomous Capabilities")
-        st.success("✅ Right-sizing (<$10K impact)")
-        st.success("✅ Idle resource termination")
-        st.success("✅ Storage tier optimization")
-        st.warning("⚠️ Commitment purchases (requires approval)")
+Temperature: 0.2 (deterministic)
+Tools: RDS API, DynamoDB API, IAM API,
+       Secrets Manager, CloudWatch Logs
+            """, language="yaml")
+            st.markdown("### Autonomous Capabilities")
+            st.success("✅ Grant time-limited DB access")
+            st.success("✅ Auto-revoke expired sessions")
+            st.success("✅ Performance optimization")
+            st.success("✅ Automated backup verification")
+            st.warning("⚠️ Schema changes (requires approval)")
+            
+        elif "FinOps" in agent_choice:
+            st.code("""
+Agent: FinOps Agent
+Runtime: Lambda Python 3.12
+Memory: 512MB
+Timeout: 5 minutes
+Trigger: EventBridge (hourly) + Cost Anomaly
+Model: Claude 4 Sonnet
+Context Window: 200K tokens
+Temperature: 0.3
+Tools: Cost Explorer, EC2 API, RDS API,
+       Savings Plans API, Reserved Instance API
+            """, language="yaml")
+            st.markdown("### Autonomous Capabilities")
+            st.success("✅ Right-size instances (<$10K)")
+            st.success("✅ Terminate idle resources")
+            st.success("✅ Storage tier optimization")
+            st.success("✅ Anomaly detection & alerts")
+            st.warning("⚠️ RI/SP purchases (requires approval)")
+            
+        else:  # Policy Engine
+            st.code("""
+Agent: Policy Engine
+Runtime: Lambda Python 3.12
+Memory: 512MB
+Timeout: 5 minutes
+Trigger: EventBridge + CloudFormation hooks
+Model: Claude 4 Sonnet
+Context Window: 200K tokens
+Temperature: 0.1 (deterministic)
+Tools: Organizations API, SCP API, Config,
+       CloudFormation, Service Catalog
+            """, language="yaml")
+            st.markdown("### Autonomous Capabilities")
+            st.success("✅ Generate policies from patterns")
+            st.success("✅ A/B test policy effectiveness")
+            st.success("✅ Auto-update guardrails")
+            st.success("✅ Exception management")
+            st.warning("⚠️ SCP deployment (requires approval)")
     
     with col2:
         st.markdown("### Live Decision Scenario")
         
+        # Dynamic scenarios based on agent
+        if "Security" in agent_choice:
+            scenarios = ["Exposed S3 Bucket", "Compromised Credentials", "Unpatched EC2"]
+        elif "Compliance" in agent_choice:
+            scenarios = ["PCI DSS Violation", "Encryption Missing", "Tagging Non-Compliance"]
+        elif "DevOps" in agent_choice:
+            scenarios = ["Pipeline Optimization", "Build Failure", "Security Scan Finding"]
+        elif "Database" in agent_choice:
+            scenarios = ["Access Request", "Performance Issue", "Session Audit"]
+        elif "FinOps" in agent_choice:
+            scenarios = ["Cost Optimization", "Anomaly Detection", "Commitment Analysis"]
+        else:
+            scenarios = ["Policy Generation", "Violation Pattern", "Effectiveness Review"]
+        
         scenario_type = st.radio(
             "Select Scenario:",
-            ["Cost Optimization", "Anomaly Detection", "Commitment Analysis"],
+            scenarios,
             horizontal=True
         )
         
@@ -1236,44 +1356,286 @@ Tools: EC2 API, RDS API, Cost Explorer
             with st.spinner("Claude 4 analyzing scenario..."):
                 time.sleep(2)
                 
-                if scenario_type == "Cost Optimization":
+                # Generate agent-specific reasoning
+                if "Security" in agent_choice:
+                    st.markdown("""
+**🛡️ Security Agent - Claude AI Reasoning**
+
+```
+THREAT ANALYSIS:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Resource: s3://prod-data-analytics-2024
+Issue: Public access enabled, PII detected
+Risk Score: 9/10 (CRITICAL)
+
+CONTEXT GATHERED:
+• Bucket contains 2,847 objects (127GB)
+• 47,000+ customer records with PII
+• Created 3 hours ago by dev-team-lead
+• No encryption enabled
+
+DECISION: IMMEDIATE REMEDIATION
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Action 1: Block public access ✅ EXECUTED
+Action 2: Enable AES-256 encryption ✅ EXECUTED
+Action 3: Enable access logging ✅ EXECUTED
+Action 4: Create Security Hub finding ✅ EXECUTED
+Action 5: Notify security team ✅ EXECUTED
+
+Total Response Time: 1.2 seconds
+```
+                    """)
+                elif "Compliance" in agent_choice:
+                    st.markdown("""
+**⚖️ Compliance Agent - Claude AI Reasoning**
+
+```
+COMPLIANCE ANALYSIS:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Framework: PCI DSS 4.0
+Violation: Requirement 3.4.1 - Data encryption
+Resource: rds:prod-payments-db
+Risk: HIGH
+
+CONTEXT GATHERED:
+• Database stores cardholder data
+• Encryption at rest: DISABLED
+• Last audit: 45 days ago
+• Compliance score impact: -2.3%
+
+DECISION: AUTO-REMEDIATE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Action 1: Enable RDS encryption ✅ SCHEDULED
+Action 2: Update Config rule status ✅ EXECUTED
+Action 3: Generate evidence artifact ✅ EXECUTED
+Action 4: Update compliance dashboard ✅ EXECUTED
+
+Compliance Score: 94.8% → 97.1%
+```
+                    """)
+                elif "DevOps" in agent_choice:
+                    st.markdown("""
+**⚙️ DevOps Agent - Claude AI Reasoning**
+
+```
+PIPELINE ANALYSIS:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Pipeline: backend-api-main
+Current Build Time: 14m 32s
+Bottleneck: Test stage (9m 15s)
+
+OPTIMIZATION OPPORTUNITIES:
+• Tests running sequentially (847 tests)
+• No Docker layer caching
+• Fresh npm install each build
+
+DECISION: OPTIMIZE PIPELINE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Action 1: Enable parallel testing (4 runners) ✅
+Action 2: Configure Docker layer caching ✅
+Action 3: Add npm dependency caching ✅
+Action 4: Implement test splitting ✅
+
+Expected Improvement: 14m 32s → 5m 05s (-65%)
+Monthly Savings: $2,400 in build minutes
+```
+                    """)
+                elif "Database" in agent_choice:
+                    st.markdown("""
+**🗄️ Database Agent - Claude AI Reasoning**
+
+```
+ACCESS REQUEST ANALYSIS:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Requester: john.doe@company.com
+Database: prod-postgres-01
+Access Type: Read-Only
+Duration: 4 hours
+Justification: "Q4 revenue analysis for board"
+
+USER PROFILE:
+• Role: Senior Data Analyst
+• Previous requests: 15 (100% compliant)
+• Manager: jane.smith@company.com
+• Team: Business Intelligence
+
+RISK ASSESSMENT: LOW (3/10)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+DECISION: GRANT ACCESS
+
+Action 1: Generate temp credentials (4h TTL) ✅
+Action 2: Restrict to analytics schema ✅
+Action 3: Enable query logging ✅
+Action 4: Set auto-revocation timer ✅
+Action 5: Notify user via Slack ✅
+```
+                    """)
+                elif "FinOps" in agent_choice:
                     st.markdown(simulate_claude_reasoning('cost_optimization'))
-                elif scenario_type == "Anomaly Detection":
-                    st.markdown(simulate_claude_reasoning('anomaly'))
                 else:
-                    st.markdown(simulate_claude_reasoning('commitment'))
+                    st.markdown("""
+**📋 Policy Engine - Claude AI Reasoning**
+
+```
+PATTERN ANALYSIS:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Detected Pattern: Unencrypted S3 buckets
+Occurrences: 23 in last 30 days
+Affected Accounts: 12
+Trend: Increasing (+15%)
+
+ROOT CAUSE:
+• No preventive control exists
+• Only detective Config rule in place
+• 67% of developers unaware of requirement
+
+DECISION: GENERATE PREVENTIVE POLICY
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Policy Type: Service Control Policy (SCP)
+Target OUs: Production, Staging
+
+Generated SCP:
+{
+  "Effect": "Deny",
+  "Action": "s3:CreateBucket",
+  "Condition": {
+    "StringNotEquals": {
+      "s3:x-amz-server-side-encryption": "AES256"
+    }
+  }
+}
+
+Expected Impact: 95%+ violations prevented
+```
+                    """)
                 
                 st.success("✅ Analysis Complete - Decision logged to audit trail")
     
     st.markdown("---")
     
-    # Agent performance metrics
-    st.subheader("📊 Agent Performance Metrics")
+    # ============ ALL 6 AGENTS STATUS GRID ============
+    st.subheader("📊 All Agents Status & Performance")
     
-    col1, col2, col3 = st.columns(3)
+    # 6 agent cards in 2 rows of 3
+    row1_col1, row1_col2, row1_col3 = st.columns(3)
+    row2_col1, row2_col2, row2_col3 = st.columns(3)
     
-    with col1:
-        st.metric("Decisions/Day", "1,247", "+89 vs yesterday")
-    with col2:
-        st.metric("Success Rate", "98.7%", "+0.2%")
-    with col3:
-        st.metric("Avg Decision Time", "1.3s", "-0.1s")
+    with row1_col1:
+        st.markdown("""
+        <div style='background: linear-gradient(135deg, #1E293B 0%, #0F172A 100%); border: 1px solid #334155; border-left: 4px solid #22C55E; border-radius: 8px; padding: 16px; margin: 8px 0;'>
+            <div style='font-size: 1.1rem; font-weight: 700; color: #F1F5F9;'>🛡️ Security Agent</div>
+            <div style='color: #22C55E; font-size: 12px; font-weight: 600; margin: 4px 0;'>● ACTIVE</div>
+            <div style='margin-top: 8px; font-size: 13px; color: #94A3B8;'>
+                Threats Blocked: <span style='color: #10B981; font-weight: 700;'>47</span><br/>
+                Response Time: <span style='color: #10B981; font-weight: 700;'>1.2s</span><br/>
+                Decisions Today: <span style='color: #10B981; font-weight: 700;'>156</span>
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
     
-    # Agent decision distribution
+    with row1_col2:
+        st.markdown("""
+        <div style='background: linear-gradient(135deg, #1E293B 0%, #0F172A 100%); border: 1px solid #334155; border-left: 4px solid #22C55E; border-radius: 8px; padding: 16px; margin: 8px 0;'>
+            <div style='font-size: 1.1rem; font-weight: 700; color: #F1F5F9;'>⚖️ Compliance Agent</div>
+            <div style='color: #22C55E; font-size: 12px; font-weight: 600; margin: 4px 0;'>● ACTIVE</div>
+            <div style='margin-top: 8px; font-size: 13px; color: #94A3B8;'>
+                Compliance Score: <span style='color: #10B981; font-weight: 700;'>97.2%</span><br/>
+                Violations Fixed: <span style='color: #10B981; font-weight: 700;'>34</span><br/>
+                Decisions Today: <span style='color: #10B981; font-weight: 700;'>89</span>
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+    
+    with row1_col3:
+        st.markdown("""
+        <div style='background: linear-gradient(135deg, #1E293B 0%, #0F172A 100%); border: 1px solid #334155; border-left: 4px solid #22C55E; border-radius: 8px; padding: 16px; margin: 8px 0;'>
+            <div style='font-size: 1.1rem; font-weight: 700; color: #F1F5F9;'>⚙️ DevOps Agent</div>
+            <div style='color: #22C55E; font-size: 12px; font-weight: 600; margin: 4px 0;'>● ACTIVE</div>
+            <div style='margin-top: 8px; font-size: 13px; color: #94A3B8;'>
+                Pipelines Optimized: <span style='color: #10B981; font-weight: 700;'>47</span><br/>
+                Build Time Saved: <span style='color: #10B981; font-weight: 700;'>-45%</span><br/>
+                Decisions Today: <span style='color: #10B981; font-weight: 700;'>201</span>
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+    
+    with row2_col1:
+        st.markdown("""
+        <div style='background: linear-gradient(135deg, #1E293B 0%, #0F172A 100%); border: 1px solid #334155; border-left: 4px solid #22C55E; border-radius: 8px; padding: 16px; margin: 8px 0;'>
+            <div style='font-size: 1.1rem; font-weight: 700; color: #F1F5F9;'>🗄️ Database Agent</div>
+            <div style='color: #22C55E; font-size: 12px; font-weight: 600; margin: 4px 0;'>● ACTIVE</div>
+            <div style='margin-top: 8px; font-size: 13px; color: #94A3B8;'>
+                Access Requests: <span style='color: #10B981; font-weight: 700;'>32</span><br/>
+                Auto-Approved: <span style='color: #10B981; font-weight: 700;'>28</span><br/>
+                Decisions Today: <span style='color: #10B981; font-weight: 700;'>67</span>
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+    
+    with row2_col2:
+        st.markdown("""
+        <div style='background: linear-gradient(135deg, #1E293B 0%, #0F172A 100%); border: 1px solid #334155; border-left: 4px solid #22C55E; border-radius: 8px; padding: 16px; margin: 8px 0;'>
+            <div style='font-size: 1.1rem; font-weight: 700; color: #F1F5F9;'>💰 FinOps Agent</div>
+            <div style='color: #22C55E; font-size: 12px; font-weight: 600; margin: 4px 0;'>● ACTIVE</div>
+            <div style='margin-top: 8px; font-size: 13px; color: #94A3B8;'>
+                Cost Savings: <span style='color: #10B981; font-weight: 700;'>$487K</span><br/>
+                Optimizations: <span style='color: #10B981; font-weight: 700;'>156</span><br/>
+                Decisions Today: <span style='color: #10B981; font-weight: 700;'>412</span>
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+    
+    with row2_col3:
+        st.markdown("""
+        <div style='background: linear-gradient(135deg, #1E293B 0%, #0F172A 100%); border: 1px solid #334155; border-left: 4px solid #22C55E; border-radius: 8px; padding: 16px; margin: 8px 0;'>
+            <div style='font-size: 1.1rem; font-weight: 700; color: #F1F5F9;'>📋 Policy Engine</div>
+            <div style='color: #22C55E; font-size: 12px; font-weight: 600; margin: 4px 0;'>● ACTIVE</div>
+            <div style='margin-top: 8px; font-size: 13px; color: #94A3B8;'>
+                Active Policies: <span style='color: #10B981; font-weight: 700;'>87</span><br/>
+                AI-Generated: <span style='color: #10B981; font-weight: 700;'>34</span><br/>
+                Decisions Today: <span style='color: #10B981; font-weight: 700;'>45</span>
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+    
+    st.markdown("---")
+    
+    # Agent decision distribution chart
+    st.subheader("📈 Agent Decision Distribution (Last 24h)")
+    
     fig = go.Figure(data=[
         go.Bar(
-            x=['Cost Opt', 'Commit', 'Anomaly', 'Forecast', 'Storage', 'Placement'],
-            y=[412, 89, 156, 201, 289, 100],
-            marker_color=['#A3BE8C', '#EBCB8B', '#BF616A', '#88C0D0', '#B48EAD', '#5E81AC']
+            x=['Security', 'Compliance', 'DevOps', 'Database', 'FinOps', 'Policy'],
+            y=[156, 89, 201, 67, 412, 45],
+            marker_color=['#EF4444', '#3B82F6', '#F59E0B', '#8B5CF6', '#10B981', '#EC4899'],
+            text=[156, 89, 201, 67, 412, 45],
+            textposition='auto',
+            textfont=dict(color='#FFFFFF', size=14, family='Arial Black')
         )
     ])
     fig.update_layout(
-        title="Decisions by Agent (Last 24h)",
+        title=dict(text="Autonomous Decisions by Agent", font=dict(color='#FFFFFF', size=16)),
         template='plotly_dark',
         height=350,
-        showlegend=False
+        showlegend=False,
+        paper_bgcolor='rgba(0,0,0,0)',
+        plot_bgcolor='rgba(0,0,0,0)',
+        font=dict(color='#FFFFFF'),
+        xaxis=dict(tickfont=dict(color='#FFFFFF', size=12)),
+        yaxis=dict(tickfont=dict(color='#FFFFFF'), title=dict(text='Decisions', font=dict(color='#FFFFFF')))
     )
     st.plotly_chart(fig, use_container_width=True)
+    
+    # Performance summary
+    col1, col2, col3, col4 = st.columns(4)
+    with col1:
+        st.metric("Total Decisions/Day", "970", "+89 vs yesterday")
+    with col2:
+        st.metric("Overall Success Rate", "98.7%", "+0.2%")
+    with col3:
+        st.metric("Avg Decision Time", "1.3s", "-0.1s")
+    with col4:
+        st.metric("Human Escalations", "12", "-3 vs yesterday")
 
 with tab7:
     st.header("💰 FinOps Intelligence & Cost Optimization")
