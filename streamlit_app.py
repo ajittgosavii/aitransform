@@ -265,23 +265,148 @@ st.markdown("""
         background-color: #334155 !important;
     }
     
-    /* ============ INPUTS ============ */
-    input, textarea, select {
-        background-color: #1E293B !important;
-        color: #F1F5F9 !important;
+    /* ============ INPUTS - BLACK TEXT FOR VISIBILITY ============ */
+    /* Force dark text on all input elements */
+    input, textarea {
+        background-color: #FFFFFF !important;
+        color: #0F172A !important;
         border: 2px solid #334155 !important;
         border-radius: 8px !important;
     }
-    input:focus, textarea:focus, select:focus {
+    input::placeholder, textarea::placeholder {
+        color: #64748B !important;
+    }
+    input:focus, textarea:focus {
         border-color: #10B981 !important;
         box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2) !important;
+        outline: none !important;
     }
     
-    /* Selectbox */
+    /* ============ SELECTBOX/DROPDOWN - BLACK TEXT ============ */
+    /* Main selectbox container */
     .stSelectbox > div > div {
-        background-color: #1E293B !important;
-        color: #F1F5F9 !important;
+        background-color: #FFFFFF !important;
+        color: #0F172A !important;
         border: 2px solid #334155 !important;
+        border-radius: 8px !important;
+    }
+    .stSelectbox label {
+        color: #F1F5F9 !important;
+        font-weight: 600 !important;
+    }
+    
+    /* Selectbox value display - BLACK TEXT */
+    .stSelectbox [data-baseweb="select"] {
+        background-color: #FFFFFF !important;
+    }
+    .stSelectbox [data-baseweb="select"] > div {
+        background-color: #FFFFFF !important;
+        color: #0F172A !important;
+    }
+    .stSelectbox [data-baseweb="select"] span {
+        color: #0F172A !important;
+    }
+    
+    /* Dropdown menu items */
+    [data-baseweb="menu"] {
+        background-color: #FFFFFF !important;
+    }
+    [data-baseweb="menu"] li {
+        color: #0F172A !important;
+        background-color: #FFFFFF !important;
+    }
+    [data-baseweb="menu"] li:hover {
+        background-color: #E2E8F0 !important;
+        color: #0F172A !important;
+    }
+    
+    /* Selected option in dropdown */
+    [data-baseweb="menu"] [aria-selected="true"] {
+        background-color: #10B981 !important;
+        color: #FFFFFF !important;
+    }
+    
+    /* ============ RADIO BUTTONS - BLACK TEXT ============ */
+    .stRadio label {
+        color: #F1F5F9 !important;
+    }
+    .stRadio [data-baseweb="radio"] span {
+        color: #0F172A !important;
+    }
+    .stRadio > div {
+        background-color: transparent !important;
+    }
+    .stRadio > div > div > label {
+        color: #0F172A !important;
+        background-color: #FFFFFF !important;
+        padding: 8px 12px !important;
+        border-radius: 6px !important;
+        border: 1px solid #CBD5E1 !important;
+    }
+    .stRadio > div > div > label:hover {
+        background-color: #F1F5F9 !important;
+    }
+    
+    /* ============ MULTISELECT - BLACK TEXT ============ */
+    .stMultiSelect [data-baseweb="tag"] {
+        background-color: #10B981 !important;
+        color: #FFFFFF !important;
+    }
+    .stMultiSelect [data-baseweb="select"] {
+        background-color: #FFFFFF !important;
+    }
+    .stMultiSelect [data-baseweb="select"] span {
+        color: #0F172A !important;
+    }
+    
+    /* ============ TEXT INPUT - BLACK TEXT ============ */
+    .stTextInput input {
+        background-color: #FFFFFF !important;
+        color: #0F172A !important;
+        border: 2px solid #334155 !important;
+    }
+    .stTextInput label {
+        color: #F1F5F9 !important;
+    }
+    
+    /* ============ NUMBER INPUT - BLACK TEXT ============ */
+    .stNumberInput input {
+        background-color: #FFFFFF !important;
+        color: #0F172A !important;
+    }
+    
+    /* ============ DATE INPUT - BLACK TEXT ============ */
+    .stDateInput input {
+        background-color: #FFFFFF !important;
+        color: #0F172A !important;
+    }
+    
+    /* ============ SLIDER LABELS ============ */
+    .stSlider label {
+        color: #F1F5F9 !important;
+    }
+    .stSlider [data-baseweb="slider"] div {
+        color: #0F172A !important;
+    }
+    
+    /* ============ CHECKBOX - BLACK TEXT ============ */
+    .stCheckbox label {
+        color: #F1F5F9 !important;
+    }
+    .stCheckbox span {
+        color: #F1F5F9 !important;
+    }
+    
+    /* ============ CODE BLOCKS - Ensure readable ============ */
+    pre, code {
+        background-color: #1E293B !important;
+        color: #34D399 !important;
+    }
+    .stCodeBlock {
+        background-color: #1E293B !important;
+    }
+    .stCodeBlock code {
+        color: #34D399 !important;
     }
     
     /* ============ EXPANDERS ============ */
