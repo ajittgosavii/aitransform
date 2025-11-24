@@ -28,6 +28,74 @@ st.set_page_config(
 # ============ FIXED CSS - ALL TEXT VISIBLE ============
 st.markdown("""
 <style>
+    /* ============ COMPLETELY FIX WHITE HEADER BAR ============ */
+    /* Target EVERYTHING at the top */
+    header, .stApp > header, header[data-testid="stHeader"] {
+        background-color: #0F172A !important;
+        background: #0F172A !important;
+    }
+    
+    /* The main culprit - Streamlit's top bar */
+    [data-testid="stHeader"] {
+        background-color: #0F172A !important;
+        background: #0F172A !important;
+        border-bottom: none !important;
+    }
+    
+    /* Toolbar area */
+    [data-testid="stToolbar"] {
+        background-color: #0F172A !important;
+        background: #0F172A !important;
+    }
+    
+    /* Deploy button area */
+    .stDeployButton {
+        background-color: #0F172A !important;
+    }
+    
+    /* App view container header */
+    [data-testid="stAppViewContainer"] > header {
+        background-color: #0F172A !important;
+        background: #0F172A !important;
+    }
+    
+    /* Block container at top */
+    .stApp [data-testid="stAppViewBlockContainer"] {
+        background-color: #0F172A !important;
+    }
+    
+    /* Any remaining white divs at top */
+    .stApp > div:first-child {
+        background-color: #0F172A !important;
+    }
+    
+    /* Status widget (running indicator) */
+    [data-testid="stStatusWidget"] {
+        background-color: #0F172A !important;
+    }
+    
+    /* Decoration - hamburger menu area */
+    [data-testid="stDecoration"] {
+        background-color: #0F172A !important;
+        background: #0F172A !important;
+        display: none !important;
+    }
+    
+    /* The main wrapper */
+    .main .block-container {
+        background-color: #0F172A !important;
+    }
+    
+    /* Root level */
+    #root > div:first-child {
+        background-color: #0F172A !important;
+    }
+    
+    /* iframe parent if embedded */
+    .stApp iframe {
+        background-color: #0F172A !important;
+    }
+    
     /* ============ FORCE ALL TEXT WHITE ============ */
     .stApp, .main {
         background-color: #0F172A !important;
@@ -850,14 +918,6 @@ Purchase 3-year Compute Savings Plan:
     
     return reasoning_templates.get(scenario, "Analysis in progress...")
 
-# Main app header with professional styling
-st.markdown("""
-<div style="text-align: center; padding: 1rem 0 2rem 0; border-bottom: 2px solid #434C5E; margin-bottom: 2rem;">
-    <div class="main-header">🤖 AI-Powered Cloud Operations Platform</div>
-    <div class="sub-header">Transform Phase | AWS Bedrock + Claude 4 | 640+ AWS Accounts | Autonomous Operations</div>
-</div>
-""", unsafe_allow_html=True)
-
 # Sidebar with enhanced professional design
 with st.sidebar:
     # Header with icon
@@ -1054,19 +1114,8 @@ tab1, tab2, tab3, tab4, tab5, tab6, tab7, tab8, tab9, tab10 = st.tabs([
 ])
 
 with tab1:
-    # ============ TECHGUARD RAILS - UNIFIED COMMAND CENTER ============
-    st.markdown("""
-    <div style='text-align: center; padding: 20px 0;'>
-        <h1 style='font-size: 2.5rem; font-weight: 800; color: #10B981; margin-bottom: 8px;'>
-            🛡️ TechGuard Rails Command Center
-        </h1>
-        <p style='font-size: 1.1rem; color: #94A3B8;'>
-            Unified Operations Dashboard | 640+ AWS Accounts | 6 AI Agents | Real-Time Autonomous Operations
-        </p>
-    </div>
-    """, unsafe_allow_html=True)
-    
-    st.markdown("---")
+    # ============ DASHBOARD - KEY METRICS ============
+    # (Main header is already shown above tabs)
     
     # ============ TOP-LEVEL KPIs ============
     st.markdown("### 📊 Platform Overview")
