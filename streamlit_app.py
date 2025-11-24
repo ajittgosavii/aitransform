@@ -6,159 +6,285 @@ import plotly.express as px
 from datetime import datetime, timedelta
 import time
 import random
-import boto3
-from botocore.exceptions import ClientError, NoCredentialsError
 import json
+
+# Optional AWS imports - gracefully handle if not installed
+try:
+    import boto3
+    from botocore.exceptions import ClientError, NoCredentialsError
+    AWS_AVAILABLE = True
+except ImportError:
+    AWS_AVAILABLE = False
+    boto3 = None
 
 # Page configuration
 st.set_page_config(
-    page_title="AI Platform - Transform Phase Demo",
+    page_title="Tech Guardrails Platform | AI Cloud Operations",
     page_icon="🤖",
     layout="wide",
     initial_sidebar_state="expanded"
 )
 
-# Custom CSS for professional styling and better tab visibility
+# HIGH CONTRAST CSS - Professional styling with maximum visibility
 st.markdown("""
 <style>
-    /* Main headers */
+    /* ============ HIGH CONTRAST COLOR SCHEME ============ */
+    /* Primary: #00D9FF (Cyan) - Headers, active elements */
+    /* Success: #00FF88 (Green) - Positive metrics */
+    /* Warning: #FFD700 (Gold) - Warnings */
+    /* Error: #FF4444 (Red) - Critical issues */
+    /* Background: #0f1419 (Dark Blue) - Main background */
+    /* Text: #FFFFFF (White) - Maximum contrast */
+    
+    /* Main Application Background */
+    .main {
+        background-color: #0f1419;
+    }
+    
+    /* Main headers - HIGH CONTRAST */
     .main-header {
-        font-size: 2.8rem;
-        font-weight: 700;
-        color: #88C0D0;
+        font-size: 3rem;
+        font-weight: 800;
+        color: #00D9FF !important;
         text-align: center;
         margin-bottom: 0.5rem;
-        text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        text-shadow: 0 0 20px rgba(0, 217, 255, 0.5);
+        letter-spacing: 1px;
     }
     .sub-header {
-        font-size: 1.1rem;
-        color: #D8DEE9;
+        font-size: 1.2rem;
+        color: #FFFFFF !important;
         text-align: center;
         margin-bottom: 2rem;
-        opacity: 0.9;
+        opacity: 0.95;
+        font-weight: 500;
     }
     
-    /* Enhanced Tab Styling - Much more visible */
+    /* ============ TABS - MAXIMUM VISIBILITY ============ */
     .stTabs [data-baseweb="tab-list"] {
         gap: 8px;
-        background-color: rgba(46, 52, 64, 0.4);
-        padding: 10px;
-        border-radius: 10px;
-        margin-bottom: 20px;
+        background-color: #1a2332;
+        padding: 12px;
+        border-radius: 12px;
+        margin-bottom: 25px;
+        border: 2px solid #00D9FF;
     }
     .stTabs [data-baseweb="tab"] {
-        height: 60px;
-        background-color: #3B4252;
-        border-radius: 8px;
-        padding: 12px 24px;
-        font-size: 16px;
-        font-weight: 600;
-        color: #D8DEE9;
-        border: 2px solid transparent;
+        height: 55px;
+        background: linear-gradient(135deg, #2a3f5f 0%, #1a2332 100%);
+        border-radius: 10px;
+        padding: 10px 20px;
+        font-size: 15px;
+        font-weight: 700;
+        color: #FFFFFF !important;
+        border: 2px solid #3a4f6f;
         transition: all 0.3s ease;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.3);
     }
     .stTabs [data-baseweb="tab"]:hover {
-        background-color: #434C5E;
-        border-color: #88C0D0;
-        color: #ECEFF4;
-        transform: translateY(-2px);
-        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        background: linear-gradient(135deg, #3a5f8f 0%, #2a3f5f 100%);
+        border-color: #00D9FF;
+        color: #00D9FF !important;
+        transform: translateY(-3px);
+        box-shadow: 0 6px 16px rgba(0, 217, 255, 0.4);
     }
     .stTabs [aria-selected="true"] {
-        background-color: #5E81AC !important;
-        color: #ECEFF4 !important;
-        border-color: #88C0D0 !important;
-        box-shadow: 0 4px 12px rgba(94, 129, 172, 0.4);
+        background: linear-gradient(135deg, #00D9FF 0%, #0099CC 100%) !important;
+        color: #000000 !important;
+        border-color: #00FFFF !important;
+        box-shadow: 0 6px 20px rgba(0, 217, 255, 0.6);
+        font-weight: 800;
     }
     
-    /* Metric cards */
+    /* Text Visibility - High Contrast */
+    p, span, div, label {
+        color: #E8E8E8 !important;
+    }
+    
+    /* Headers in content */
+    h1, h2, h3, h4, h5, h6 {
+        color: #FFFFFF !important;
+        font-weight: 700 !important;
+    }
+    
+    /* ============ METRIC CARDS - HIGH VISIBILITY ============ */
+    [data-testid="stMetricValue"] {
+        font-size: 2.5rem;
+        font-weight: 800;
+        color: #00D9FF !important;
+    }
+    [data-testid="stMetricLabel"] {
+        color: #FFFFFF !important;
+        font-weight: 600;
+        font-size: 1.1rem;
+    }
+    [data-testid="stMetricDelta"] {
+        font-weight: 700;
+    }
+    
     .metric-card {
-        background: linear-gradient(135deg, #1a1f35 0%, #2E3440 100%);
+        background: linear-gradient(135deg, #1a1f35 0%, #0f1419 100%);
         padding: 1.5rem;
         border-radius: 12px;
-        border: 2px solid #5E81AC;
+        border: 2px solid #00D9FF;
         margin-bottom: 1rem;
-        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        box-shadow: 0 4px 12px rgba(0, 217, 255, 0.2);
     }
     
-    /* Agent status badges */
+    /* Agent status badges - HIGH CONTRAST */
     .agent-status {
         padding: 0.6rem 1.2rem;
         border-radius: 6px;
-        font-weight: 600;
+        font-weight: 700;
         display: inline-block;
         margin: 0.3rem;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        box-shadow: 0 2px 6px rgba(0,0,0,0.3);
     }
     .status-active {
-        background-color: #A3BE8C;
-        color: #2E3440;
+        background: linear-gradient(135deg, #00FF88 0%, #00CC66 100%);
+        color: #000000;
     }
     .status-idle {
-        background-color: #EBCB8B;
-        color: #2E3440;
+        background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+        color: #000000;
     }
     .status-processing {
-        background-color: #88C0D0;
-        color: #2E3440;
+        background: linear-gradient(135deg, #00D9FF 0%, #0099CC 100%);
+        color: #000000;
+    }
+    .status-critical {
+        background: linear-gradient(135deg, #FF4444 0%, #CC0000 100%);
+        color: #FFFFFF;
     }
     
-    /* Alert boxes */
+    /* Alert boxes - HIGH CONTRAST */
     .alert-critical {
-        background-color: #BF616A;
-        color: #fff;
+        background-color: #4a0a0a;
+        color: #FFFFFF;
         padding: 1.2rem;
         border-radius: 8px;
         margin: 0.5rem 0;
-        border-left: 5px solid #A93F47;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        border-left: 5px solid #FF4444;
+        box-shadow: 0 2px 8px rgba(255, 68, 68, 0.3);
     }
     .alert-warning {
-        background-color: #D08770;
-        color: #fff;
+        background-color: #4a3a0a;
+        color: #FFFFFF;
         padding: 1.2rem;
         border-radius: 8px;
         margin: 0.5rem 0;
-        border-left: 5px solid #B8694E;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        border-left: 5px solid #FFD700;
+        box-shadow: 0 2px 8px rgba(255, 215, 0, 0.3);
     }
     .alert-info {
-        background-color: #5E81AC;
-        color: #fff;
+        background-color: #0a2a4a;
+        color: #FFFFFF;
         padding: 1.2rem;
         border-radius: 8px;
         margin: 0.5rem 0;
-        border-left: 5px solid #476890;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        border-left: 5px solid #00D9FF;
+        box-shadow: 0 2px 8px rgba(0, 217, 255, 0.3);
     }
-    
-    /* Sidebar improvements */
-    section[data-testid="stSidebar"] {
-        background-color: #2E3440;
-        border-right: 2px solid #434C5E;
-    }
-    
-    /* Better button styling */
-    .stButton > button {
+    .alert-success {
+        background-color: #0a4a2a;
+        color: #FFFFFF;
+        padding: 1.2rem;
         border-radius: 8px;
-        font-weight: 600;
+        margin: 0.5rem 0;
+        border-left: 5px solid #00FF88;
+        box-shadow: 0 2px 8px rgba(0, 255, 136, 0.3);
+    }
+    
+    /* Sidebar - HIGH CONTRAST */
+    section[data-testid="stSidebar"] {
+        background: linear-gradient(180deg, #1a1f2e 0%, #0f1419 100%);
+        border-right: 3px solid #00D9FF;
+    }
+    section[data-testid="stSidebar"] * {
+        color: #FFFFFF !important;
+    }
+    
+    /* Buttons - HIGH VISIBILITY */
+    .stButton > button {
+        border-radius: 10px;
+        font-weight: 700;
         transition: all 0.3s ease;
+        border: 2px solid #00D9FF;
+        background: linear-gradient(135deg, #0099CC 0%, #0066AA 100%);
+        color: #FFFFFF !important;
+        font-size: 15px;
+        padding: 10px 20px;
     }
     .stButton > button:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        transform: translateY(-3px);
+        box-shadow: 0 6px 20px rgba(0, 217, 255, 0.5);
+        background: linear-gradient(135deg, #00D9FF 0%, #0099CC 100%);
+        border-color: #00FFFF;
     }
     
-    /* Improved metrics */
-    [data-testid="stMetricValue"] {
-        font-size: 2rem;
-        font-weight: 700;
+    /* Data Tables - HIGH CONTRAST */
+    .dataframe {
+        color: #FFFFFF !important;
+        background-color: #1a1f2e !important;
+    }
+    .dataframe th {
+        background-color: #0099CC !important;
+        color: #FFFFFF !important;
+        font-weight: 700 !important;
+        padding: 12px !important;
+    }
+    .dataframe td {
+        color: #E8E8E8 !important;
+        border-color: #3a4f6f !important;
+        padding: 10px !important;
+    }
+    
+    /* Input Fields - HIGH VISIBILITY */
+    input, textarea, select {
+        background-color: #1a2332 !important;
+        color: #FFFFFF !important;
+        border: 2px solid #3a4f6f !important;
+    }
+    
+    /* Selectbox and Multiselect */
+    .stSelectbox > div > div {
+        background-color: #1a2332;
+        color: #FFFFFF;
+    }
+    
+    /* Expanders - HIGH CONTRAST */
+    .streamlit-expanderHeader {
+        background-color: #1a2332 !important;
+        color: #00D9FF !important;
+        font-weight: 700 !important;
+        border: 2px solid #3a4f6f !important;
+        border-radius: 8px;
+    }
+    
+    /* Code Blocks */
+    code {
+        background-color: #1a2332 !important;
+        color: #00FF88 !important;
+        padding: 4px 8px;
+        border-radius: 4px;
+        border: 1px solid #3a4f6f;
+    }
+    
+    /* Progress Bars */
+    .stProgress > div > div {
+        background-color: #00D9FF !important;
     }
     
     /* Professional spacing */
     .block-container {
         padding-top: 2rem;
         padding-bottom: 2rem;
+        max-width: 100%;
+    }
+    
+    /* Plotly Charts Background Fix */
+    .js-plotly-plot {
+        background-color: transparent !important;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -568,13 +694,17 @@ with st.sidebar:
 st.markdown("<br>", unsafe_allow_html=True)
 
 # Main content tabs with better labels
-tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs([
+tab1, tab2, tab3, tab4, tab5, tab6, tab7, tab8, tab9, tab10 = st.tabs([
     "📊 Dashboard", 
     "🤖 AI Agents", 
-    "💰 FinOps Intelligence",
-    "🛡️ Compliance",
+    "🛡️ Security",
+    "⚖️ Compliance",
+    "⚙️ DevOps",
+    "🗄️ Database",
+    "💰 FinOps",
+    "📋 Policy",
     "📈 Analytics",
-    "📋 Audit Trail"
+    "📋 Audit"
 ])
 
 with tab1:
@@ -789,7 +919,7 @@ Tools: EC2 API, RDS API, Cost Explorer
     )
     st.plotly_chart(fig, use_container_width=True)
 
-with tab3:
+with tab7:
     st.header("💰 FinOps Intelligence & Cost Optimization")
     
     # Create sub-tabs for FinOps
@@ -2388,7 +2518,7 @@ with tab4:
         All SCP violations are logged and alerted in real-time.
         """)
 
-with tab5:
+with tab9:
     st.header("📈 Analytics & Predictive Insights")
     
     # Forecast
@@ -2524,7 +2654,7 @@ with tab5:
     fig.update_layout(template='plotly_dark', height=350)
     st.plotly_chart(fig, use_container_width=True)
 
-with tab6:
+with tab10:
     st.header("📋 Audit Trail & Compliance Evidence")
     
     st.markdown("""
@@ -2760,12 +2890,761 @@ ORDER BY timestamp DESC
 LIMIT 100;
             """, language="sql")
 
+# ==================== TAB 3: SECURITY AGENT ====================
+with tab3:
+    st.header("🛡️ Security Agent")
+    st.markdown("**Autonomous threat detection and remediation powered by Claude 4**")
+    
+    # Metrics row
+    col1, col2, col3, col4 = st.columns(4)
+    with col1:
+        st.metric("Threats Detected (24h)", "47", delta="-8 vs yesterday")
+    with col2:
+        st.metric("Auto-Remediated", "42", delta="+5")
+    with col3:
+        st.metric("Risk Score", "23/100", delta="-12", delta_color="inverse")
+    with col4:
+        st.metric("Avg Response Time", "1.2s", delta="-0.3s")
+    
+    st.markdown("---")
+    
+    # Security sub-tabs
+    sec_tab1, sec_tab2, sec_tab3, sec_tab4 = st.tabs([
+        "🔍 Active Threats",
+        "🛠️ Remediation Queue",
+        "📊 Security Dashboard",
+        "🤖 Claude Reasoning"
+    ])
+    
+    with sec_tab1:
+        st.subheader("🔍 Active Security Threats")
+        
+        # Generate threat data
+        threat_types = ['Exposed S3 Bucket', 'Weak IAM Policy', 'Unpatched EC2', 
+                       'Compromised Credentials', 'Suspicious API Activity', 'Port Scan Detected']
+        severities = ['🔴 Critical', '🟠 High', '🟡 Medium', '🟢 Low']
+        
+        threats_data = []
+        for i in range(12):
+            threats_data.append({
+                'Timestamp': (datetime.now() - timedelta(minutes=random.randint(5, 1440))).strftime('%Y-%m-%d %H:%M'),
+                'Threat_Type': random.choice(threat_types),
+                'Severity': random.choice(severities),
+                'Account': f'prod-{random.choice(["web", "api", "ml", "data"])}-{random.randint(1, 640):03d}',
+                'Resource': f'arn:aws:ec2:us-east-1:{random.randint(100000000000, 999999999999)}:instance/i-{random.randint(10000000, 99999999)}',
+                'Status': random.choice(['🔍 Detected', '🔄 Remediating', '⏳ Pending Approval', '✅ Resolved']),
+                'Risk_Score': random.randint(3, 10)
+            })
+        
+        threats_df = pd.DataFrame(threats_data).sort_values('Timestamp', ascending=False)
+        st.dataframe(threats_df, use_container_width=True, hide_index=True)
+        
+        # Action buttons
+        col1, col2, col3 = st.columns(3)
+        with col1:
+            if st.button("🛡️ Auto-Remediate All Critical", key="sec_auto_remediate", type="primary"):
+                st.success("✅ 5 critical threats queued for auto-remediation")
+        with col2:
+            if st.button("📊 Generate Security Report", key="sec_report"):
+                st.info("📄 Security report generated and sent to security@company.com")
+        with col3:
+            if st.button("🔔 Escalate to SOC", key="sec_escalate"):
+                st.warning("⚠️ High-priority threats escalated to Security Operations Center")
+    
+    with sec_tab2:
+        st.subheader("🛠️ Remediation Queue")
+        
+        remediation_data = []
+        actions = ['Auto-patch EC2', 'Revoke IAM Keys', 'Encrypt S3 Bucket', 'Isolate Instance', 'Update Security Group']
+        for i in range(8):
+            remediation_data.append({
+                'Action_ID': f'REM-{random.randint(10000, 99999)}',
+                'Action': random.choice(actions),
+                'Target': f'prod-{random.choice(["web", "api"])}-{random.randint(1, 100):03d}',
+                'Priority': random.choice(['🔴 Critical', '🟠 High', '🟡 Medium']),
+                'ETA': f'{random.randint(1, 15)} min',
+                'Status': random.choice(['⏳ Queued', '🔄 In Progress', '✅ Completed']),
+                'Approved_By': random.choice(['Auto-approved', 'Claude AI', 'Security Team'])
+            })
+        
+        st.dataframe(pd.DataFrame(remediation_data), use_container_width=True, hide_index=True)
+    
+    with sec_tab3:
+        st.subheader("📊 Security Overview Dashboard")
+        
+        # Security metrics over time
+        dates = [(datetime.now() - timedelta(days=i)).strftime('%Y-%m-%d') for i in range(30, 0, -1)]
+        threats_detected = [random.randint(20, 80) for _ in dates]
+        threats_remediated = [int(t * random.uniform(0.85, 0.95)) for t in threats_detected]
+        
+        fig = go.Figure()
+        fig.add_trace(go.Scatter(x=dates, y=threats_detected, name='Detected',
+                                line=dict(color='#FF6B6B', width=3)))
+        fig.add_trace(go.Scatter(x=dates, y=threats_remediated, name='Remediated',
+                                line=dict(color='#00FF88', width=3), fill='tonexty'))
+        fig.update_layout(
+            template='plotly_dark',
+            paper_bgcolor='rgba(0,0,0,0)',
+            plot_bgcolor='rgba(0,0,0,0)',
+            title='Security Threats: Detection vs Remediation (30 days)',
+            height=400
+        )
+        st.plotly_chart(fig, use_container_width=True)
+        
+        # Threat breakdown by type
+        col1, col2 = st.columns(2)
+        with col1:
+            threat_counts = {'S3 Exposure': 23, 'IAM Issues': 45, 'Unpatched': 18, 'Credentials': 12, 'Network': 8}
+            fig_pie = go.Figure(data=[go.Pie(labels=list(threat_counts.keys()), 
+                                            values=list(threat_counts.values()),
+                                            hole=.4)])
+            fig_pie.update_layout(template='plotly_dark', paper_bgcolor='rgba(0,0,0,0)',
+                                 title='Threats by Category')
+            st.plotly_chart(fig_pie, use_container_width=True)
+        
+        with col2:
+            st.markdown("#### Security Health by Service")
+            services = ['EC2', 'S3', 'IAM', 'RDS', 'Lambda', 'EKS']
+            for svc in services:
+                score = random.randint(85, 100)
+                color = '#00FF88' if score >= 95 else '#FFD700' if score >= 85 else '#FF4444'
+                st.markdown(f"**{svc}**: {score}% secure")
+                st.progress(score/100)
+    
+    with sec_tab4:
+        st.subheader("🤖 Claude AI Security Reasoning")
+        
+        with st.expander("📋 Example: Exposed S3 Bucket Detection & Remediation", expanded=True):
+            st.markdown("""
+### Scenario: Exposed S3 Bucket Detected
+
+**Input Context:**
+- Bucket: `prod-data-analytics-2024`
+- Public read access enabled
+- Contains 2,847 objects (127 GB)
+- No encryption at rest
+- Last accessed: 3 hours ago from unknown IP (45.33.32.156)
+
+**Claude Analysis:**
+```
+SECURITY ASSESSMENT:
+├── Data Classification: PII (Personal Identifiable Information detected)
+├── Exposure Level: CRITICAL - Internet accessible
+├── Affected Records: ~47,000 customer records
+├── Compliance Impact: GDPR, PCI DSS violations likely
+├── Active Threat: Unknown IP access suggests potential data exfiltration
+└── Risk Score: 9/10 (Critical)
+```
+
+**Decision Process:**
+1. ✅ Verified bucket contains PII through object sampling (names, emails, addresses)
+2. ✅ Confirmed public access is NOT required (checked IAM policies, no legitimate use case)
+3. ✅ Checked for active connections (none currently active)
+4. ✅ Evaluated blast radius: Affects 47,000 customer records across 3 business units
+5. ✅ Assessed regulatory impact: GDPR Article 33 notification may be required
+
+**Decision:** `IMMEDIATE REMEDIATION REQUIRED`
+
+**Actions Taken:**
+1. 🔒 Removed public access (BlockPublicAcls enabled)
+2. 🔐 Enabled default encryption (AES-256)
+3. 📝 Enabled access logging to security-logs bucket
+4. 🚨 Created Security Hub finding (CRITICAL)
+5. 📧 Notified security team via SNS
+6. 📊 Initiated incident response protocol
+7. 🔍 Queued review of 3 similar buckets found
+
+**Confidence Score:** 99%
+**Execution Time:** 1.2s
+""")
+        
+        with st.expander("📋 Example: Compromised IAM Credentials", expanded=False):
+            st.markdown("""
+### Scenario: Suspicious IAM Activity Detected
+
+**Input Context:**
+- User: `svc-deployment-prod`
+- 847 API calls in last hour (normal: 50-100)
+- New regions accessed: ap-southeast-1, eu-west-2 (never before)
+- Actions: ListBuckets, GetObject (unusual for this service account)
+- Source IP: 185.234.72.x (known VPN exit node)
+
+**Claude Analysis:**
+```
+CREDENTIAL COMPROMISE INDICATORS:
+├── API Volume: 8.5x normal (ANOMALY)
+├── Geographic: 2 new regions (ANOMALY)
+├── Behavior: Read-heavy pattern inconsistent with service purpose
+├── IP Reputation: Associated with previous breaches
+└── Risk Score: 8/10 (High)
+```
+
+**Decision:** `CREDENTIALS COMPROMISED - REVOKE IMMEDIATELY`
+
+**Actions Taken:**
+1. 🔑 Revoked all active sessions for user
+2. 🚫 Deactivated access keys
+3. 📝 Generated new credentials (stored in Secrets Manager)
+4. 🔔 Alerted DevOps team for key rotation
+5. 📊 Logged all affected resources for audit
+
+**Confidence Score:** 97%
+""")
+
+# ==================== TAB 5: DEVOPS AGENT ====================
+with tab5:
+    st.header("⚙️ DevOps Agent")
+    st.markdown("**CI/CD pipeline optimization and security scanning automation**")
+    
+    # Metrics
+    col1, col2, col3, col4 = st.columns(4)
+    with col1:
+        st.metric("Pipelines Monitored", "23", delta="+2")
+    with col2:
+        st.metric("Optimizations (7d)", "47", delta="+12")
+    with col3:
+        st.metric("Avg Build Time", "6m 42s", delta="-3m 15s")
+    with col4:
+        st.metric("Security Scans", "156", delta="+23")
+    
+    st.markdown("---")
+    
+    # DevOps sub-tabs
+    devops_tab1, devops_tab2, devops_tab3, devops_tab4 = st.tabs([
+        "🔄 Pipeline Status",
+        "⚡ Optimizations",
+        "🔒 Security Scans",
+        "🤖 Claude Reasoning"
+    ])
+    
+    with devops_tab1:
+        st.subheader("🔄 CI/CD Pipeline Status")
+        
+        repos = ['frontend-app', 'backend-api', 'ml-models', 'data-pipeline', 
+                'mobile-app', 'infrastructure', 'auth-service', 'payment-service']
+        
+        pipeline_data = []
+        for repo in repos:
+            pipeline_data.append({
+                'Repository': repo,
+                'Branch': random.choice(['main', 'develop', 'release/v2.1']),
+                'Status': random.choice(['✅ Success', '🔄 Running', '⚠️ Warning', '❌ Failed']),
+                'Build_Time': f'{random.randint(3, 15)}m {random.randint(10, 59)}s',
+                'Tests': f'{random.randint(90, 100)}% passed',
+                'Coverage': f'{random.randint(75, 95)}%',
+                'Security': random.choice(['✅ Clean', '⚠️ 2 Medium', '🔴 1 Critical']),
+                'Last_Deploy': (datetime.now() - timedelta(hours=random.randint(1, 72))).strftime('%Y-%m-%d %H:%M')
+            })
+        
+        st.dataframe(pd.DataFrame(pipeline_data), use_container_width=True, hide_index=True)
+        
+        col1, col2, col3 = st.columns(3)
+        with col1:
+            if st.button("⚡ Optimize All Pipelines", key="devops_optimize", type="primary"):
+                st.success("✅ 5 pipelines optimized! Average build time reduced by 45%")
+        with col2:
+            if st.button("🔒 Run Security Scans", key="devops_scan"):
+                st.info("🔍 Security scans initiated on all repositories")
+        with col3:
+            if st.button("📊 Performance Report", key="devops_report"):
+                st.info("📄 Pipeline performance report generated")
+    
+    with devops_tab2:
+        st.subheader("⚡ Optimization Recommendations")
+        
+        optimizations = [
+            {"Pipeline": "backend-api", "Recommendation": "Enable parallel testing (4 runners)",
+             "Impact": "-65% build time", "Effort": "Low", "Status": "⏳ Pending"},
+            {"Pipeline": "frontend-app", "Recommendation": "Implement Docker layer caching",
+             "Impact": "-40% build time", "Effort": "Low", "Status": "✅ Implemented"},
+            {"Pipeline": "ml-models", "Recommendation": "Use spot instances for training",
+             "Impact": "-70% cost", "Effort": "Medium", "Status": "🔄 In Progress"},
+            {"Pipeline": "data-pipeline", "Recommendation": "Optimize dependency resolution",
+             "Impact": "-30% build time", "Effort": "Low", "Status": "⏳ Pending"},
+        ]
+        
+        for opt in optimizations:
+            with st.expander(f"📋 {opt['Pipeline']}: {opt['Recommendation']}", expanded=False):
+                col1, col2, col3 = st.columns(3)
+                with col1:
+                    st.metric("Expected Impact", opt['Impact'])
+                with col2:
+                    st.metric("Effort", opt['Effort'])
+                with col3:
+                    st.write(f"**Status:** {opt['Status']}")
+                
+                if opt['Status'] == '⏳ Pending':
+                    if st.button(f"✅ Implement", key=f"impl_{opt['Pipeline']}"):
+                        st.success(f"Optimization implemented for {opt['Pipeline']}")
+    
+    with devops_tab3:
+        st.subheader("🔒 Security Scan Results")
+        
+        scan_results = []
+        vuln_types = ['Dependency CVE', 'Hardcoded Secret', 'Insecure Config', 'Outdated Package']
+        for i in range(10):
+            scan_results.append({
+                'Repository': random.choice(repos),
+                'Scanner': random.choice(['KICS', 'GHAS', 'Snyk', 'Trivy']),
+                'Finding': random.choice(vuln_types),
+                'Severity': random.choice(['🔴 Critical', '🟠 High', '🟡 Medium', '🟢 Low']),
+                'CVE': f'CVE-2024-{random.randint(10000, 99999)}' if random.random() > 0.5 else 'N/A',
+                'Status': random.choice(['⏳ Open', '🔄 In Progress', '✅ Fixed']),
+                'Age': f'{random.randint(1, 30)} days'
+            })
+        
+        st.dataframe(pd.DataFrame(scan_results), use_container_width=True, hide_index=True)
+    
+    with devops_tab4:
+        st.subheader("🤖 Claude AI DevOps Reasoning")
+        
+        with st.expander("📋 Example: Pipeline Optimization Analysis", expanded=True):
+            st.markdown("""
+### Scenario: Backend API Pipeline Optimization
+
+**Input Context:**
+- Repository: backend-api
+- Average build time: 14m 32s
+- Test execution: 9m 15s (63% of total)
+- Docker build: 3m 10s
+- Deployment: 2m 7s
+
+**Claude Analysis:**
+```
+PERFORMANCE BOTTLENECKS IDENTIFIED:
+├── Test Suite: Sequential execution (should be parallel)
+│   └── 847 tests, all running sequentially
+├── Docker Build: No layer caching
+│   └── Rebuilding node_modules on every change
+├── Dependency Install: Fresh install each build
+│   └── 2m 30s for npm install
+└── Test Strategy: Full suite on every commit
+    └── Should use selective testing based on changed files
+```
+
+**Optimization Plan:**
+1. **Enable Parallel Testing** (4 runners)
+   - Current: 9m 15s → Expected: 2m 45s
+   - Implementation: Update jest.config.js, add `--maxWorkers=4`
+
+2. **Docker Layer Caching**
+   - Current: 3m 10s → Expected: 45s
+   - Implementation: Reorder Dockerfile, cache node_modules layer
+
+3. **Intelligent Test Selection**
+   - Only run tests affected by changed files
+   - Full suite on PR merge only
+
+4. **Dependency Caching**
+   - Cache npm packages between builds
+   - Expected savings: 2m 15s
+
+**Expected Results:**
+- Build time: 14m 32s → **5m 05s** (-65%)
+- Cost savings: $2,400/month (fewer build minutes)
+- Developer productivity: +40% faster feedback
+
+**Confidence Score:** 94%
+""")
+
+# ==================== TAB 6: DATABASE AGENT ====================
+with tab6:
+    st.header("🗄️ Database Agent")
+    st.markdown("**Intelligent database access management and performance optimization**")
+    
+    # Metrics
+    col1, col2, col3, col4 = st.columns(4)
+    with col1:
+        st.metric("Access Requests (24h)", "32", delta="+7")
+    with col2:
+        st.metric("Auto-Approved", "28", delta="+5")
+    with col3:
+        st.metric("Active Sessions", "18", delta="+3")
+    with col4:
+        st.metric("Avg Approval Time", "1.5s", delta="-0.4s")
+    
+    st.markdown("---")
+    
+    # Database sub-tabs
+    db_tab1, db_tab2, db_tab3, db_tab4 = st.tabs([
+        "📋 Access Requests",
+        "📊 Performance",
+        "🔐 Active Sessions",
+        "🤖 Claude Reasoning"
+    ])
+    
+    with db_tab1:
+        st.subheader("📋 Database Access Request Queue")
+        
+        databases = ['prod-postgres-01', 'prod-mysql-02', 'prod-aurora-03', 'prod-dynamodb-main']
+        users = ['john.doe@company.com', 'jane.smith@company.com', 'bob.wilson@company.com', 
+                'alice.chen@company.com', 'david.kumar@company.com']
+        
+        requests = []
+        for i in range(10):
+            requests.append({
+                'Request_ID': f'DBR-{random.randint(10000, 99999)}',
+                'User': random.choice(users),
+                'Database': random.choice(databases),
+                'Access_Type': random.choice(['Read-Only', 'Read-Write', 'Admin']),
+                'Duration': random.choice(['1 hour', '4 hours', '1 day', '1 week']),
+                'Justification': random.choice([
+                    'Production bug investigation',
+                    'Q4 revenue analysis',
+                    'Schema migration',
+                    'Performance tuning',
+                    'Audit compliance check'
+                ]),
+                'Risk_Score': random.randint(2, 8),
+                'Status': random.choice(['⏳ Pending', '✅ Approved', '❌ Denied', '🔄 Active'])
+            })
+        
+        requests_df = pd.DataFrame(requests)
+        st.dataframe(requests_df, use_container_width=True, hide_index=True)
+        
+        col1, col2, col3 = st.columns(3)
+        with col1:
+            if st.button("✅ Auto-Approve Low Risk", key="db_approve", type="primary"):
+                st.success("✅ 4 low-risk requests approved with time-bound credentials")
+        with col2:
+            if st.button("🔍 Audit Active Sessions", key="db_audit"):
+                st.info("📊 Session audit completed - all sessions compliant")
+        with col3:
+            if st.button("⚙️ Revoke Expired", key="db_revoke"):
+                st.warning("⚠️ 3 expired sessions revoked")
+    
+    with db_tab2:
+        st.subheader("📊 Database Performance Overview")
+        
+        # Performance metrics
+        col1, col2 = st.columns(2)
+        
+        with col1:
+            # Query performance over time
+            hours = [f'{i}:00' for i in range(24)]
+            query_times = [random.uniform(10, 100) for _ in hours]
+            
+            fig = go.Figure()
+            fig.add_trace(go.Scatter(x=hours, y=query_times, name='Avg Query Time (ms)',
+                                    line=dict(color='#00D9FF', width=3), fill='tozeroy'))
+            fig.update_layout(template='plotly_dark', paper_bgcolor='rgba(0,0,0,0)',
+                             title='Average Query Time (24h)', height=300)
+            st.plotly_chart(fig, use_container_width=True)
+        
+        with col2:
+            # Connection pool usage
+            connections = {'prod-postgres-01': 78, 'prod-mysql-02': 45, 
+                          'prod-aurora-03': 92, 'prod-dynamodb-main': 34}
+            
+            fig = go.Figure(data=[go.Bar(x=list(connections.keys()), 
+                                        y=list(connections.values()),
+                                        marker_color='#00FF88')])
+            fig.update_layout(template='plotly_dark', paper_bgcolor='rgba(0,0,0,0)',
+                             title='Connection Pool Usage (%)', height=300)
+            st.plotly_chart(fig, use_container_width=True)
+        
+        # Optimization recommendations
+        st.subheader("💡 AI-Recommended Optimizations")
+        optimizations = [
+            {"Database": "prod-postgres-01", "Recommendation": "Add index on users.created_at", "Impact": "-40% query time"},
+            {"Database": "prod-aurora-03", "Recommendation": "Scale read replicas to 3", "Impact": "-25% latency"},
+            {"Database": "prod-mysql-02", "Recommendation": "Enable query caching", "Impact": "-30% load"},
+        ]
+        
+        for opt in optimizations:
+            st.info(f"**{opt['Database']}**: {opt['Recommendation']} (Expected: {opt['Impact']})")
+    
+    with db_tab3:
+        st.subheader("🔐 Active Database Sessions")
+        
+        sessions = []
+        for i in range(8):
+            sessions.append({
+                'Session_ID': f'SES-{random.randint(10000, 99999)}',
+                'User': random.choice(users),
+                'Database': random.choice(databases),
+                'Started': (datetime.now() - timedelta(minutes=random.randint(5, 240))).strftime('%H:%M'),
+                'Queries': random.randint(10, 500),
+                'Data_Read': f'{random.randint(1, 100)} MB',
+                'Expires_In': f'{random.randint(10, 180)} min',
+                'Status': '🟢 Active'
+            })
+        
+        st.dataframe(pd.DataFrame(sessions), use_container_width=True, hide_index=True)
+    
+    with db_tab4:
+        st.subheader("🤖 Claude AI Database Access Reasoning")
+        
+        with st.expander("📋 Example: Access Request Evaluation", expanded=True):
+            st.markdown("""
+### Scenario: Database Access Request Evaluation
+
+**Request Details:**
+- User: john.doe@company.com (Senior Data Analyst)
+- Database: prod-postgres-01 (customer analytics)
+- Access Type: Read-Only
+- Duration: 4 hours
+- Justification: "Q4 revenue analysis for board presentation"
+
+**Claude Analysis:**
+```
+ACCESS RISK EVALUATION:
+├── User Profile
+│   ├── Role: Senior Data Analyst (authorized for analytics data)
+│   ├── History: 15 previous requests, 100% compliant
+│   ├── Last Access: 3 days ago (normal pattern)
+│   └── Security Training: Current (completed 2024-10-15)
+│
+├── Database Sensitivity
+│   ├── Classification: Medium (aggregated data)
+│   ├── PII Present: No (anonymized)
+│   ├── Financial Data: Yes (revenue figures)
+│   └── Compliance: SOC 2 applicable
+│
+├── Request Context
+│   ├── Business Justification: Valid (board meeting in 6 hours)
+│   ├── Time Sensitivity: High
+│   ├── Alternative Options: Pre-built dashboard insufficient
+│   └── Access Scope: Read-only (minimal risk)
+│
+└── Risk Score: 3/10 (Low)
+```
+
+**Decision:** `GRANT ACCESS - Time-bound with monitoring`
+
+**Actions Taken:**
+1. 🔑 Generated temporary IAM credentials (4h TTL)
+2. 📊 Granted read-only access to analytics schema only
+3. 📝 Enabled query logging for audit trail
+4. ⏰ Scheduled automatic revocation at 18:00
+5. 📧 Notified user of access grant via Slack
+6. 🔔 Set up alert for unusual query patterns
+
+**Security Controls Applied:**
+- Access limited to `analytics` schema only
+- No access to `users` or `payments` tables
+- Query result set limited to 10,000 rows
+- Export disabled (results stay in-platform)
+
+**Confidence Score:** 96%
+**Execution Time:** 1.5s
+""")
+
+# ==================== TAB 8: POLICY ENGINE ====================
+with tab8:
+    st.header("📋 Adaptive Policy Engine")
+    st.markdown("**AI-powered policy generation and effectiveness tracking**")
+    
+    # Metrics
+    col1, col2, col3, col4 = st.columns(4)
+    with col1:
+        st.metric("Active Policies", "87", delta="+5")
+    with col2:
+        st.metric("AI-Generated", "34", delta="+8")
+    with col3:
+        st.metric("Effectiveness", "96.4%", delta="+1.2%")
+    with col4:
+        st.metric("Violations Prevented", "1,247", delta="+89")
+    
+    st.markdown("---")
+    
+    # Policy sub-tabs
+    policy_tab1, policy_tab2, policy_tab3, policy_tab4 = st.tabs([
+        "💡 Recommendations",
+        "📋 Active Policies",
+        "📊 Effectiveness",
+        "🤖 Claude Reasoning"
+    ])
+    
+    with policy_tab1:
+        st.subheader("💡 AI-Generated Policy Recommendations")
+        
+        recommendations = [
+            {
+                "name": "S3 Bucket Encryption Enforcement",
+                "description": "Prevent creation of unencrypted S3 buckets",
+                "rationale": "23 unencrypted buckets created in past 30 days",
+                "type": "Preventive (SCP)",
+                "impact": "Medium",
+                "effectiveness": "94%"
+            },
+            {
+                "name": "IAM Password Rotation Policy",
+                "description": "Enforce 90-day password rotation for all users",
+                "rationale": "31% of users have passwords older than 180 days",
+                "type": "Detective (Config Rule)",
+                "impact": "Low",
+                "effectiveness": "89%"
+            },
+            {
+                "name": "EC2 Instance Tagging Requirement",
+                "description": "Require cost-center and owner tags on all EC2 instances",
+                "rationale": "156 untagged instances causing cost allocation issues",
+                "type": "Preventive (SCP)",
+                "impact": "Low",
+                "effectiveness": "97%"
+            },
+            {
+                "name": "Public RDS Prevention",
+                "description": "Block creation of publicly accessible RDS instances",
+                "rationale": "2 public RDS instances detected this month",
+                "type": "Preventive (SCP)",
+                "impact": "Critical",
+                "effectiveness": "99%"
+            }
+        ]
+        
+        for i, policy in enumerate(recommendations):
+            with st.expander(f"📜 {policy['name']}", expanded=(i==0)):
+                st.markdown(f"**Description:** {policy['description']}")
+                st.markdown(f"**Rationale:** {policy['rationale']}")
+                st.markdown(f"**Type:** {policy['type']}")
+                
+                col1, col2 = st.columns(2)
+                with col1:
+                    st.metric("Business Impact", policy['impact'])
+                with col2:
+                    st.metric("Expected Effectiveness", policy['effectiveness'])
+                
+                col1, col2, col3 = st.columns(3)
+                with col1:
+                    if st.button("✅ Deploy Policy", key=f"deploy_{i}", type="primary"):
+                        st.success(f"✅ Policy '{policy['name']}' deployed to production OUs")
+                with col2:
+                    if st.button("🧪 A/B Test", key=f"test_{i}"):
+                        st.info("🧪 A/B test initiated - will run for 7 days")
+                with col3:
+                    if st.button("📝 Review", key=f"review_{i}"):
+                        st.info("📋 Policy sent to security team for review")
+    
+    with policy_tab2:
+        st.subheader("📋 Active Policies Catalog")
+        
+        policies = []
+        policy_types = ['SCP', 'Config Rule', 'OPA', 'GuardDuty Rule']
+        for i in range(15):
+            policies.append({
+                'Policy_ID': f'POL-{random.randint(1000, 9999)}',
+                'Name': random.choice([
+                    'Require S3 Encryption', 'Block Public Access', 'Enforce MFA',
+                    'Restrict Regions', 'Require Tagging', 'Prevent Root Usage'
+                ]),
+                'Type': random.choice(policy_types),
+                'Scope': random.choice(['All Accounts', 'Production', 'Development', 'Sandbox']),
+                'Violations_Blocked': random.randint(50, 500),
+                'Effectiveness': f'{random.randint(85, 99)}%',
+                'Status': random.choice(['✅ Active', '🔄 Testing', '⏸️ Paused'])
+            })
+        
+        st.dataframe(pd.DataFrame(policies), use_container_width=True, hide_index=True)
+    
+    with policy_tab3:
+        st.subheader("📊 Policy Effectiveness Dashboard")
+        
+        # Effectiveness over time
+        weeks = [f'Week {i}' for i in range(1, 13)]
+        effectiveness = [random.uniform(85, 99) for _ in weeks]
+        
+        fig = go.Figure()
+        fig.add_trace(go.Scatter(x=weeks, y=effectiveness, mode='lines+markers',
+                                name='Policy Effectiveness %',
+                                line=dict(color='#00FF88', width=3)))
+        fig.add_hline(y=95, line_dash="dash", line_color="#FFD700", 
+                     annotation_text="Target: 95%")
+        fig.update_layout(template='plotly_dark', paper_bgcolor='rgba(0,0,0,0)',
+                         title='Overall Policy Effectiveness (12 weeks)', height=400)
+        st.plotly_chart(fig, use_container_width=True)
+        
+        # Policy performance breakdown
+        col1, col2 = st.columns(2)
+        with col1:
+            st.markdown("#### Top Performing Policies")
+            top_policies = [
+                ("Require S3 Encryption", "99%"),
+                ("Block Public Access", "98%"),
+                ("Enforce MFA", "97%"),
+                ("Restrict Regions", "96%")
+            ]
+            for name, eff in top_policies:
+                st.success(f"✅ {name}: {eff}")
+        
+        with col2:
+            st.markdown("#### Policies Needing Attention")
+            attention_policies = [
+                ("EC2 Tagging", "78%"),
+                ("Cost Allocation Tags", "72%")
+            ]
+            for name, eff in attention_policies:
+                st.warning(f"⚠️ {name}: {eff}")
+    
+    with policy_tab4:
+        st.subheader("🤖 Claude AI Policy Generation Reasoning")
+        
+        with st.expander("📋 Example: Policy Generation from Violation Patterns", expanded=True):
+            st.markdown("""
+### Scenario: Recurring Violation Pattern Detected
+
+**Input Context:**
+- Violation Type: Unencrypted S3 buckets
+- Occurrences: 23 instances in past 30 days
+- Affected Accounts: 12 different accounts
+- Pattern: New buckets created without encryption enabled
+
+**Claude Analysis:**
+```
+VIOLATION PATTERN ANALYSIS:
+├── Trend: Increasing (+15% vs previous month)
+├── Root Cause: No preventive control exists
+│   └── Current policy: Detective only (Config rule)
+├── Developer Awareness: 67% unaware of requirement
+├── Manual Remediation: Taking avg 2-3 days per incident
+└── Compliance Risk: PCI DSS, HIPAA violations possible
+```
+
+**Policy Generation:**
+```json
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "DenyUnencryptedS3",
+      "Effect": "Deny",
+      "Action": "s3:CreateBucket",
+      "Resource": "*",
+      "Condition": {
+        "StringNotEquals": {
+          "s3:x-amz-server-side-encryption": "AES256"
+        }
+      }
+    }
+  ]
+}
+```
+
+**Decision:** `GENERATE PREVENTIVE POLICY`
+
+**Implementation Plan:**
+1. 📋 Create SCP to deny unencrypted bucket creation
+2. 🏷️ Add exception for dev/sandbox accounts (tag-based)
+3. 🚀 Deploy to Production and Staging OUs
+4. 📝 Update developer documentation
+5. 📧 Send notification to all affected teams
+6. 📊 Monitor for 7 days before full enforcement
+
+**Expected Impact:**
+- Violations prevented: 95%+
+- Manual remediation: -90%
+- Compliance risk: Eliminated
+
+**Confidence Score:** 98%
+""")
+
 # Footer
 st.markdown("---")
 st.markdown("""
-<div style='text-align: center; color: #D8DEE9; padding: 2rem;'>
-    <strong>AI-Powered Cloud Operations Platform</strong><br/>
-    Built with AWS Bedrock, Claude 4 Sonnet, and Streamlit<br/>
-    <small>Demo Version | For Client Presentation</small>
+<div style='text-align: center; color: #FFFFFF; padding: 2rem; background: linear-gradient(135deg, #1a2332 0%, #0f1419 100%); border-radius: 10px; border: 1px solid #00D9FF;'>
+    <strong style='font-size: 1.2rem; color: #00D9FF;'>🤖 AI-Powered Cloud Operations Platform</strong><br/>
+    <span style='color: #E8E8E8;'>Transform Phase | AWS Bedrock + Claude 4 | 640+ AWS Accounts | Autonomous Operations</span><br/>
+    <small style='color: #888;'>Tech Guardrails Platform v2.0 | All 6 Agents Operational</small>
 </div>
 """, unsafe_allow_html=True)
