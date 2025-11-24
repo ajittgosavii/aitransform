@@ -18,79 +18,147 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Custom CSS for better styling
+# Custom CSS for professional styling and better tab visibility
 st.markdown("""
 <style>
+    /* Main headers */
     .main-header {
-        font-size: 2.5rem;
-        font-weight: bold;
+        font-size: 2.8rem;
+        font-weight: 700;
         color: #88C0D0;
         text-align: center;
         margin-bottom: 0.5rem;
+        text-shadow: 0 2px 4px rgba(0,0,0,0.3);
     }
     .sub-header {
-        font-size: 1.2rem;
+        font-size: 1.1rem;
         color: #D8DEE9;
         text-align: center;
         margin-bottom: 2rem;
+        opacity: 0.9;
     }
+    
+    /* Enhanced Tab Styling - Much more visible */
+    .stTabs [data-baseweb="tab-list"] {
+        gap: 8px;
+        background-color: rgba(46, 52, 64, 0.4);
+        padding: 10px;
+        border-radius: 10px;
+        margin-bottom: 20px;
+    }
+    .stTabs [data-baseweb="tab"] {
+        height: 60px;
+        background-color: #3B4252;
+        border-radius: 8px;
+        padding: 12px 24px;
+        font-size: 16px;
+        font-weight: 600;
+        color: #D8DEE9;
+        border: 2px solid transparent;
+        transition: all 0.3s ease;
+    }
+    .stTabs [data-baseweb="tab"]:hover {
+        background-color: #434C5E;
+        border-color: #88C0D0;
+        color: #ECEFF4;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+    .stTabs [aria-selected="true"] {
+        background-color: #5E81AC !important;
+        color: #ECEFF4 !important;
+        border-color: #88C0D0 !important;
+        box-shadow: 0 4px 12px rgba(94, 129, 172, 0.4);
+    }
+    
+    /* Metric cards */
     .metric-card {
         background: linear-gradient(135deg, #1a1f35 0%, #2E3440 100%);
         padding: 1.5rem;
-        border-radius: 10px;
+        border-radius: 12px;
         border: 2px solid #5E81AC;
         margin-bottom: 1rem;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
     }
+    
+    /* Agent status badges */
     .agent-status {
-        padding: 0.5rem 1rem;
-        border-radius: 5px;
-        font-weight: bold;
+        padding: 0.6rem 1.2rem;
+        border-radius: 6px;
+        font-weight: 600;
         display: inline-block;
-        margin: 0.2rem;
+        margin: 0.3rem;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.2);
     }
     .status-active {
         background-color: #A3BE8C;
-        color: #000;
+        color: #2E3440;
     }
     .status-idle {
         background-color: #EBCB8B;
-        color: #000;
+        color: #2E3440;
     }
     .status-processing {
         background-color: #88C0D0;
-        color: #000;
+        color: #2E3440;
     }
+    
+    /* Alert boxes */
     .alert-critical {
         background-color: #BF616A;
         color: #fff;
-        padding: 1rem;
-        border-radius: 5px;
+        padding: 1.2rem;
+        border-radius: 8px;
         margin: 0.5rem 0;
+        border-left: 5px solid #A93F47;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.2);
     }
     .alert-warning {
         background-color: #D08770;
         color: #fff;
-        padding: 1rem;
-        border-radius: 5px;
+        padding: 1.2rem;
+        border-radius: 8px;
         margin: 0.5rem 0;
+        border-left: 5px solid #B8694E;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.2);
     }
     .alert-info {
         background-color: #5E81AC;
         color: #fff;
-        padding: 1rem;
-        border-radius: 5px;
+        padding: 1.2rem;
+        border-radius: 8px;
         margin: 0.5rem 0;
+        border-left: 5px solid #476890;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.2);
     }
-    .stTabs [data-baseweb="tab-list"] {
-        gap: 2rem;
-    }
-    .stTabs [data-baseweb="tab"] {
+    
+    /* Sidebar improvements */
+    section[data-testid="stSidebar"] {
         background-color: #2E3440;
-        border-radius: 5px 5px 0 0;
-        padding: 1rem 2rem;
+        border-right: 2px solid #434C5E;
     }
-    .stTabs [aria-selected="true"] {
-        background-color: #5E81AC;
+    
+    /* Better button styling */
+    .stButton > button {
+        border-radius: 8px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+    .stButton > button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+    
+    /* Improved metrics */
+    [data-testid="stMetricValue"] {
+        font-size: 2rem;
+        font-weight: 700;
+    }
+    
+    /* Professional spacing */
+    .block-container {
+        padding-top: 2rem;
+        padding-bottom: 2rem;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -394,17 +462,27 @@ Purchase 3-year Compute Savings Plan:
     
     return reasoning_templates.get(scenario, "Analysis in progress...")
 
-# Main app header
-st.markdown('<div class="main-header">🤖 AI-Powered Cloud Operations Platform</div>', unsafe_allow_html=True)
-st.markdown('<div class="sub-header">Transform Phase | AWS Bedrock + Claude 4 | 640+ AWS Accounts | Autonomous Operations</div>', unsafe_allow_html=True)
+# Main app header with professional styling
+st.markdown("""
+<div style="text-align: center; padding: 1rem 0 2rem 0; border-bottom: 2px solid #434C5E; margin-bottom: 2rem;">
+    <div class="main-header">🤖 AI-Powered Cloud Operations Platform</div>
+    <div class="sub-header">Transform Phase | AWS Bedrock + Claude 4 | 640+ AWS Accounts | Autonomous Operations</div>
+</div>
+""", unsafe_allow_html=True)
 
-# Sidebar
+# Sidebar with enhanced professional design
 with st.sidebar:
-    st.image("https://img.icons8.com/fluency/96/artificial-intelligence.png", width=80)
-    st.title("Control Center")
+    # Header with icon
+    col1, col2 = st.columns([1, 3])
+    with col1:
+        st.image("https://img.icons8.com/fluency/96/artificial-intelligence.png", width=70)
+    with col2:
+        st.markdown("### Control Center")
+    
+    st.markdown("---")
     
     # MODE TOGGLE - Demo vs Live AWS
-    st.markdown("### 🎮 Data Source")
+    st.markdown("#### 🎮 Data Source")
     mode_options = {
         "🎬 Demo Mode": "demo",
         "🔴 Live AWS": "live"
@@ -413,7 +491,8 @@ with st.sidebar:
         "Select data source:",
         options=list(mode_options.keys()),
         index=0 if st.session_state.mode == 'demo' else 1,
-        help="Demo Mode: Simulated data for presentations\nLive AWS: Real data from your AWS accounts"
+        help="Demo Mode: Simulated data for presentations\nLive AWS: Real data from your AWS accounts",
+        label_visibility="collapsed"
     )
     st.session_state.mode = mode_options[selected_mode]
     
@@ -425,45 +504,55 @@ with st.sidebar:
             try:
                 sts = aws_session.client('sts')
                 identity = sts.get_caller_identity()
-                st.caption(f"Account: {identity['Account']}")
+                st.caption(f"🔑 Account: {identity['Account']}")
             except:
                 pass
         else:
             st.error("❌ AWS Not Connected")
-            st.info("""
-            **To connect AWS:**
-            1. Add credentials to Streamlit secrets, or
-            2. Use IAM role (if deployed on AWS), or
-            3. Configure ~/.aws/credentials
-            """)
+            with st.expander("📖 Connection Guide"):
+                st.info("""
+                **To connect AWS:**
+                1. Add credentials to Streamlit secrets
+                2. Use IAM role (if on AWS)
+                3. Configure ~/.aws/credentials
+                """)
     else:
         st.info("📊 Using simulated demo data")
     
     st.markdown("---")
-    st.markdown("### System Status")
+    st.markdown("#### System Status")
     st.success("🟢 All Systems Operational")
-    st.metric("Uptime", "99.97%")
-    st.metric("Active Agents", "6/6")
+    
+    col1, col2 = st.columns(2)
+    with col1:
+        st.metric("Uptime", "99.97%", delta="0.02%")
+    with col2:
+        st.metric("Agents", "6/6", delta="0")
     
     st.markdown("---")
-    st.markdown("### Quick Stats")
-    st.metric("Total Accounts", "640")
-    st.metric("Monthly Spend", "$2.8M")
-    st.metric("Cost Savings (30d)", f"${st.session_state.cost_savings:,}")
+    st.markdown("#### 📊 Quick Stats")
+    
+    col1, col2 = st.columns(2)
+    with col1:
+        st.metric("Accounts", "640", delta="+3")
+        st.metric("Monthly", "$2.8M", delta="-$89K")
+    with col2:
+        st.metric("Savings", f"${st.session_state.cost_savings:,}", delta="+12%")
+        st.metric("Actions", st.session_state.actions_executed, delta="+5")
     
     st.markdown("---")
-    st.markdown("### Demo Controls")
+    st.markdown("#### 🎮 Demo Controls")
     
-    if st.button("🎯 Simulate Cost Optimization", use_container_width=True):
+    if st.button("🎯 Cost Optimization", use_container_width=True, type="primary"):
         st.session_state.actions_executed += 1
         st.session_state.cost_savings += random.randint(2000, 15000)
-        st.success("Optimization executed!")
+        st.success("✅ Optimization executed!")
         time.sleep(0.5)
         st.rerun()
     
-    if st.button("⚠️ Simulate Anomaly Detection", use_container_width=True):
+    if st.button("⚠️ Anomaly Detection", use_container_width=True):
         st.session_state.anomalies_detected += 1
-        st.warning("Anomaly detected!")
+        st.warning("⚡ Anomaly detected!")
         time.sleep(0.5)
         st.rerun()
     
@@ -474,13 +563,17 @@ with st.sidebar:
         st.session_state.agent_decisions = []
         st.rerun()
 
-# Main content tabs
+
+# Add visual separation before tabs
+st.markdown("<br>", unsafe_allow_html=True)
+
+# Main content tabs with better labels
 tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs([
     "📊 Dashboard", 
     "🤖 AI Agents", 
     "💰 FinOps Intelligence",
-    "🛡️ Security & Compliance",
-    "📈 Analytics & Insights",
+    "🛡️ Compliance",
+    "📈 Analytics",
     "📋 Audit Trail"
 ])
 
