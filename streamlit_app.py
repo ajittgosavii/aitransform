@@ -25,266 +25,369 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# HIGH CONTRAST CSS - Professional styling with maximum visibility
+# ============ ENTERPRISE PROFESSIONAL CSS ============
+# Color Scheme: Emerald Green + Slate + Gold Accents
+# Designed for maximum visibility and corporate presentation
 st.markdown("""
 <style>
-    /* ============ HIGH CONTRAST COLOR SCHEME ============ */
-    /* Primary: #00D9FF (Cyan) - Headers, active elements */
-    /* Success: #00FF88 (Green) - Positive metrics */
-    /* Warning: #FFD700 (Gold) - Warnings */
-    /* Error: #FF4444 (Red) - Critical issues */
-    /* Background: #0f1419 (Dark Blue) - Main background */
-    /* Text: #FFFFFF (White) - Maximum contrast */
+    /* ============ ENTERPRISE COLOR PALETTE ============ */
+    /* Primary: #10B981 (Emerald) - Professional, enterprise */
+    /* Secondary: #3B82F6 (Blue) - Links, secondary actions */
+    /* Accent: #F59E0B (Amber/Gold) - Highlights, warnings */
+    /* Success: #22C55E (Green) - Positive metrics */
+    /* Error: #EF4444 (Red) - Critical issues */
+    /* Background: #0F172A (Slate 900) - Deep professional dark */
+    /* Surface: #1E293B (Slate 800) - Cards, panels */
+    /* Text: #F8FAFC (Slate 50) - Primary text - MAXIMUM CONTRAST */
     
-    /* Main Application Background */
+    /* ============ GLOBAL STYLES ============ */
     .main {
-        background-color: #0f1419;
+        background-color: #0F172A;
     }
     
-    /* Main headers - HIGH CONTRAST */
-    .main-header {
-        font-size: 3rem;
-        font-weight: 800;
-        color: #00D9FF !important;
-        text-align: center;
-        margin-bottom: 0.5rem;
-        text-shadow: 0 0 20px rgba(0, 217, 255, 0.5);
-        letter-spacing: 1px;
-    }
-    .sub-header {
-        font-size: 1.2rem;
-        color: #FFFFFF !important;
-        text-align: center;
-        margin-bottom: 2rem;
-        opacity: 0.95;
+    /* ALL TEXT - Maximum visibility */
+    p, span, div, label, li {
+        color: #F8FAFC !important;
         font-weight: 500;
     }
     
-    /* ============ TABS - MAXIMUM VISIBILITY ============ */
-    .stTabs [data-baseweb="tab-list"] {
-        gap: 8px;
-        background-color: #1a2332;
-        padding: 12px;
-        border-radius: 12px;
-        margin-bottom: 25px;
-        border: 2px solid #00D9FF;
-    }
-    .stTabs [data-baseweb="tab"] {
-        height: 55px;
-        background: linear-gradient(135deg, #2a3f5f 0%, #1a2332 100%);
-        border-radius: 10px;
-        padding: 10px 20px;
-        font-size: 15px;
-        font-weight: 700;
-        color: #FFFFFF !important;
-        border: 2px solid #3a4f6f;
-        transition: all 0.3s ease;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.3);
-    }
-    .stTabs [data-baseweb="tab"]:hover {
-        background: linear-gradient(135deg, #3a5f8f 0%, #2a3f5f 100%);
-        border-color: #00D9FF;
-        color: #00D9FF !important;
-        transform: translateY(-3px);
-        box-shadow: 0 6px 16px rgba(0, 217, 255, 0.4);
-    }
-    .stTabs [aria-selected="true"] {
-        background: linear-gradient(135deg, #00D9FF 0%, #0099CC 100%) !important;
-        color: #000000 !important;
-        border-color: #00FFFF !important;
-        box-shadow: 0 6px 20px rgba(0, 217, 255, 0.6);
-        font-weight: 800;
-    }
-    
-    /* Text Visibility - High Contrast */
-    p, span, div, label {
-        color: #E8E8E8 !important;
-    }
-    
-    /* Headers in content */
     h1, h2, h3, h4, h5, h6 {
         color: #FFFFFF !important;
         font-weight: 700 !important;
     }
     
-    /* ============ METRIC CARDS - HIGH VISIBILITY ============ */
-    [data-testid="stMetricValue"] {
-        font-size: 2.5rem;
+    /* Main Header - Enterprise Style */
+    .main-header {
+        font-size: 2.8rem;
         font-weight: 800;
-        color: #00D9FF !important;
+        background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        text-align: center;
+        margin-bottom: 0.5rem;
+        letter-spacing: 0.5px;
+    }
+    .sub-header {
+        font-size: 1.15rem;
+        color: #CBD5E1 !important;
+        text-align: center;
+        margin-bottom: 2rem;
+        font-weight: 500;
+    }
+    
+    /* ============ TABS - ENTERPRISE PROFESSIONAL ============ */
+    .stTabs [data-baseweb="tab-list"] {
+        gap: 6px;
+        background: linear-gradient(180deg, #1E293B 0%, #0F172A 100%);
+        padding: 14px 16px;
+        border-radius: 12px;
+        margin-bottom: 24px;
+        border: 2px solid #334155;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+    }
+    .stTabs [data-baseweb="tab"] {
+        height: 52px;
+        background: linear-gradient(180deg, #334155 0%, #1E293B 100%);
+        border-radius: 8px;
+        padding: 12px 18px;
+        font-size: 14px;
+        font-weight: 700;
+        color: #E2E8F0 !important;
+        border: 1px solid #475569;
+        transition: all 0.25s ease;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+    .stTabs [data-baseweb="tab"]:hover {
+        background: linear-gradient(180deg, #475569 0%, #334155 100%);
+        border-color: #10B981;
+        color: #10B981 !important;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+    }
+    .stTabs [aria-selected="true"] {
+        background: linear-gradient(135deg, #10B981 0%, #059669 100%) !important;
+        color: #FFFFFF !important;
+        border-color: #34D399 !important;
+        box-shadow: 0 4px 16px rgba(16, 185, 129, 0.4);
+        font-weight: 800;
+    }
+    
+    /* ============ METRICS - HIGH VISIBILITY ============ */
+    [data-testid="stMetricValue"] {
+        font-size: 2.2rem;
+        font-weight: 800;
+        color: #10B981 !important;
     }
     [data-testid="stMetricLabel"] {
-        color: #FFFFFF !important;
+        color: #F1F5F9 !important;
         font-weight: 600;
-        font-size: 1.1rem;
+        font-size: 1rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
     }
     [data-testid="stMetricDelta"] {
         font-weight: 700;
+        font-size: 0.9rem;
     }
     
+    /* Metric Cards */
     .metric-card {
-        background: linear-gradient(135deg, #1a1f35 0%, #0f1419 100%);
+        background: linear-gradient(135deg, #1E293B 0%, #0F172A 100%);
         padding: 1.5rem;
         border-radius: 12px;
-        border: 2px solid #00D9FF;
+        border: 1px solid #334155;
         margin-bottom: 1rem;
-        box-shadow: 0 4px 12px rgba(0, 217, 255, 0.2);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
     }
     
-    /* Agent status badges - HIGH CONTRAST */
+    /* ============ STATUS BADGES ============ */
     .agent-status {
-        padding: 0.6rem 1.2rem;
+        padding: 8px 16px;
         border-radius: 6px;
         font-weight: 700;
         display: inline-block;
-        margin: 0.3rem;
-        box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+        margin: 4px;
+        font-size: 13px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
     }
     .status-active {
-        background: linear-gradient(135deg, #00FF88 0%, #00CC66 100%);
-        color: #000000;
+        background: linear-gradient(135deg, #22C55E 0%, #16A34A 100%);
+        color: #FFFFFF;
+        box-shadow: 0 2px 8px rgba(34, 197, 94, 0.4);
     }
-    .status-idle {
-        background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
-        color: #000000;
-    }
-    .status-processing {
-        background: linear-gradient(135deg, #00D9FF 0%, #0099CC 100%);
-        color: #000000;
+    .status-warning {
+        background: linear-gradient(135deg, #F59E0B 0%, #D97706 100%);
+        color: #FFFFFF;
+        box-shadow: 0 2px 8px rgba(245, 158, 11, 0.4);
     }
     .status-critical {
-        background: linear-gradient(135deg, #FF4444 0%, #CC0000 100%);
+        background: linear-gradient(135deg, #EF4444 0%, #DC2626 100%);
+        color: #FFFFFF;
+        box-shadow: 0 2px 8px rgba(239, 68, 68, 0.4);
+    }
+    .status-idle {
+        background: linear-gradient(135deg, #64748B 0%, #475569 100%);
         color: #FFFFFF;
     }
     
-    /* Alert boxes - HIGH CONTRAST */
-    .alert-critical {
-        background-color: #4a0a0a;
-        color: #FFFFFF;
-        padding: 1.2rem;
-        border-radius: 8px;
-        margin: 0.5rem 0;
-        border-left: 5px solid #FF4444;
-        box-shadow: 0 2px 8px rgba(255, 68, 68, 0.3);
+    /* ============ ALERTS - ENTERPRISE ============ */
+    .stSuccess {
+        background-color: #0D3D2E !important;
+        border-left: 4px solid #22C55E !important;
+        color: #FFFFFF !important;
     }
-    .alert-warning {
-        background-color: #4a3a0a;
-        color: #FFFFFF;
-        padding: 1.2rem;
-        border-radius: 8px;
-        margin: 0.5rem 0;
-        border-left: 5px solid #FFD700;
-        box-shadow: 0 2px 8px rgba(255, 215, 0, 0.3);
+    .stWarning {
+        background-color: #3D2E0D !important;
+        border-left: 4px solid #F59E0B !important;
+        color: #FFFFFF !important;
     }
-    .alert-info {
-        background-color: #0a2a4a;
-        color: #FFFFFF;
-        padding: 1.2rem;
-        border-radius: 8px;
-        margin: 0.5rem 0;
-        border-left: 5px solid #00D9FF;
-        box-shadow: 0 2px 8px rgba(0, 217, 255, 0.3);
+    .stError {
+        background-color: #3D0D0D !important;
+        border-left: 4px solid #EF4444 !important;
+        color: #FFFFFF !important;
     }
-    .alert-success {
-        background-color: #0a4a2a;
-        color: #FFFFFF;
-        padding: 1.2rem;
-        border-radius: 8px;
-        margin: 0.5rem 0;
-        border-left: 5px solid #00FF88;
-        box-shadow: 0 2px 8px rgba(0, 255, 136, 0.3);
+    .stInfo {
+        background-color: #0D2D3D !important;
+        border-left: 4px solid #3B82F6 !important;
+        color: #FFFFFF !important;
     }
     
-    /* Sidebar - HIGH CONTRAST */
+    /* ============ SIDEBAR - ENTERPRISE ============ */
     section[data-testid="stSidebar"] {
-        background: linear-gradient(180deg, #1a1f2e 0%, #0f1419 100%);
-        border-right: 3px solid #00D9FF;
+        background: linear-gradient(180deg, #1E293B 0%, #0F172A 100%);
+        border-right: 2px solid #334155;
     }
     section[data-testid="stSidebar"] * {
-        color: #FFFFFF !important;
+        color: #F1F5F9 !important;
+    }
+    section[data-testid="stSidebar"] h1,
+    section[data-testid="stSidebar"] h2,
+    section[data-testid="stSidebar"] h3 {
+        color: #10B981 !important;
     }
     
-    /* Buttons - HIGH VISIBILITY */
+    /* ============ BUTTONS - ENTERPRISE ============ */
     .stButton > button {
-        border-radius: 10px;
+        border-radius: 8px;
         font-weight: 700;
-        transition: all 0.3s ease;
-        border: 2px solid #00D9FF;
-        background: linear-gradient(135deg, #0099CC 0%, #0066AA 100%);
+        transition: all 0.25s ease;
+        border: 2px solid #10B981;
+        background: linear-gradient(135deg, #10B981 0%, #059669 100%);
         color: #FFFFFF !important;
-        font-size: 15px;
+        font-size: 14px;
         padding: 10px 20px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
     }
     .stButton > button:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 6px 20px rgba(0, 217, 255, 0.5);
-        background: linear-gradient(135deg, #00D9FF 0%, #0099CC 100%);
-        border-color: #00FFFF;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(16, 185, 129, 0.4);
+        background: linear-gradient(135deg, #34D399 0%, #10B981 100%);
+        border-color: #34D399;
     }
     
-    /* Data Tables - HIGH CONTRAST */
+    /* Secondary buttons */
+    .stButton > button[kind="secondary"] {
+        background: transparent;
+        border: 2px solid #475569;
+        color: #E2E8F0 !important;
+    }
+    .stButton > button[kind="secondary"]:hover {
+        border-color: #10B981;
+        color: #10B981 !important;
+    }
+    
+    /* ============ DATA TABLES ============ */
     .dataframe {
-        color: #FFFFFF !important;
-        background-color: #1a1f2e !important;
+        color: #F1F5F9 !important;
+        background-color: #1E293B !important;
+        border: 1px solid #334155 !important;
     }
     .dataframe th {
-        background-color: #0099CC !important;
-        color: #FFFFFF !important;
+        background: linear-gradient(180deg, #334155 0%, #1E293B 100%) !important;
+        color: #F1F5F9 !important;
         font-weight: 700 !important;
         padding: 12px !important;
+        border-bottom: 2px solid #10B981 !important;
+        text-transform: uppercase;
+        font-size: 12px;
+        letter-spacing: 0.5px;
     }
     .dataframe td {
-        color: #E8E8E8 !important;
-        border-color: #3a4f6f !important;
+        color: #E2E8F0 !important;
+        border-color: #334155 !important;
         padding: 10px !important;
     }
+    .dataframe tr:hover td {
+        background-color: #334155 !important;
+    }
     
-    /* Input Fields - HIGH VISIBILITY */
+    /* ============ INPUTS ============ */
     input, textarea, select {
-        background-color: #1a2332 !important;
-        color: #FFFFFF !important;
-        border: 2px solid #3a4f6f !important;
+        background-color: #1E293B !important;
+        color: #F1F5F9 !important;
+        border: 2px solid #334155 !important;
+        border-radius: 8px !important;
+    }
+    input:focus, textarea:focus, select:focus {
+        border-color: #10B981 !important;
+        box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2) !important;
     }
     
-    /* Selectbox and Multiselect */
+    /* Selectbox */
     .stSelectbox > div > div {
-        background-color: #1a2332;
-        color: #FFFFFF;
+        background-color: #1E293B !important;
+        color: #F1F5F9 !important;
+        border: 2px solid #334155 !important;
     }
     
-    /* Expanders - HIGH CONTRAST */
+    /* ============ EXPANDERS ============ */
     .streamlit-expanderHeader {
-        background-color: #1a2332 !important;
-        color: #00D9FF !important;
+        background-color: #1E293B !important;
+        color: #10B981 !important;
         font-weight: 700 !important;
-        border: 2px solid #3a4f6f !important;
+        border: 1px solid #334155 !important;
         border-radius: 8px;
     }
+    .streamlit-expanderContent {
+        background-color: #0F172A !important;
+        border: 1px solid #334155 !important;
+        border-top: none !important;
+    }
     
-    /* Code Blocks */
+    /* ============ CODE BLOCKS ============ */
     code {
-        background-color: #1a2332 !important;
-        color: #00FF88 !important;
+        background-color: #1E293B !important;
+        color: #34D399 !important;
         padding: 4px 8px;
         border-radius: 4px;
-        border: 1px solid #3a4f6f;
+        border: 1px solid #334155;
+        font-family: 'Monaco', 'Consolas', monospace;
+    }
+    pre {
+        background-color: #1E293B !important;
+        border: 1px solid #334155 !important;
+        border-radius: 8px;
+        padding: 16px !important;
     }
     
-    /* Progress Bars */
+    /* ============ PROGRESS BARS ============ */
     .stProgress > div > div {
-        background-color: #00D9FF !important;
+        background: linear-gradient(90deg, #10B981 0%, #34D399 100%) !important;
+        border-radius: 4px;
     }
     
-    /* Professional spacing */
+    /* ============ DIVIDERS ============ */
+    hr {
+        border-color: #334155 !important;
+        margin: 24px 0 !important;
+    }
+    
+    /* ============ LAYOUT ============ */
     .block-container {
         padding-top: 2rem;
         padding-bottom: 2rem;
         max-width: 100%;
     }
     
-    /* Plotly Charts Background Fix */
+    /* ============ CHARTS ============ */
     .js-plotly-plot {
         background-color: transparent !important;
+    }
+    
+    /* ============ DASHBOARD CARDS ============ */
+    .dashboard-card {
+        background: linear-gradient(135deg, #1E293B 0%, #0F172A 100%);
+        border: 1px solid #334155;
+        border-radius: 12px;
+        padding: 20px;
+        margin: 8px 0;
+        transition: all 0.25s ease;
+    }
+    .dashboard-card:hover {
+        border-color: #10B981;
+        box-shadow: 0 4px 16px rgba(16, 185, 129, 0.2);
+        transform: translateY(-2px);
+    }
+    .dashboard-card-header {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: #10B981 !important;
+        margin-bottom: 12px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+    .dashboard-card-value {
+        font-size: 2rem;
+        font-weight: 800;
+        color: #FFFFFF !important;
+    }
+    .dashboard-card-subtitle {
+        font-size: 0.85rem;
+        color: #94A3B8 !important;
+        margin-top: 8px;
+    }
+    
+    /* ============ AGENT STATUS CARDS ============ */
+    .agent-card {
+        background: linear-gradient(135deg, #1E293B 0%, #0F172A 100%);
+        border: 1px solid #334155;
+        border-left: 4px solid #10B981;
+        border-radius: 8px;
+        padding: 16px;
+        margin: 8px 0;
+    }
+    .agent-card-active {
+        border-left-color: #22C55E;
+    }
+    .agent-card-warning {
+        border-left-color: #F59E0B;
+    }
+    .agent-card-critical {
+        border-left-color: #EF4444;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -708,50 +811,147 @@ tab1, tab2, tab3, tab4, tab5, tab6, tab7, tab8, tab9, tab10 = st.tabs([
 ])
 
 with tab1:
-    st.header("Real-Time Operations Dashboard")
-    
-    # Top metrics
-    col1, col2, col3, col4 = st.columns(4)
-    
-    with col1:
-        st.metric(
-            "Actions Executed (24h)", 
-            st.session_state.actions_executed,
-            delta="+12 vs yesterday",
-            delta_color="normal"
-        )
-    
-    with col2:
-        st.metric(
-            "Cost Savings (30d)", 
-            f"${st.session_state.cost_savings:,}",
-            delta="+$89K vs last month",
-            delta_color="normal"
-        )
-    
-    with col3:
-        st.metric(
-            "Anomalies Detected", 
-            st.session_state.anomalies_detected,
-            delta="-2 vs yesterday",
-            delta_color="inverse"
-        )
-    
-    with col4:
-        st.metric(
-            "Avg Response Time", 
-            "1.2s",
-            delta="-0.3s improvement",
-            delta_color="inverse"
-        )
+    # ============ TECHGUARD RAILS - UNIFIED COMMAND CENTER ============
+    st.markdown("""
+    <div style='text-align: center; padding: 20px 0;'>
+        <h1 style='font-size: 2.5rem; font-weight: 800; color: #10B981; margin-bottom: 8px;'>
+            🛡️ TechGuard Rails Command Center
+        </h1>
+        <p style='font-size: 1.1rem; color: #94A3B8;'>
+            Unified Operations Dashboard | 640+ AWS Accounts | 6 AI Agents | Real-Time Autonomous Operations
+        </p>
+    </div>
+    """, unsafe_allow_html=True)
     
     st.markdown("---")
     
-    # Cost trend chart
-    col1, col2 = st.columns([2, 1])
+    # ============ TOP-LEVEL KPIs ============
+    st.markdown("### 📊 Platform Overview")
     
-    with col1:
-        st.subheader("💵 Cost Trend & Optimization Impact")
+    kpi1, kpi2, kpi3, kpi4, kpi5, kpi6 = st.columns(6)
+    
+    with kpi1:
+        st.metric("AWS Accounts", "640", delta="+3 this week")
+    with kpi2:
+        st.metric("AI Actions (24h)", str(st.session_state.actions_executed + 156), delta="+23%")
+    with kpi3:
+        st.metric("Cost Savings", f"${st.session_state.cost_savings + 487000:,}", delta="+$89K")
+    with kpi4:
+        st.metric("Threats Blocked", "47", delta="-8 vs yesterday", delta_color="inverse")
+    with kpi5:
+        st.metric("Compliance", "97.2%", delta="+0.4%")
+    with kpi6:
+        st.metric("Uptime", "99.97%", delta="+0.02%")
+    
+    st.markdown("---")
+    
+    # ============ ALL 6 AGENTS STATUS - SINGLE VIEW ============
+    st.markdown("### 🤖 AI Agent Status - All Systems")
+    
+    agent_col1, agent_col2, agent_col3 = st.columns(3)
+    
+    with agent_col1:
+        # Security Agent
+        st.markdown("""
+        <div style='background: linear-gradient(135deg, #1E293B 0%, #0F172A 100%); border: 1px solid #334155; border-left: 4px solid #22C55E; border-radius: 8px; padding: 16px; margin: 8px 0;'>
+            <div style='display: flex; justify-content: space-between; align-items: center;'>
+                <span style='font-size: 1.2rem; font-weight: 700; color: #F1F5F9;'>🛡️ Security Agent</span>
+                <span style='background: #22C55E; color: white; padding: 4px 12px; border-radius: 4px; font-size: 12px; font-weight: 700;'>ACTIVE</span>
+            </div>
+            <div style='margin-top: 12px; display: flex; gap: 20px;'>
+                <div><span style='color: #94A3B8; font-size: 12px;'>Threats Blocked</span><br/><span style='font-size: 1.5rem; font-weight: 700; color: #10B981;'>47</span></div>
+                <div><span style='color: #94A3B8; font-size: 12px;'>Response Time</span><br/><span style='font-size: 1.5rem; font-weight: 700; color: #10B981;'>1.2s</span></div>
+                <div><span style='color: #94A3B8; font-size: 12px;'>Risk Score</span><br/><span style='font-size: 1.5rem; font-weight: 700; color: #22C55E;'>23/100</span></div>
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+        
+        # Compliance Agent
+        st.markdown("""
+        <div style='background: linear-gradient(135deg, #1E293B 0%, #0F172A 100%); border: 1px solid #334155; border-left: 4px solid #22C55E; border-radius: 8px; padding: 16px; margin: 8px 0;'>
+            <div style='display: flex; justify-content: space-between; align-items: center;'>
+                <span style='font-size: 1.2rem; font-weight: 700; color: #F1F5F9;'>⚖️ Compliance Agent</span>
+                <span style='background: #22C55E; color: white; padding: 4px 12px; border-radius: 4px; font-size: 12px; font-weight: 700;'>ACTIVE</span>
+            </div>
+            <div style='margin-top: 12px; display: flex; gap: 20px;'>
+                <div><span style='color: #94A3B8; font-size: 12px;'>Score</span><br/><span style='font-size: 1.5rem; font-weight: 700; color: #10B981;'>97.2%</span></div>
+                <div><span style='color: #94A3B8; font-size: 12px;'>Violations Fixed</span><br/><span style='font-size: 1.5rem; font-weight: 700; color: #10B981;'>34</span></div>
+                <div><span style='color: #94A3B8; font-size: 12px;'>Frameworks</span><br/><span style='font-size: 1.5rem; font-weight: 700; color: #10B981;'>5</span></div>
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+    
+    with agent_col2:
+        # DevOps Agent
+        st.markdown("""
+        <div style='background: linear-gradient(135deg, #1E293B 0%, #0F172A 100%); border: 1px solid #334155; border-left: 4px solid #22C55E; border-radius: 8px; padding: 16px; margin: 8px 0;'>
+            <div style='display: flex; justify-content: space-between; align-items: center;'>
+                <span style='font-size: 1.2rem; font-weight: 700; color: #F1F5F9;'>⚙️ DevOps Agent</span>
+                <span style='background: #22C55E; color: white; padding: 4px 12px; border-radius: 4px; font-size: 12px; font-weight: 700;'>ACTIVE</span>
+            </div>
+            <div style='margin-top: 12px; display: flex; gap: 20px;'>
+                <div><span style='color: #94A3B8; font-size: 12px;'>Pipelines</span><br/><span style='font-size: 1.5rem; font-weight: 700; color: #10B981;'>23</span></div>
+                <div><span style='color: #94A3B8; font-size: 12px;'>Optimized</span><br/><span style='font-size: 1.5rem; font-weight: 700; color: #10B981;'>47</span></div>
+                <div><span style='color: #94A3B8; font-size: 12px;'>Build Time</span><br/><span style='font-size: 1.5rem; font-weight: 700; color: #10B981;'>-45%</span></div>
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+        
+        # Database Agent
+        st.markdown("""
+        <div style='background: linear-gradient(135deg, #1E293B 0%, #0F172A 100%); border: 1px solid #334155; border-left: 4px solid #22C55E; border-radius: 8px; padding: 16px; margin: 8px 0;'>
+            <div style='display: flex; justify-content: space-between; align-items: center;'>
+                <span style='font-size: 1.2rem; font-weight: 700; color: #F1F5F9;'>🗄️ Database Agent</span>
+                <span style='background: #22C55E; color: white; padding: 4px 12px; border-radius: 4px; font-size: 12px; font-weight: 700;'>ACTIVE</span>
+            </div>
+            <div style='margin-top: 12px; display: flex; gap: 20px;'>
+                <div><span style='color: #94A3B8; font-size: 12px;'>Access Requests</span><br/><span style='font-size: 1.5rem; font-weight: 700; color: #10B981;'>32</span></div>
+                <div><span style='color: #94A3B8; font-size: 12px;'>Auto-Approved</span><br/><span style='font-size: 1.5rem; font-weight: 700; color: #10B981;'>28</span></div>
+                <div><span style='color: #94A3B8; font-size: 12px;'>Active</span><br/><span style='font-size: 1.5rem; font-weight: 700; color: #10B981;'>18</span></div>
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+    
+    with agent_col3:
+        # FinOps Agent
+        st.markdown("""
+        <div style='background: linear-gradient(135deg, #1E293B 0%, #0F172A 100%); border: 1px solid #334155; border-left: 4px solid #22C55E; border-radius: 8px; padding: 16px; margin: 8px 0;'>
+            <div style='display: flex; justify-content: space-between; align-items: center;'>
+                <span style='font-size: 1.2rem; font-weight: 700; color: #F1F5F9;'>💰 FinOps Agent</span>
+                <span style='background: #22C55E; color: white; padding: 4px 12px; border-radius: 4px; font-size: 12px; font-weight: 700;'>ACTIVE</span>
+            </div>
+            <div style='margin-top: 12px; display: flex; gap: 20px;'>
+                <div><span style='color: #94A3B8; font-size: 12px;'>Monthly Spend</span><br/><span style='font-size: 1.5rem; font-weight: 700; color: #10B981;'>$2.8M</span></div>
+                <div><span style='color: #94A3B8; font-size: 12px;'>Savings</span><br/><span style='font-size: 1.5rem; font-weight: 700; color: #22C55E;'>$487K</span></div>
+                <div><span style='color: #94A3B8; font-size: 12px;'>Optimization</span><br/><span style='font-size: 1.5rem; font-weight: 700; color: #10B981;'>18.2%</span></div>
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+        
+        # Policy Engine
+        st.markdown("""
+        <div style='background: linear-gradient(135deg, #1E293B 0%, #0F172A 100%); border: 1px solid #334155; border-left: 4px solid #22C55E; border-radius: 8px; padding: 16px; margin: 8px 0;'>
+            <div style='display: flex; justify-content: space-between; align-items: center;'>
+                <span style='font-size: 1.2rem; font-weight: 700; color: #F1F5F9;'>📋 Policy Engine</span>
+                <span style='background: #22C55E; color: white; padding: 4px 12px; border-radius: 4px; font-size: 12px; font-weight: 700;'>ACTIVE</span>
+            </div>
+            <div style='margin-top: 12px; display: flex; gap: 20px;'>
+                <div><span style='color: #94A3B8; font-size: 12px;'>Active Policies</span><br/><span style='font-size: 1.5rem; font-weight: 700; color: #10B981;'>87</span></div>
+                <div><span style='color: #94A3B8; font-size: 12px;'>AI-Generated</span><br/><span style='font-size: 1.5rem; font-weight: 700; color: #10B981;'>34</span></div>
+                <div><span style='color: #94A3B8; font-size: 12px;'>Effectiveness</span><br/><span style='font-size: 1.5rem; font-weight: 700; color: #10B981;'>96.4%</span></div>
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+    
+    st.markdown("---")
+    
+    # ============ FINOPS & COST OVERVIEW ============
+    st.markdown("### 💰 FinOps Intelligence - Cost & Savings Overview")
+    
+    fin_col1, fin_col2 = st.columns([2, 1])
+    
+    with fin_col1:
+        # Cost trend chart
         cost_data = generate_cost_trend_data(mode=st.session_state.mode)
         
         fig = go.Figure()
@@ -759,69 +959,122 @@ with tab1:
             x=cost_data['Date'],
             y=cost_data['Baseline'],
             name='Baseline (No AI)',
-            line=dict(color='#BF616A', width=2, dash='dash')
+            line=dict(color='#EF4444', width=2, dash='dash')
         ))
         fig.add_trace(go.Scatter(
             x=cost_data['Date'],
             y=cost_data['Optimized'],
             name='AI-Optimized',
-            line=dict(color='#A3BE8C', width=3),
-            fill='tonexty'
+            line=dict(color='#10B981', width=3),
+            fill='tonexty',
+            fillcolor='rgba(16, 185, 129, 0.1)'
         ))
         
         fig.update_layout(
             template='plotly_dark',
-            height=400,
+            height=350,
+            paper_bgcolor='rgba(0,0,0,0)',
+            plot_bgcolor='rgba(0,0,0,0)',
             xaxis_title='Date',
             yaxis_title='Daily Cost ($)',
             hovermode='x unified',
-            legend=dict(orientation='h', yanchor='bottom', y=1.02)
+            legend=dict(orientation='h', yanchor='bottom', y=1.02),
+            font=dict(color='#F1F5F9')
         )
         
         st.plotly_chart(fig, use_container_width=True)
-        
-        st.info("📊 **AI Impact:** $487K saved in last 30 days through autonomous optimizations")
     
-    with col2:
-        st.subheader("🎯 Agent Activity")
+    with fin_col2:
+        st.markdown("#### 📈 Savings Breakdown")
         
-        agent_statuses = [
-            ("Cost Optimization", "🟢 Active", 23),
-            ("Commitment Agent", "🟡 Idle", 8),
-            ("Anomaly Detection", "🔵 Processing", 15),
-            ("Forecast Agent", "🟢 Active", 12),
-            ("Storage Optimizer", "🟢 Active", 31),
-            ("Placement Agent", "🟡 Idle", 6)
+        savings_data = {
+            'Category': ['EC2 Rightsizing', 'Idle Resources', 'RI/Savings Plans', 'Storage Optimization', 'Other'],
+            'Savings': [156000, 89000, 134000, 67000, 41000]
+        }
+        
+        fig_pie = go.Figure(data=[go.Pie(
+            labels=savings_data['Category'],
+            values=savings_data['Savings'],
+            hole=.4,
+            marker_colors=['#10B981', '#22C55E', '#34D399', '#6EE7B7', '#A7F3D0']
+        )])
+        fig_pie.update_layout(
+            template='plotly_dark',
+            paper_bgcolor='rgba(0,0,0,0)',
+            height=300,
+            showlegend=True,
+            legend=dict(orientation='h', yanchor='bottom', y=-0.3),
+            font=dict(color='#F1F5F9')
+        )
+        st.plotly_chart(fig_pie, use_container_width=True)
+        
+        st.success(f"**Total Savings (30d):** ${sum(savings_data['Savings']):,}")
+    
+    st.markdown("---")
+    
+    # ============ SECURITY & COMPLIANCE SUMMARY ============
+    st.markdown("### 🛡️ Security & Compliance Summary")
+    
+    sec_col1, sec_col2, sec_col3 = st.columns(3)
+    
+    with sec_col1:
+        st.markdown("#### Threat Detection")
+        threat_data = {'Status': ['Blocked', 'Remediating', 'Pending'], 'Count': [42, 3, 2]}
+        
+        fig_bar = go.Figure(data=[go.Bar(
+            x=threat_data['Status'],
+            y=threat_data['Count'],
+            marker_color=['#22C55E', '#F59E0B', '#EF4444']
+        )])
+        fig_bar.update_layout(
+            template='plotly_dark',
+            paper_bgcolor='rgba(0,0,0,0)',
+            height=250,
+            font=dict(color='#F1F5F9')
+        )
+        st.plotly_chart(fig_bar, use_container_width=True)
+    
+    with sec_col2:
+        st.markdown("#### Compliance by Framework")
+        frameworks = {'Framework': ['PCI DSS', 'HIPAA', 'SOC 2', 'ISO 27001', 'GDPR'], 
+                     'Score': [96.5, 98.2, 94.8, 97.1, 99.0]}
+        
+        for fw, score in zip(frameworks['Framework'], frameworks['Score']):
+            color = '#22C55E' if score >= 95 else '#F59E0B' if score >= 90 else '#EF4444'
+            st.markdown(f"**{fw}**: {score}%")
+            st.progress(score/100)
+    
+    with sec_col3:
+        st.markdown("#### Recent Actions")
+        recent_actions = [
+            ("🛡️ Blocked S3 exposure", "2 min ago"),
+            ("💰 Terminated idle RDS", "5 min ago"),
+            ("⚖️ Fixed Config violation", "12 min ago"),
+            ("🗄️ Granted DB access", "18 min ago"),
+            ("📋 Deployed new policy", "25 min ago")
         ]
         
-        for agent, status, actions in agent_statuses:
+        for action, time in recent_actions:
             st.markdown(f"""
-            <div style='background: #2E3440; padding: 0.8rem; border-radius: 5px; margin: 0.5rem 0; border-left: 4px solid #5E81AC;'>
-                <strong>{agent}</strong><br/>
-                <small>{status} | {actions} actions today</small>
+            <div style='background: #1E293B; padding: 10px 12px; border-radius: 6px; margin: 6px 0; border-left: 3px solid #10B981;'>
+                <span style='color: #F1F5F9; font-weight: 500;'>{action}</span><br/>
+                <small style='color: #64748B;'>{time}</small>
             </div>
             """, unsafe_allow_html=True)
     
     st.markdown("---")
     
-    # Recent activity
-    st.subheader("🔔 Recent Agent Activity")
-    activity_df = generate_agent_activity()
+    # ============ RECENT ACTIVITY TABLE ============
+    st.markdown("### 📋 Recent Agent Activity Log")
     
-    # Style the dataframe
+    activity_df = generate_agent_activity()
     st.dataframe(
         activity_df,
         use_container_width=True,
         hide_index=True,
         column_config={
-            "Timestamp": st.column_config.DatetimeColumn(
-                "Timestamp",
-                format="MMM DD, HH:mm"
-            ),
-            "Impact": st.column_config.TextColumn(
-                "Impact",
-                width="small"
-            )
+            "Timestamp": st.column_config.DatetimeColumn("Timestamp", format="MMM DD, HH:mm"),
+            "Impact": st.column_config.TextColumn("Impact", width="small")
         }
     )
 
@@ -3642,9 +3895,9 @@ VIOLATION PATTERN ANALYSIS:
 # Footer
 st.markdown("---")
 st.markdown("""
-<div style='text-align: center; color: #FFFFFF; padding: 2rem; background: linear-gradient(135deg, #1a2332 0%, #0f1419 100%); border-radius: 10px; border: 1px solid #00D9FF;'>
-    <strong style='font-size: 1.2rem; color: #00D9FF;'>🤖 AI-Powered Cloud Operations Platform</strong><br/>
-    <span style='color: #E8E8E8;'>Transform Phase | AWS Bedrock + Claude 4 | 640+ AWS Accounts | Autonomous Operations</span><br/>
-    <small style='color: #888;'>Tech Guardrails Platform v2.0 | All 6 Agents Operational</small>
+<div style='text-align: center; padding: 24px; background: linear-gradient(135deg, #1E293B 0%, #0F172A 100%); border-radius: 12px; border: 1px solid #334155; margin-top: 20px;'>
+    <div style='font-size: 1.3rem; font-weight: 700; color: #10B981; margin-bottom: 8px;'>🛡️ TechGuard Rails Platform</div>
+    <div style='color: #CBD5E1; font-size: 0.95rem;'>Enterprise Cloud Operations | AWS Bedrock + Claude 4 | 640+ AWS Accounts | 6 AI Agents</div>
+    <div style='color: #64748B; font-size: 0.85rem; margin-top: 8px;'>Version 2.0 | All Systems Operational | Transform Phase</div>
 </div>
 """, unsafe_allow_html=True)
