@@ -164,21 +164,63 @@ st.markdown("""
         font-weight: 600;
     }
     
-    /* ============ SIDEBAR ============ */
+    /* ============ SIDEBAR - FORCE VISIBLE ============ */
+    /* Ensure sidebar is visible and expanded */
     section[data-testid="stSidebar"] {
-        background: linear-gradient(180deg, #1E293B 0%, #0F172A 100%);
-        border-right: 2px solid #334155;
+        background: linear-gradient(180deg, #1E293B 0%, #0F172A 100%) !important;
+        border-right: 3px solid #10B981 !important;
+        min-width: 320px !important;
+        width: 320px !important;
     }
+    
+    /* Sidebar collapse button - make it visible */
+    button[data-testid="stSidebarCollapseButton"],
+    [data-testid="collapsedControl"] {
+        color: #10B981 !important;
+        background: #1E293B !important;
+        border: 2px solid #10B981 !important;
+    }
+    
+    /* Sidebar expand button when collapsed */
+    button[kind="header"] {
+        background: #10B981 !important;
+        color: #FFFFFF !important;
+    }
+    
+    /* Force sidebar to be visible */
+    section[data-testid="stSidebar"] > div {
+        background: transparent !important;
+    }
+    
+    /* ALL sidebar text white */
     section[data-testid="stSidebar"] * {
         color: #FFFFFF !important;
     }
     
-    /* SIDEBAR RADIO BUTTONS - Force white text */
+    /* Sidebar headers */
+    section[data-testid="stSidebar"] h1,
+    section[data-testid="stSidebar"] h2,
+    section[data-testid="stSidebar"] h3,
+    section[data-testid="stSidebar"] h4 {
+        color: #10B981 !important;
+        font-weight: 700 !important;
+    }
+    
+    /* SIDEBAR RADIO BUTTONS - Force visible */
+    section[data-testid="stSidebar"] .stRadio {
+        background-color: rgba(30, 41, 59, 0.8) !important;
+        padding: 12px !important;
+        border-radius: 8px !important;
+        border: 1px solid #334155 !important;
+    }
     section[data-testid="stSidebar"] .stRadio label {
         color: #FFFFFF !important;
+        font-weight: 600 !important;
+        font-size: 14px !important;
     }
     section[data-testid="stSidebar"] .stRadio p {
         color: #FFFFFF !important;
+        font-size: 14px !important;
     }
     section[data-testid="stSidebar"] .stRadio span {
         color: #FFFFFF !important;
@@ -186,8 +228,33 @@ st.markdown("""
     section[data-testid="stSidebar"] .stRadio div {
         color: #FFFFFF !important;
     }
-    section[data-testid="stSidebar"] [data-testid="stMarkdownContainer"] p {
+    section[data-testid="stSidebar"] .stRadio [data-testid="stMarkdownContainer"] p {
         color: #FFFFFF !important;
+        font-size: 14px !important;
+        font-weight: 500 !important;
+    }
+    
+    /* Sidebar metrics */
+    section[data-testid="stSidebar"] [data-testid="stMetricValue"] {
+        color: #10B981 !important;
+        font-size: 1.5rem !important;
+    }
+    section[data-testid="stSidebar"] [data-testid="stMetricLabel"] {
+        color: #FFFFFF !important;
+    }
+    
+    /* Sidebar buttons */
+    section[data-testid="stSidebar"] .stButton > button {
+        background: linear-gradient(135deg, #10B981 0%, #059669 100%) !important;
+        color: #FFFFFF !important;
+        border: none !important;
+        font-weight: 700 !important;
+    }
+    
+    /* Sidebar info/success/warning boxes */
+    section[data-testid="stSidebar"] .stAlert {
+        background-color: rgba(16, 185, 129, 0.1) !important;
+        border: 1px solid #10B981 !important;
     }
     
     /* ============ BUTTONS ============ */
@@ -794,16 +861,25 @@ st.markdown("""
 # Sidebar with enhanced professional design
 with st.sidebar:
     # Header with icon
-    col1, col2 = st.columns([1, 3])
-    with col1:
-        st.image("https://img.icons8.com/fluency/96/artificial-intelligence.png", width=70)
-    with col2:
-        st.markdown("### Control Center")
+    st.markdown("""
+    <div style='text-align: center; padding: 10px 0;'>
+        <h2 style='color: #10B981; margin: 0;'>🛡️ TechGuard Rails</h2>
+        <p style='color: #94A3B8; font-size: 12px; margin: 5px 0 0 0;'>Control Center</p>
+    </div>
+    """, unsafe_allow_html=True)
     
     st.markdown("---")
     
-    # MODE TOGGLE - Demo vs Live AWS
+    # MODE TOGGLE - Demo vs Live AWS - PROMINENT
     st.markdown("#### 🎮 Data Source")
+    
+    # Create a more visible mode selector
+    st.markdown("""
+    <div style='background: rgba(16, 185, 129, 0.1); border: 1px solid #10B981; border-radius: 8px; padding: 10px; margin-bottom: 10px;'>
+        <p style='color: #10B981; font-size: 12px; margin: 0; text-align: center;'>Select Mode Below</p>
+    </div>
+    """, unsafe_allow_html=True)
+    
     mode_options = {
         "🎬 Demo Mode": "demo",
         "🔴 Live AWS": "live"
@@ -817,11 +893,24 @@ with st.sidebar:
     )
     st.session_state.mode = mode_options[selected_mode]
     
-    # Show AWS connection status if in live mode
-    if st.session_state.mode == 'live':
+    # Show current mode status prominently
+    if st.session_state.mode == 'demo':
+        st.markdown("""
+        <div style='background: #3B82F6; color: white; padding: 10px; border-radius: 8px; text-align: center; margin: 10px 0;'>
+            <strong>📊 DEMO MODE ACTIVE</strong><br/>
+            <small>Using simulated data</small>
+        </div>
+        """, unsafe_allow_html=True)
+    else:
+        # Show AWS connection status if in live mode
         aws_session = get_aws_session()
         if aws_session:
-            st.success("✅ AWS Connected")
+            st.markdown("""
+            <div style='background: #22C55E; color: white; padding: 10px; border-radius: 8px; text-align: center; margin: 10px 0;'>
+                <strong>✅ AWS CONNECTED</strong><br/>
+                <small>Live data active</small>
+            </div>
+            """, unsafe_allow_html=True)
             try:
                 sts = aws_session.client('sts')
                 identity = sts.get_caller_identity()
@@ -829,7 +918,12 @@ with st.sidebar:
             except:
                 pass
         else:
-            st.error("❌ AWS Not Connected")
+            st.markdown("""
+            <div style='background: #EF4444; color: white; padding: 10px; border-radius: 8px; text-align: center; margin: 10px 0;'>
+                <strong>❌ AWS NOT CONNECTED</strong><br/>
+                <small>Check credentials</small>
+            </div>
+            """, unsafe_allow_html=True)
             with st.expander("📖 Connection Guide"):
                 st.info("""
                 **To connect AWS:**
@@ -837,12 +931,16 @@ with st.sidebar:
                 2. Use IAM role (if on AWS)
                 3. Configure ~/.aws/credentials
                 """)
-    else:
-        st.info("📊 Using simulated demo data")
     
     st.markdown("---")
-    st.markdown("#### System Status")
-    st.success("🟢 All Systems Operational")
+    
+    # System Status
+    st.markdown("#### ⚡ System Status")
+    st.markdown("""
+    <div style='background: rgba(34, 197, 94, 0.2); border: 1px solid #22C55E; border-radius: 8px; padding: 10px; text-align: center;'>
+        <span style='color: #22C55E; font-weight: 700;'>🟢 All Systems Operational</span>
+    </div>
+    """, unsafe_allow_html=True)
     
     col1, col2 = st.columns(2)
     with col1:
@@ -851,6 +949,8 @@ with st.sidebar:
         st.metric("Agents", "6/6", delta="0")
     
     st.markdown("---")
+    
+    # Quick Stats
     st.markdown("#### 📊 Quick Stats")
     
     col1, col2 = st.columns(2)
@@ -862,6 +962,8 @@ with st.sidebar:
         st.metric("Actions", st.session_state.actions_executed, delta="+5")
     
     st.markdown("---")
+    
+    # Demo Controls
     st.markdown("#### 🎮 Demo Controls")
     
     if st.button("🎯 Cost Optimization", use_container_width=True, type="primary"):
@@ -883,6 +985,16 @@ with st.sidebar:
         st.session_state.anomalies_detected = 0
         st.session_state.agent_decisions = []
         st.rerun()
+    
+    st.markdown("---")
+    
+    # Footer
+    st.markdown("""
+    <div style='text-align: center; padding: 10px 0;'>
+        <small style='color: #64748B;'>TechGuard Rails v2.0</small><br/>
+        <small style='color: #64748B;'>640 AWS Accounts | 6 Agents</small>
+    </div>
+    """, unsafe_allow_html=True)
 
 
 # Add visual separation before tabs
