@@ -1000,6 +1000,45 @@ with st.sidebar:
 # Add visual separation before tabs
 st.markdown("<br>", unsafe_allow_html=True)
 
+# ============ MAIN PAGE HEADER WITH MODE TOGGLE ============
+header_col1, header_col2, header_col3 = st.columns([2, 1, 1])
+
+with header_col1:
+    st.markdown("""
+    <div style='padding: 10px 0;'>
+        <h2 style='color: #10B981; margin: 0; font-size: 1.8rem;'>🛡️ TechGuard Rails Platform</h2>
+        <p style='color: #94A3B8; margin: 5px 0 0 0; font-size: 14px;'>AI-Powered Cloud Operations | 640+ AWS Accounts</p>
+    </div>
+    """, unsafe_allow_html=True)
+
+with header_col2:
+    # MODE TOGGLE - Always visible on main page
+    mode_choice = st.radio(
+        "🎮 Data Mode:",
+        ["🎬 Demo", "🔴 Live AWS"],
+        index=0 if st.session_state.mode == 'demo' else 1,
+        horizontal=True,
+        key="main_mode_toggle"
+    )
+    st.session_state.mode = 'demo' if "Demo" in mode_choice else 'live'
+
+with header_col3:
+    # Status indicator
+    if st.session_state.mode == 'demo':
+        st.markdown("""
+        <div style='background: #3B82F6; color: white; padding: 12px 16px; border-radius: 8px; text-align: center; margin-top: 10px;'>
+            <strong>📊 DEMO MODE</strong>
+        </div>
+        """, unsafe_allow_html=True)
+    else:
+        st.markdown("""
+        <div style='background: #22C55E; color: white; padding: 12px 16px; border-radius: 8px; text-align: center; margin-top: 10px;'>
+            <strong>🔴 LIVE AWS</strong>
+        </div>
+        """, unsafe_allow_html=True)
+
+st.markdown("---")
+
 # Main content tabs with better labels
 tab1, tab2, tab3, tab4, tab5, tab6, tab7, tab8, tab9, tab10 = st.tabs([
     "📊 Dashboard", 
