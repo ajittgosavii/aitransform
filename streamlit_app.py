@@ -33,7 +33,7 @@ st.markdown("""
         background-color: #0F172A !important;
     }
     
-    /* ALL TEXT WHITE */
+    /* AGGRESSIVE: ALL TEXT WHITE */
     .stMarkdown, .stMarkdown p, .stMarkdown span, .stMarkdown div,
     .stMarkdown li, .element-container, .stText, p, span, li {
         color: #FFFFFF !important;
@@ -49,6 +49,71 @@ st.markdown("""
     label, .stSelectbox label, .stRadio label, .stTextInput label {
         color: #FFFFFF !important;
         font-weight: 600 !important;
+    }
+    
+    /* ============ RADIO BUTTONS - CRITICAL FIX ============ */
+    /* Target ALL radio button text elements */
+    .stRadio {
+        color: #FFFFFF !important;
+    }
+    .stRadio label {
+        color: #FFFFFF !important;
+    }
+    .stRadio p {
+        color: #FFFFFF !important;
+    }
+    .stRadio span {
+        color: #FFFFFF !important;
+    }
+    .stRadio div {
+        color: #FFFFFF !important;
+    }
+    
+    /* Radio option text - multiple selectors for maximum coverage */
+    [data-testid="stRadio"] label {
+        color: #FFFFFF !important;
+    }
+    [data-testid="stRadio"] p {
+        color: #FFFFFF !important;
+    }
+    [data-testid="stRadio"] span {
+        color: #FFFFFF !important;
+    }
+    
+    /* BaseWeb radio component text */
+    [data-baseweb="radio"] ~ div {
+        color: #FFFFFF !important;
+    }
+    [data-baseweb="radio"] + div {
+        color: #FFFFFF !important;
+    }
+    [data-baseweb="radio-group"] label {
+        color: #FFFFFF !important;
+    }
+    [data-baseweb="radio-group"] p {
+        color: #FFFFFF !important;
+    }
+    
+    /* Role-based selectors */
+    [role="radiogroup"] label {
+        color: #FFFFFF !important;
+    }
+    [role="radiogroup"] p {
+        color: #FFFFFF !important;
+    }
+    [role="radiogroup"] span {
+        color: #FFFFFF !important;
+    }
+    [role="radiogroup"] div {
+        color: #FFFFFF !important;
+    }
+    
+    /* Markdown inside radio */
+    .stRadio [data-testid="stMarkdownContainer"] {
+        color: #FFFFFF !important;
+    }
+    .stRadio [data-testid="stMarkdownContainer"] p {
+        color: #FFFFFF !important;
     }
     
     /* ============ TABS ============ */
@@ -101,6 +166,23 @@ st.markdown("""
         color: #FFFFFF !important;
     }
     
+    /* SIDEBAR RADIO BUTTONS - Force white text */
+    section[data-testid="stSidebar"] .stRadio label {
+        color: #FFFFFF !important;
+    }
+    section[data-testid="stSidebar"] .stRadio p {
+        color: #FFFFFF !important;
+    }
+    section[data-testid="stSidebar"] .stRadio span {
+        color: #FFFFFF !important;
+    }
+    section[data-testid="stSidebar"] .stRadio div {
+        color: #FFFFFF !important;
+    }
+    section[data-testid="stSidebar"] [data-testid="stMarkdownContainer"] p {
+        color: #FFFFFF !important;
+    }
+    
     /* ============ BUTTONS ============ */
     .stButton > button {
         border-radius: 8px;
@@ -143,16 +225,55 @@ st.markdown("""
         color: #FFFFFF !important;
     }
     
-    /* ============ RADIO - BLACK TEXT ON WHITE ============ */
+    /* ============ RADIO - VISIBLE TEXT ============ */
+    /* Radio container - keep transparent for sidebar */
     .stRadio > div {
-        background-color: #FFFFFF !important;
-        padding: 10px !important;
+        background-color: transparent !important;
+        padding: 8px !important;
         border-radius: 8px !important;
     }
-    .stRadio [role="radiogroup"] label,
+    
+    /* Radio group label (the title above radio buttons) */
+    .stRadio > label {
+        color: #FFFFFF !important;
+        font-weight: 600 !important;
+    }
+    
+    /* Each radio option container */
+    .stRadio [role="radiogroup"] {
+        gap: 8px !important;
+    }
+    
+    /* Radio option labels - THE KEY FIX */
+    .stRadio [role="radiogroup"] label {
+        color: #FFFFFF !important;
+        font-weight: 500 !important;
+        background-color: transparent !important;
+    }
+    
+    .stRadio [role="radiogroup"] label p,
     .stRadio [role="radiogroup"] label span,
-    .stRadio [data-baseweb="radio"] div {
-        color: #000000 !important;
+    .stRadio [role="radiogroup"] label div {
+        color: #FFFFFF !important;
+    }
+    
+    /* Radio button text specifically */
+    .stRadio [data-testid="stMarkdownContainer"] p {
+        color: #FFFFFF !important;
+    }
+    
+    /* Horizontal radio buttons */
+    .stRadio [data-baseweb="radio"] {
+        background-color: transparent !important;
+    }
+    
+    /* The actual text next to radio circle */
+    .stRadio div[data-testid="stMarkdownContainer"] {
+        color: #FFFFFF !important;
+    }
+    .stRadio div[data-testid="stMarkdownContainer"] p {
+        color: #FFFFFF !important;
+        margin: 0 !important;
     }
     
     /* ============ TEXT INPUT ============ */
