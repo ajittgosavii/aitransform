@@ -1180,6 +1180,238 @@ with tab1:
             "Impact": st.column_config.TextColumn("Impact", width="small")
         }
     )
+    
+    st.markdown("---")
+    
+    # ============ TECHGUARD RAILS - POLICY & SECURITY TOOLS ============
+    st.markdown("### 🔧 TechGuard Rails - Policy & Security Tools")
+    
+    st.markdown("""
+    <p style='color: #94A3B8; font-size: 14px;'>
+    Real-time status of IaC security scanners, policy engines, and guardrails protecting 640+ AWS accounts.
+    </p>
+    """, unsafe_allow_html=True)
+    
+    # Tools status in 4 columns
+    tools_col1, tools_col2, tools_col3, tools_col4 = st.columns(4)
+    
+    with tools_col1:
+        st.markdown("""
+        <div style='background: linear-gradient(135deg, #1E293B 0%, #0F172A 100%); border: 1px solid #334155; border-radius: 8px; padding: 16px; margin: 4px 0;'>
+            <div style='display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;'>
+                <span style='font-size: 1rem; font-weight: 700; color: #F1F5F9;'>🔍 KICS</span>
+                <span style='background: #22C55E; color: white; padding: 2px 8px; border-radius: 4px; font-size: 10px; font-weight: 700;'>ACTIVE</span>
+            </div>
+            <div style='color: #94A3B8; font-size: 11px;'>Keeping IaC Secure</div>
+            <div style='margin-top: 10px; font-size: 12px;'>
+                <div style='color: #F1F5F9;'>Scans Today: <span style='color: #10B981; font-weight: 700;'>847</span></div>
+                <div style='color: #F1F5F9;'>Issues Found: <span style='color: #F59E0B; font-weight: 700;'>23</span></div>
+                <div style='color: #F1F5F9;'>Auto-Fixed: <span style='color: #22C55E; font-weight: 700;'>18</span></div>
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+        
+        st.markdown("""
+        <div style='background: linear-gradient(135deg, #1E293B 0%, #0F172A 100%); border: 1px solid #334155; border-radius: 8px; padding: 16px; margin: 4px 0;'>
+            <div style='display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;'>
+                <span style='font-size: 1rem; font-weight: 700; color: #F1F5F9;'>🛡️ Checkov</span>
+                <span style='background: #22C55E; color: white; padding: 2px 8px; border-radius: 4px; font-size: 10px; font-weight: 700;'>ACTIVE</span>
+            </div>
+            <div style='color: #94A3B8; font-size: 11px;'>IaC Security Scanner</div>
+            <div style='margin-top: 10px; font-size: 12px;'>
+                <div style='color: #F1F5F9;'>Policies: <span style='color: #10B981; font-weight: 700;'>2,500+</span></div>
+                <div style='color: #F1F5F9;'>Pass Rate: <span style='color: #22C55E; font-weight: 700;'>94.7%</span></div>
+                <div style='color: #F1F5F9;'>Blocked PRs: <span style='color: #EF4444; font-weight: 700;'>12</span></div>
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+    
+    with tools_col2:
+        st.markdown("""
+        <div style='background: linear-gradient(135deg, #1E293B 0%, #0F172A 100%); border: 1px solid #334155; border-radius: 8px; padding: 16px; margin: 4px 0;'>
+            <div style='display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;'>
+                <span style='font-size: 1rem; font-weight: 700; color: #F1F5F9;'>⚖️ OPA/Rego</span>
+                <span style='background: #22C55E; color: white; padding: 2px 8px; border-radius: 4px; font-size: 10px; font-weight: 700;'>ACTIVE</span>
+            </div>
+            <div style='color: #94A3B8; font-size: 11px;'>Open Policy Agent</div>
+            <div style='margin-top: 10px; font-size: 12px;'>
+                <div style='color: #F1F5F9;'>Policies: <span style='color: #10B981; font-weight: 700;'>156</span></div>
+                <div style='color: #F1F5F9;'>Decisions/hr: <span style='color: #10B981; font-weight: 700;'>12.4K</span></div>
+                <div style='color: #F1F5F9;'>Denials: <span style='color: #EF4444; font-weight: 700;'>847</span></div>
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+        
+        st.markdown("""
+        <div style='background: linear-gradient(135deg, #1E293B 0%, #0F172A 100%); border: 1px solid #334155; border-radius: 8px; padding: 16px; margin: 4px 0;'>
+            <div style='display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;'>
+                <span style='font-size: 1rem; font-weight: 700; color: #F1F5F9;'>🔒 tfsec</span>
+                <span style='background: #22C55E; color: white; padding: 2px 8px; border-radius: 4px; font-size: 10px; font-weight: 700;'>ACTIVE</span>
+            </div>
+            <div style='color: #94A3B8; font-size: 11px;'>Terraform Security</div>
+            <div style='margin-top: 10px; font-size: 12px;'>
+                <div style='color: #F1F5F9;'>Modules Scanned: <span style='color: #10B981; font-weight: 700;'>234</span></div>
+                <div style='color: #F1F5F9;'>Critical: <span style='color: #EF4444; font-weight: 700;'>3</span></div>
+                <div style='color: #F1F5F9;'>High: <span style='color: #F59E0B; font-weight: 700;'>12</span></div>
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+    
+    with tools_col3:
+        st.markdown("""
+        <div style='background: linear-gradient(135deg, #1E293B 0%, #0F172A 100%); border: 1px solid #334155; border-radius: 8px; padding: 16px; margin: 4px 0;'>
+            <div style='display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;'>
+                <span style='font-size: 1rem; font-weight: 700; color: #F1F5F9;'>📋 AWS SCPs</span>
+                <span style='background: #22C55E; color: white; padding: 2px 8px; border-radius: 4px; font-size: 10px; font-weight: 700;'>ENFORCED</span>
+            </div>
+            <div style='color: #94A3B8; font-size: 11px;'>Service Control Policies</div>
+            <div style='margin-top: 10px; font-size: 12px;'>
+                <div style='color: #F1F5F9;'>Active SCPs: <span style='color: #10B981; font-weight: 700;'>47</span></div>
+                <div style='color: #F1F5F9;'>OUs Protected: <span style='color: #10B981; font-weight: 700;'>12</span></div>
+                <div style='color: #F1F5F9;'>Denials (24h): <span style='color: #EF4444; font-weight: 700;'>1,247</span></div>
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+        
+        st.markdown("""
+        <div style='background: linear-gradient(135deg, #1E293B 0%, #0F172A 100%); border: 1px solid #334155; border-radius: 8px; padding: 16px; margin: 4px 0;'>
+            <div style='display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;'>
+                <span style='font-size: 1rem; font-weight: 700; color: #F1F5F9;'>⚙️ AWS Config</span>
+                <span style='background: #22C55E; color: white; padding: 2px 8px; border-radius: 4px; font-size: 10px; font-weight: 700;'>ACTIVE</span>
+            </div>
+            <div style='color: #94A3B8; font-size: 11px;'>Config Rules</div>
+            <div style='margin-top: 10px; font-size: 12px;'>
+                <div style='color: #F1F5F9;'>Rules Active: <span style='color: #10B981; font-weight: 700;'>89</span></div>
+                <div style='color: #F1F5F9;'>Compliant: <span style='color: #22C55E; font-weight: 700;'>97.2%</span></div>
+                <div style='color: #F1F5F9;'>Auto-Remediated: <span style='color: #10B981; font-weight: 700;'>156</span></div>
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+    
+    with tools_col4:
+        st.markdown("""
+        <div style='background: linear-gradient(135deg, #1E293B 0%, #0F172A 100%); border: 1px solid #334155; border-radius: 8px; padding: 16px; margin: 4px 0;'>
+            <div style='display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;'>
+                <span style='font-size: 1rem; font-weight: 700; color: #F1F5F9;'>🔐 Sentinel</span>
+                <span style='background: #22C55E; color: white; padding: 2px 8px; border-radius: 4px; font-size: 10px; font-weight: 700;'>ACTIVE</span>
+            </div>
+            <div style='color: #94A3B8; font-size: 11px;'>HashiCorp Policy as Code</div>
+            <div style='margin-top: 10px; font-size: 12px;'>
+                <div style='color: #F1F5F9;'>Policies: <span style='color: #10B981; font-weight: 700;'>67</span></div>
+                <div style='color: #F1F5F9;'>TF Runs: <span style='color: #10B981; font-weight: 700;'>1,847</span></div>
+                <div style='color: #F1F5F9;'>Blocked: <span style='color: #EF4444; font-weight: 700;'>34</span></div>
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+        
+        st.markdown("""
+        <div style='background: linear-gradient(135deg, #1E293B 0%, #0F172A 100%); border: 1px solid #334155; border-radius: 8px; padding: 16px; margin: 4px 0;'>
+            <div style='display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;'>
+                <span style='font-size: 1rem; font-weight: 700; color: #F1F5F9;'>🛡️ GuardDuty</span>
+                <span style='background: #22C55E; color: white; padding: 2px 8px; border-radius: 4px; font-size: 10px; font-weight: 700;'>ACTIVE</span>
+            </div>
+            <div style='color: #94A3B8; font-size: 11px;'>Threat Detection</div>
+            <div style='margin-top: 10px; font-size: 12px;'>
+                <div style='color: #F1F5F9;'>Findings (24h): <span style='color: #F59E0B; font-weight: 700;'>23</span></div>
+                <div style='color: #F1F5F9;'>High Severity: <span style='color: #EF4444; font-weight: 700;'>2</span></div>
+                <div style='color: #F1F5F9;'>Auto-Resolved: <span style='color: #22C55E; font-weight: 700;'>18</span></div>
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+    
+    st.markdown("---")
+    
+    # ============ GUARDRAILS ENFORCEMENT SUMMARY ============
+    st.markdown("### 🚧 Guardrails Enforcement Summary")
+    
+    guard_col1, guard_col2, guard_col3 = st.columns(3)
+    
+    with guard_col1:
+        st.markdown("#### IaC Security (Pre-Deploy)")
+        iac_tools = [
+            ("KICS", "847 scans", "99.2%", "#22C55E"),
+            ("Checkov", "1,234 scans", "94.7%", "#22C55E"),
+            ("tfsec", "456 scans", "97.8%", "#22C55E"),
+            ("Trivy", "789 scans", "96.3%", "#22C55E"),
+            ("Snyk IaC", "234 scans", "95.1%", "#22C55E")
+        ]
+        for tool, scans, rate, color in iac_tools:
+            st.markdown(f"""
+            <div style='display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #334155;'>
+                <span style='color: #F1F5F9; font-weight: 600;'>{tool}</span>
+                <span style='color: #94A3B8;'>{scans}</span>
+                <span style='color: {color}; font-weight: 700;'>{rate}</span>
+            </div>
+            """, unsafe_allow_html=True)
+    
+    with guard_col2:
+        st.markdown("#### Policy Engines (Runtime)")
+        policy_tools = [
+            ("OPA/Rego", "12.4K decisions/hr", "Active", "#22C55E"),
+            ("AWS SCPs", "47 policies", "Enforced", "#22C55E"),
+            ("Sentinel", "67 policies", "Active", "#22C55E"),
+            ("Config Rules", "89 rules", "97.2%", "#22C55E"),
+            ("CloudFormation Guard", "34 rules", "Active", "#22C55E")
+        ]
+        for tool, metric, status, color in policy_tools:
+            st.markdown(f"""
+            <div style='display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #334155;'>
+                <span style='color: #F1F5F9; font-weight: 600;'>{tool}</span>
+                <span style='color: #94A3B8;'>{metric}</span>
+                <span style='color: {color}; font-weight: 700;'>{status}</span>
+            </div>
+            """, unsafe_allow_html=True)
+    
+    with guard_col3:
+        st.markdown("#### Detection & Response")
+        detection_tools = [
+            ("GuardDuty", "640 accounts", "Active", "#22C55E"),
+            ("Security Hub", "23 integrations", "Active", "#22C55E"),
+            ("Inspector", "1,247 assessments", "Active", "#22C55E"),
+            ("Macie", "PII scanning", "Active", "#22C55E"),
+            ("CloudTrail", "All regions", "Enabled", "#22C55E")
+        ]
+        for tool, metric, status, color in detection_tools:
+            st.markdown(f"""
+            <div style='display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #334155;'>
+                <span style='color: #F1F5F9; font-weight: 600;'>{tool}</span>
+                <span style='color: #94A3B8;'>{metric}</span>
+                <span style='color: {color}; font-weight: 700;'>{status}</span>
+            </div>
+            """, unsafe_allow_html=True)
+    
+    st.markdown("---")
+    
+    # ============ POLICY VIOLATIONS BLOCKED TODAY ============
+    st.markdown("### 🚫 Policy Violations Blocked Today")
+    
+    violations_data = pd.DataFrame({
+        'Tool': ['OPA', 'SCPs', 'KICS', 'Checkov', 'Sentinel', 'Config Rules', 'tfsec', 'GuardDuty'],
+        'Violations_Blocked': [847, 1247, 156, 89, 34, 67, 23, 45],
+        'Category': ['Runtime', 'AWS Native', 'IaC Scan', 'IaC Scan', 'TF Policy', 'AWS Native', 'IaC Scan', 'Detection']
+    })
+    
+    fig_violations = go.Figure(data=[
+        go.Bar(
+            x=violations_data['Tool'],
+            y=violations_data['Violations_Blocked'],
+            marker_color=['#8B5CF6', '#3B82F6', '#10B981', '#22C55E', '#F59E0B', '#06B6D4', '#34D399', '#EF4444'],
+            text=violations_data['Violations_Blocked'],
+            textposition='auto',
+            textfont=dict(color='#FFFFFF', size=12, family='Arial Black')
+        )
+    ])
+    fig_violations.update_layout(
+        title=dict(text="Violations Blocked by Tool (Last 24h)", font=dict(color='#FFFFFF', size=16)),
+        template='plotly_dark',
+        height=350,
+        paper_bgcolor='rgba(0,0,0,0)',
+        plot_bgcolor='rgba(0,0,0,0)',
+        font=dict(color='#FFFFFF'),
+        xaxis=dict(tickfont=dict(color='#FFFFFF', size=11)),
+        yaxis=dict(tickfont=dict(color='#FFFFFF'), title=dict(text='Violations Blocked', font=dict(color='#FFFFFF')))
+    )
+    st.plotly_chart(fig_violations, use_container_width=True)
 
 with tab2:
     st.header("🤖 AI Agents - Autonomous Decision Making")
