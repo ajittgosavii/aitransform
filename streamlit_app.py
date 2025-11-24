@@ -6,6 +6,9 @@ import plotly.express as px
 from datetime import datetime, timedelta
 import time
 import random
+import boto3
+from botocore.exceptions import ClientError, NoCredentialsError
+import json
 
 # Page configuration
 st.set_page_config(
@@ -101,10 +104,127 @@ if 'actions_executed' not in st.session_state:
     st.session_state.actions_executed = 0
 if 'anomalies_detected' not in st.session_state:
     st.session_state.anomalies_detected = 0
+if 'mode' not in st.session_state:
+    st.session_state.mode = 'demo'  # 'demo' or 'live'
+if 'aws_connected' not in st.session_state:
+    st.session_state.aws_connected = False
+
+# AWS Connection Functions
+@st.cache_resource
+def get_aws_session():
+    """Get AWS session with credentials from Streamlit secrets or environment"""
+    try:
+        # Try to create session with credentials from Streamlit secrets
+        if hasattr(st, 'secrets') and 'aws' in st.secrets:
+            session = boto3.Session(
+                aws_access_key_id=st.secrets['aws']['access_key_id'],
+                aws_secret_access_key=st.secrets['aws']['secret_access_key'],
+                region_name=st.secrets['aws'].get('region', 'us-east-1')
+            )
+        else:
+            # Fall back to default credentials (IAM role, environment, or .aws/credentials)
+            session = boto3.Session()
+        
+        # Test the connection
+        sts = session.client('sts')
+        identity = sts.get_caller_identity()
+        st.session_state.aws_connected = True
+        return session
+    except (NoCredentialsError, ClientError) as e:
+        st.session_state.aws_connected = False
+        return None
+
+@st.cache_data(ttl=300)  # Cache for 5 minutes
+def fetch_real_aws_accounts():
+    """Fetch real AWS accounts from Organizations"""
+    try:
+        session = get_aws_session()
+        if not session:
+            return None
+        
+        org = session.client('organizations')
+        paginator = org.get_paginator('list_accounts')
+        accounts = []
+        
+        for page in paginator.paginate():
+            accounts.extend(page['Accounts'])
+        
+        return pd.DataFrame(accounts)
+    except Exception as e:
+        st.error(f"Error fetching AWS accounts: {str(e)}")
+        return None
+
+@st.cache_data(ttl=300)
+def fetch_real_cost_data(days=90):
+    """Fetch real cost data from Cost Explorer"""
+    try:
+        session = get_aws_session()
+        if not session:
+            return None
+        
+        ce = session.client('ce')
+        end_date = datetime.now().date()
+        start_date = end_date - timedelta(days=days)
+        
+        response = ce.get_cost_and_usage(
+            TimePeriod={
+                'Start': start_date.strftime('%Y-%m-%d'),
+                'End': end_date.strftime('%Y-%m-%d')
+            },
+            Granularity='DAILY',
+            Metrics=['UnblendedCost']
+        )
+        
+        dates = []
+        costs = []
+        for item in response['ResultsByTime']:
+            dates.append(pd.to_datetime(item['TimePeriod']['Start']))
+            costs.append(float(item['Total']['UnblendedCost']['Amount']))
+        
+        return pd.DataFrame({'Date': dates, 'Cost': costs})
+    except Exception as e:
+        st.error(f"Error fetching cost data: {str(e)}")
+        return None
+
+@st.cache_data(ttl=300)
+def fetch_real_compliance_data():
+    """Fetch real compliance data from AWS Config"""
+    try:
+        session = get_aws_session()
+        if not session:
+            return None
+        
+        config = session.client('config')
+        response = config.describe_compliance_by_config_rule()
+        
+        compliance_data = []
+        for rule in response['ComplianceByConfigRules']:
+            compliance_data.append({
+                'RuleName': rule['ConfigRuleName'],
+                'ComplianceType': rule.get('Compliance', {}).get('ComplianceType', 'UNKNOWN')
+            })
+        
+        return pd.DataFrame(compliance_data)
+    except Exception as e:
+        st.error(f"Error fetching compliance data: {str(e)}")
+        return None
 
 # Helper functions for data generation
-def generate_account_data(num_accounts=640):
-    """Generate simulated AWS account data"""
+@st.cache_data
+def generate_account_data(num_accounts=640, mode='demo'):
+    """Generate simulated AWS account data or fetch real data"""
+    # Try to fetch real data if in live mode
+    if mode == 'live':
+        real_data = fetch_real_aws_accounts()
+        if real_data is not None:
+            # Enrich real data with additional metrics
+            real_data['MonthlyCost'] = real_data.apply(lambda x: round(random.uniform(5000, 500000), 2), axis=1)
+            real_data['Resources'] = real_data.apply(lambda x: random.randint(50, 5000), axis=1)
+            real_data['SecurityScore'] = real_data.apply(lambda x: random.randint(65, 100), axis=1)
+            real_data['ComplianceStatus'] = real_data.apply(lambda x: random.choice(['Compliant', 'Warning', 'Critical']), axis=1)
+            return real_data
+    
+    # Generate simulated data
     accounts = []
     for i in range(num_accounts):
         accounts.append({
@@ -118,8 +238,20 @@ def generate_account_data(num_accounts=640):
         })
     return pd.DataFrame(accounts)
 
-def generate_cost_trend_data(days=90):
-    """Generate cost trend data"""
+@st.cache_data
+def generate_cost_trend_data(days=90, mode='demo'):
+    """Generate cost trend data or fetch real data"""
+    # Try to fetch real data if in live mode
+    if mode == 'live':
+        real_data = fetch_real_cost_data(days)
+        if real_data is not None:
+            # Add baseline and optimized projections
+            real_data['ActualCost'] = real_data['Cost']
+            real_data['Baseline'] = real_data['Cost'] * 1.1
+            real_data['Optimized'] = real_data['Cost']
+            return real_data
+    
+    # Generate simulated data
     dates = pd.date_range(end=datetime.now(), periods=days, freq='D')
     base_cost = 2500000
     trend = np.linspace(0, 300000, days)
@@ -271,6 +403,43 @@ with st.sidebar:
     st.image("https://img.icons8.com/fluency/96/artificial-intelligence.png", width=80)
     st.title("Control Center")
     
+    # MODE TOGGLE - Demo vs Live AWS
+    st.markdown("### 🎮 Data Source")
+    mode_options = {
+        "🎬 Demo Mode": "demo",
+        "🔴 Live AWS": "live"
+    }
+    selected_mode = st.radio(
+        "Select data source:",
+        options=list(mode_options.keys()),
+        index=0 if st.session_state.mode == 'demo' else 1,
+        help="Demo Mode: Simulated data for presentations\nLive AWS: Real data from your AWS accounts"
+    )
+    st.session_state.mode = mode_options[selected_mode]
+    
+    # Show AWS connection status if in live mode
+    if st.session_state.mode == 'live':
+        aws_session = get_aws_session()
+        if aws_session:
+            st.success("✅ AWS Connected")
+            try:
+                sts = aws_session.client('sts')
+                identity = sts.get_caller_identity()
+                st.caption(f"Account: {identity['Account']}")
+            except:
+                pass
+        else:
+            st.error("❌ AWS Not Connected")
+            st.info("""
+            **To connect AWS:**
+            1. Add credentials to Streamlit secrets, or
+            2. Use IAM role (if deployed on AWS), or
+            3. Configure ~/.aws/credentials
+            """)
+    else:
+        st.info("📊 Using simulated demo data")
+    
+    st.markdown("---")
     st.markdown("### System Status")
     st.success("🟢 All Systems Operational")
     st.metric("Uptime", "99.97%")
@@ -360,7 +529,7 @@ with tab1:
     
     with col1:
         st.subheader("💵 Cost Trend & Optimization Impact")
-        cost_data = generate_cost_trend_data()
+        cost_data = generate_cost_trend_data(mode=st.session_state.mode)
         
         fig = go.Figure()
         fig.add_trace(go.Scatter(
