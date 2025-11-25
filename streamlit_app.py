@@ -1357,11 +1357,11 @@ with tab1:
             ("📋 Deployed new policy", "25 min ago")
         ]
         
-        for action, time in recent_actions:
+        for action, time_str in recent_actions:
             st.markdown(f"""
             <div style='background: #1E293B; padding: 10px 12px; border-radius: 6px; margin: 6px 0; border-left: 3px solid #10B981;'>
                 <span style='color: #F1F5F9; font-weight: 500;'>{action}</span><br/>
-                <small style='color: #64748B;'>{time}</small>
+                <small style='color: #64748B;'>{time_str}</small>
             </div>
             """, unsafe_allow_html=True)
     
