@@ -1905,8 +1905,50 @@ Action 5: Notify user via Slack ✅
                 elif "FinOps" in agent_choice:
                     st.markdown(simulate_claude_reasoning('cost_optimization'))
                 else:
-                    st.markdown("""
-**📋 Policy Engine - Claude AI Reasoning**
+                    # Policy Engine scenarios - check which scenario is selected
+                    if scenario_type == "Policy Generation":
+                        st.markdown("""
+**📋 Policy Engine - Policy Generation**
+
+```
+POLICY GENERATION REQUEST:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Request Type: New Security Control
+Target: EC2 Instance Metadata Service
+Scope: All Production Accounts (127 accounts)
+
+ANALYSIS:
+• IMDSv1 vulnerable to SSRF attacks
+• 340 instances currently using IMDSv1
+• No existing preventive control
+• AWS Best Practice: Enforce IMDSv2
+
+GENERATED POLICY:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Policy Type: Service Control Policy (SCP)
+Policy Name: RequireIMDSv2
+
+{
+  "Effect": "Deny",
+  "Action": "ec2:RunInstances",
+  "Condition": {
+    "StringNotEquals": {
+      "ec2:MetadataHttpTokens": "required"
+    }
+  }
+}
+
+DEPLOYMENT PLAN:
+• Phase 1: Sandbox OUs (Day 1-7)
+• Phase 2: Development OUs (Day 8-14)
+• Phase 3: Production OUs (Day 15-21)
+
+Confidence Score: 97%
+```
+                        """)
+                    elif scenario_type == "Violation Pattern":
+                        st.markdown("""
+**📋 Policy Engine - Violation Pattern Analysis**
 
 ```
 PATTERN ANALYSIS:
@@ -1939,7 +1981,44 @@ Generated SCP:
 
 Expected Impact: 95%+ violations prevented
 ```
-                    """)
+                        """)
+                    else:  # Effectiveness Review
+                        st.markdown("""
+**📋 Policy Engine - Effectiveness Review**
+
+```
+POLICY EFFECTIVENESS ANALYSIS:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Review Period: Last 30 Days
+Policies Evaluated: 87 Active Policies
+Overall Effectiveness: 96.4%
+
+TOP PERFORMERS:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+1. RequireS3Encryption     - 99.2% (1,247 blocks)
+2. DenyPublicRDS           - 98.8% (89 blocks)
+3. EnforceMFA              - 97.5% (2,340 blocks)
+4. RestrictRegions         - 96.1% (445 blocks)
+
+NEEDS ATTENTION:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+1. EC2TaggingPolicy        - 78.3% (HIGH bypass rate)
+   └─ Root Cause: Exception list too broad
+   └─ Recommendation: Tighten exception criteria
+
+2. CostAllocationTags      - 72.1% (MEDIUM bypass rate)
+   └─ Root Cause: New accounts not included
+   └─ Recommendation: Update OU attachment
+
+DECISION: UPDATE 2 POLICIES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Action 1: Revise EC2TaggingPolicy exceptions ✅
+Action 2: Extend CostAllocationTags scope ✅
+Action 3: Schedule re-evaluation in 7 days ✅
+
+Projected Improvement: 96.4% → 98.1%
+```
+                        """)
                 
                 st.success("✅ Analysis Complete - Decision logged to audit trail")
     
