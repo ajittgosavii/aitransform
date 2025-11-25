@@ -1100,7 +1100,7 @@ with header_col3:
 st.markdown("---")
 
 # Main content tabs with better labels
-tab1, tab2, tab3, tab4, tab5, tab6, tab7, tab8, tab9, tab10 = st.tabs([
+tab1, tab2, tab3, tab4, tab5, tab6, tab7, tab8, tab9, tab10, tab11 = st.tabs([
     "📊 Dashboard", 
     "🤖 AI Agents", 
     "🛡️ Security",
@@ -1110,7 +1110,8 @@ tab1, tab2, tab3, tab4, tab5, tab6, tab7, tab8, tab9, tab10 = st.tabs([
     "💰 FinOps",
     "📋 Policy",
     "📈 Analytics",
-    "📋 Audit"
+    "📋 Audit",
+    "🏗️ Account Lifecycle"
 ])
 
 with tab1:
@@ -6171,6 +6172,852 @@ VIOLATION PATTERN ANALYSIS:
 
 **Confidence Score:** 98%
 """)
+
+# ==================== TAB 11: ACCOUNT LIFECYCLE MANAGEMENT ====================
+with tab11:
+    st.header("🏗️ AWS Account Lifecycle Management")
+    
+    st.markdown("""
+    **End-to-end account lifecycle management** - Streamlined onboarding, secure offboarding, 
+    and comprehensive tracking across 640+ AWS accounts with automated provisioning via AWS Control Tower.
+    """)
+    
+    # Create sub-tabs for Account Lifecycle
+    lifecycle_tab1, lifecycle_tab2, lifecycle_tab3, lifecycle_tab4, lifecycle_tab5 = st.tabs([
+        "📊 Overview",
+        "🚀 Account Onboarding",
+        "🔴 Account Offboarding", 
+        "📋 Request Tracking",
+        "📜 Account Inventory"
+    ])
+    
+    # ==================== LIFECYCLE TAB 1: OVERVIEW ====================
+    with lifecycle_tab1:
+        st.subheader("📊 Account Lifecycle Dashboard")
+        
+        # Key metrics
+        col1, col2, col3, col4, col5, col6 = st.columns(6)
+        with col1:
+            st.metric("Total Accounts", "640", "+3 this month")
+        with col2:
+            st.metric("Active", "612", "95.6%")
+        with col3:
+            st.metric("Pending Onboard", "8", "In progress")
+        with col4:
+            st.metric("Pending Offboard", "4", "In progress")
+        with col5:
+            st.metric("Avg Onboard Time", "2.3 days", "-0.5 days")
+        with col6:
+            st.metric("Compliance Rate", "98.7%", "+0.3%")
+        
+        st.markdown("---")
+        
+        # Account distribution
+        col1, col2 = st.columns(2)
+        
+        with col1:
+            st.markdown("### 📊 Accounts by Environment")
+            
+            environments = ['Production', 'Development', 'Staging', 'Sandbox', 'DR', 'Security']
+            env_counts = [127, 234, 89, 156, 12, 22]
+            env_colors = ['#BF616A', '#A3BE8C', '#EBCB8B', '#88C0D0', '#B48EAD', '#5E81AC']
+            
+            fig = go.Figure(data=[go.Pie(
+                labels=environments,
+                values=env_counts,
+                hole=0.4,
+                marker_colors=env_colors,
+                textinfo='label+value',
+                textfont=dict(color='#FFFFFF')
+            )])
+            
+            fig.update_layout(
+                template='plotly_dark',
+                height=350,
+                paper_bgcolor='rgba(0,0,0,0)',
+                legend=dict(font=dict(color='#FFFFFF'))
+            )
+            
+            st.plotly_chart(fig, use_container_width=True)
+        
+        with col2:
+            st.markdown("### 📊 Accounts by Portfolio")
+            
+            portfolios = ['Digital Banking', 'Insurance', 'Payments', 'Capital Markets', 'Wealth Management', 'Shared Services']
+            portfolio_counts = [145, 112, 98, 87, 76, 122]
+            
+            fig = go.Figure(data=[go.Bar(
+                x=portfolios,
+                y=portfolio_counts,
+                marker_color=['#A3BE8C', '#88C0D0', '#EBCB8B', '#B48EAD', '#5E81AC', '#D08770'],
+                text=portfolio_counts,
+                textposition='outside',
+                textfont=dict(color='#FFFFFF')
+            )])
+            
+            fig.update_layout(
+                template='plotly_dark',
+                height=350,
+                yaxis_title='Number of Accounts',
+                paper_bgcolor='rgba(0,0,0,0)'
+            )
+            
+            st.plotly_chart(fig, use_container_width=True)
+        
+        st.markdown("---")
+        
+        # Monthly account activity
+        st.markdown("### 📈 Account Activity Trend (12 Months)")
+        
+        months = pd.date_range(end=datetime.now(), periods=12, freq='M')
+        onboarded = [12, 15, 8, 22, 18, 14, 20, 16, 11, 19, 13, 8]
+        offboarded = [3, 5, 2, 8, 4, 6, 3, 5, 2, 4, 3, 4]
+        net_change = [o - off for o, off in zip(onboarded, offboarded)]
+        
+        fig = go.Figure()
+        
+        fig.add_trace(go.Bar(
+            x=months, y=onboarded,
+            name='Onboarded',
+            marker_color='#A3BE8C'
+        ))
+        
+        fig.add_trace(go.Bar(
+            x=months, y=[-o for o in offboarded],
+            name='Offboarded',
+            marker_color='#BF616A'
+        ))
+        
+        fig.add_trace(go.Scatter(
+            x=months, y=net_change,
+            name='Net Change',
+            line=dict(color='#EBCB8B', width=3),
+            mode='lines+markers'
+        ))
+        
+        fig.update_layout(
+            template='plotly_dark',
+            height=350,
+            barmode='relative',
+            yaxis_title='Account Count',
+            legend=dict(orientation='h', yanchor='bottom', y=1.02),
+            paper_bgcolor='rgba(0,0,0,0)'
+        )
+        
+        st.plotly_chart(fig, use_container_width=True)
+        
+        st.markdown("---")
+        
+        # Recent activity
+        col1, col2 = st.columns(2)
+        
+        with col1:
+            st.markdown("### 🆕 Recently Onboarded")
+            
+            recent_onboarded = [
+                ("digital-banking-prod-089", "Digital Banking", "Production", "2 days ago"),
+                ("payments-dev-156", "Payments", "Development", "3 days ago"),
+                ("insurance-staging-034", "Insurance", "Staging", "5 days ago"),
+                ("data-platform-sandbox-078", "Data Platform", "Sandbox", "1 week ago"),
+                ("wealth-mgmt-prod-045", "Wealth Management", "Production", "1 week ago")
+            ]
+            
+            for account, portfolio, env, time_ago in recent_onboarded:
+                env_color = "#BF616A" if env == "Production" else "#A3BE8C" if env == "Development" else "#EBCB8B"
+                st.markdown(f"""
+                <div style='background: #2E3440; padding: 0.7rem; border-radius: 5px; margin: 0.4rem 0; border-left: 3px solid #A3BE8C;'>
+                    <strong>{account}</strong><br/>
+                    <small>{portfolio} | <span style='color: {env_color};'>{env}</span> | {time_ago}</small>
+                </div>
+                """, unsafe_allow_html=True)
+        
+        with col2:
+            st.markdown("### 🔴 Recently Offboarded")
+            
+            recent_offboarded = [
+                ("legacy-crm-prod-012", "Digital Banking", "Decommissioned", "1 day ago"),
+                ("test-sandbox-089", "Payments", "Cleanup", "4 days ago"),
+                ("migration-temp-034", "Insurance", "Migration Complete", "1 week ago"),
+                ("poc-ml-sandbox-067", "Data Platform", "POC Ended", "2 weeks ago")
+            ]
+            
+            for account, portfolio, reason, time_ago in recent_offboarded:
+                st.markdown(f"""
+                <div style='background: #2E3440; padding: 0.7rem; border-radius: 5px; margin: 0.4rem 0; border-left: 3px solid #BF616A;'>
+                    <strong>{account}</strong><br/>
+                    <small>{portfolio} | Reason: {reason} | {time_ago}</small>
+                </div>
+                """, unsafe_allow_html=True)
+    
+    # ==================== LIFECYCLE TAB 2: ACCOUNT ONBOARDING ====================
+    with lifecycle_tab2:
+        st.subheader("🚀 AWS Account Onboarding")
+        
+        st.markdown("""
+        **Automated account provisioning** via AWS Control Tower with standardized configurations, 
+        security baselines, and compliance guardrails.
+        """)
+        
+        # Onboarding metrics
+        col1, col2, col3, col4 = st.columns(4)
+        with col1:
+            st.metric("Pending Requests", "8", "Awaiting approval")
+        with col2:
+            st.metric("In Progress", "5", "Being provisioned")
+        with col3:
+            st.metric("Completed (MTD)", "12", "+3 vs last month")
+        with col4:
+            st.metric("Avg Provisioning", "4.2 hours", "-1.5 hours")
+        
+        st.markdown("---")
+        
+        # New Account Request Form
+        st.markdown("### 📝 New Account Request")
+        
+        with st.expander("➕ Submit New Account Request", expanded=False):
+            col1, col2 = st.columns(2)
+            
+            with col1:
+                account_name = st.text_input("Account Name *", placeholder="e.g., digital-banking-prod-090")
+                portfolio = st.selectbox("Portfolio *", 
+                    ["Digital Banking", "Insurance", "Payments", "Capital Markets", "Wealth Management", "Data Platform", "Shared Services"])
+                environment = st.selectbox("Environment *", 
+                    ["Production", "Development", "Staging", "Sandbox", "DR"])
+                cost_center = st.text_input("Cost Center *", placeholder="e.g., CC-1001")
+            
+            with col2:
+                owner_email = st.text_input("Account Owner Email *", placeholder="owner@company.com")
+                team_dl = st.text_input("Team Distribution List *", placeholder="team-banking@company.com")
+                business_justification = st.text_area("Business Justification *", placeholder="Describe the purpose of this account...")
+                expected_monthly_cost = st.number_input("Expected Monthly Cost ($)", min_value=0, value=5000)
+            
+            st.markdown("#### Required Configurations")
+            col1, col2, col3 = st.columns(3)
+            with col1:
+                vpc_required = st.checkbox("VPC Required", value=True)
+                direct_connect = st.checkbox("Direct Connect", value=False)
+                transit_gateway = st.checkbox("Transit Gateway", value=True)
+            with col2:
+                sso_integration = st.checkbox("SSO Integration", value=True)
+                cloudtrail = st.checkbox("CloudTrail (Required)", value=True, disabled=True)
+                config_rules = st.checkbox("Config Rules (Required)", value=True, disabled=True)
+            with col3:
+                guardduty = st.checkbox("GuardDuty (Required)", value=True, disabled=True)
+                security_hub = st.checkbox("Security Hub (Required)", value=True, disabled=True)
+                backup_policy = st.checkbox("AWS Backup Policy", value=True)
+            
+            col1, col2, col3 = st.columns([1, 1, 2])
+            with col1:
+                if st.button("🚀 Submit Request", type="primary", use_container_width=True):
+                    st.success("✅ Account request submitted! Request ID: REQ-2024-00892")
+                    st.info("📧 Approval request sent to cloud-governance@company.com")
+            with col2:
+                if st.button("💾 Save Draft", use_container_width=True):
+                    st.info("💾 Draft saved")
+        
+        st.markdown("---")
+        
+        # Onboarding Pipeline
+        st.markdown("### 🔄 Onboarding Pipeline")
+        
+        pipeline_stages = ["Pending Approval", "Approved", "Provisioning", "Configuring", "Validation", "Complete"]
+        
+        # Pending requests
+        pending_requests = [
+            {"id": "REQ-2024-00891", "account": "payments-prod-157", "requestor": "john.smith@company.com", 
+             "portfolio": "Payments", "env": "Production", "stage": "Pending Approval", "submitted": "2 hours ago"},
+            {"id": "REQ-2024-00890", "account": "insurance-dev-089", "requestor": "jane.doe@company.com", 
+             "portfolio": "Insurance", "env": "Development", "stage": "Approved", "submitted": "1 day ago"},
+            {"id": "REQ-2024-00889", "account": "banking-staging-045", "requestor": "mike.wilson@company.com", 
+             "portfolio": "Digital Banking", "env": "Staging", "stage": "Provisioning", "submitted": "1 day ago"},
+            {"id": "REQ-2024-00888", "account": "data-sandbox-123", "requestor": "sarah.chen@company.com", 
+             "portfolio": "Data Platform", "env": "Sandbox", "stage": "Configuring", "submitted": "2 days ago"},
+            {"id": "REQ-2024-00887", "account": "wealth-prod-067", "requestor": "tom.brown@company.com", 
+             "portfolio": "Wealth Management", "env": "Production", "stage": "Validation", "submitted": "2 days ago"},
+        ]
+        
+        for req in pending_requests:
+            stage_idx = pipeline_stages.index(req['stage'])
+            progress_pct = ((stage_idx + 1) / len(pipeline_stages)) * 100
+            
+            if req['stage'] == "Pending Approval":
+                stage_color = "#EBCB8B"
+            elif req['stage'] == "Complete":
+                stage_color = "#A3BE8C"
+            else:
+                stage_color = "#88C0D0"
+            
+            env_color = "#BF616A" if req['env'] == "Production" else "#A3BE8C"
+            
+            st.markdown(f"""
+            <div style='background: #2E3440; padding: 1rem; border-radius: 8px; margin: 0.5rem 0;'>
+                <div style='display: flex; justify-content: space-between; align-items: center;'>
+                    <div>
+                        <strong style='font-size: 1.1rem;'>{req['id']}</strong> - <strong>{req['account']}</strong><br/>
+                        <small>{req['portfolio']} | <span style='color: {env_color};'>{req['env']}</span> | Requestor: {req['requestor']}</small>
+                    </div>
+                    <div style='text-align: right;'>
+                        <span style='background: {stage_color}; color: #2E3440; padding: 4px 12px; border-radius: 12px; font-weight: bold;'>{req['stage']}</span><br/>
+                        <small style='color: #88C0D0;'>Submitted: {req['submitted']}</small>
+                    </div>
+                </div>
+                <div style='background: #4C566A; border-radius: 4px; height: 8px; margin-top: 10px;'>
+                    <div style='background: {stage_color}; width: {progress_pct}%; height: 100%; border-radius: 4px;'></div>
+                </div>
+                <small style='color: #D8DEE9;'>Stage {stage_idx + 1} of {len(pipeline_stages)}</small>
+            </div>
+            """, unsafe_allow_html=True)
+        
+        st.markdown("---")
+        
+        # Onboarding Checklist
+        st.markdown("### ✅ Standard Onboarding Checklist")
+        
+        col1, col2 = st.columns(2)
+        
+        with col1:
+            st.markdown("#### 🔧 Infrastructure Setup")
+            checklist_infra = [
+                ("Account created in Control Tower", True),
+                ("OU assignment completed", True),
+                ("SCPs applied", True),
+                ("VPC provisioned (if required)", True),
+                ("Transit Gateway attached", False),
+                ("Direct Connect configured", False),
+            ]
+            for item, default in checklist_infra:
+                st.checkbox(item, value=default, key=f"infra_{item}")
+            
+            st.markdown("#### 🔐 Security Configuration")
+            checklist_security = [
+                ("IAM Identity Center (SSO) configured", True),
+                ("CloudTrail enabled", True),
+                ("Config Rules deployed", True),
+                ("GuardDuty enabled", True),
+                ("Security Hub enabled", True),
+                ("AWS Backup policy attached", False),
+            ]
+            for item, default in checklist_security:
+                st.checkbox(item, value=default, key=f"sec_{item}")
+        
+        with col2:
+            st.markdown("#### 📊 Governance & Compliance")
+            checklist_gov = [
+                ("Cost allocation tags configured", True),
+                ("Budget alerts set up", True),
+                ("Compliance baseline applied", True),
+                ("Resource tagging policy enforced", False),
+                ("Data classification completed", False),
+            ]
+            for item, default in checklist_gov:
+                st.checkbox(item, value=default, key=f"gov_{item}")
+            
+            st.markdown("#### 📧 Notifications & Access")
+            checklist_access = [
+                ("Account owner notified", True),
+                ("Team access provisioned", True),
+                ("Runbook documentation shared", False),
+                ("Onboarding training scheduled", False),
+                ("Welcome email sent", False),
+            ]
+            for item, default in checklist_access:
+                st.checkbox(item, value=default, key=f"access_{item}")
+        
+        st.markdown("---")
+        
+        # Automation Status
+        st.markdown("### 🤖 Automated Provisioning Status")
+        
+        automation_steps = [
+            ("AWS Control Tower Account Factory", "✅ Completed", "2 min", "Account created successfully"),
+            ("OU Assignment", "✅ Completed", "30 sec", "Assigned to Production OU"),
+            ("SCP Application", "✅ Completed", "15 sec", "3 SCPs applied"),
+            ("VPC Provisioning", "🔄 In Progress", "~5 min", "Creating subnets..."),
+            ("Security Baseline", "⏳ Pending", "~3 min", "Waiting for VPC"),
+            ("SSO Configuration", "⏳ Pending", "~2 min", "Waiting for security baseline"),
+            ("Tagging & Compliance", "⏳ Pending", "~1 min", "Final step"),
+        ]
+        
+        for step, status, duration, detail in automation_steps:
+            if "Completed" in status:
+                color = "#A3BE8C"
+            elif "In Progress" in status:
+                color = "#88C0D0"
+            else:
+                color = "#4C566A"
+            
+            st.markdown(f"""
+            <div style='background: #2E3440; padding: 0.6rem 1rem; border-radius: 5px; margin: 0.3rem 0; border-left: 3px solid {color};'>
+                <div style='display: flex; justify-content: space-between;'>
+                    <span><strong>{step}</strong></span>
+                    <span style='color: {color};'>{status}</span>
+                </div>
+                <small style='color: #88C0D0;'>Duration: {duration} | {detail}</small>
+            </div>
+            """, unsafe_allow_html=True)
+    
+    # ==================== LIFECYCLE TAB 3: ACCOUNT OFFBOARDING ====================
+    with lifecycle_tab3:
+        st.subheader("🔴 AWS Account Offboarding")
+        
+        st.markdown("""
+        **Secure and compliant account decommissioning** with resource cleanup verification, 
+        data retention compliance, and complete audit trail.
+        """)
+        
+        # Offboarding metrics
+        col1, col2, col3, col4 = st.columns(4)
+        with col1:
+            st.metric("Pending Offboard", "4", "Awaiting approval")
+        with col2:
+            st.metric("In Progress", "2", "Being decommissioned")
+        with col3:
+            st.metric("Completed (MTD)", "4", "This month")
+        with col4:
+            st.metric("Avg Offboard Time", "5.3 days", "Including retention")
+        
+        st.markdown("---")
+        
+        # Offboarding Request Form
+        st.markdown("### 📝 Account Offboarding Request")
+        
+        with st.expander("🔴 Submit Offboarding Request", expanded=False):
+            col1, col2 = st.columns(2)
+            
+            with col1:
+                offboard_account = st.selectbox("Select Account to Offboard *",
+                    ["legacy-crm-prod-012", "test-sandbox-089", "migration-temp-034", "poc-ml-sandbox-067", "archive-data-045"])
+                offboard_reason = st.selectbox("Reason for Offboarding *",
+                    ["Project Completed", "Migration Complete", "Cost Optimization", "Consolidation", "Security Concern", "POC Ended", "Other"])
+                offboard_date = st.date_input("Requested Offboard Date *", datetime.now() + timedelta(days=30))
+            
+            with col2:
+                data_retention = st.selectbox("Data Retention Requirement *",
+                    ["No retention required", "30 days", "90 days", "1 year", "7 years (compliance)", "Archive to Glacier"])
+                backup_required = st.checkbox("Final backup required before deletion", value=True)
+                compliance_review = st.checkbox("Compliance review completed", value=False)
+                owner_approval = st.checkbox("Account owner approval obtained", value=False)
+            
+            offboard_justification = st.text_area("Offboarding Justification *", 
+                placeholder="Provide detailed justification for account closure...")
+            
+            st.warning("""
+            ⚠️ **Important**: Account offboarding is irreversible. Ensure all data has been backed up 
+            or migrated before proceeding. Compliance and legal review may be required for production accounts.
+            """)
+            
+            col1, col2 = st.columns(2)
+            with col1:
+                if st.button("🔴 Submit Offboarding Request", type="primary", use_container_width=True):
+                    st.success("✅ Offboarding request submitted! Request ID: OFF-2024-00156")
+                    st.info("📧 Approval request sent to cloud-governance@company.com and compliance@company.com")
+            with col2:
+                if st.button("📋 Pre-Offboard Assessment", use_container_width=True):
+                    st.info("🔍 Running pre-offboard resource assessment...")
+        
+        st.markdown("---")
+        
+        # Active Offboarding Requests
+        st.markdown("### 🔄 Active Offboarding Requests")
+        
+        offboard_requests = [
+            {"id": "OFF-2024-00155", "account": "legacy-crm-prod-012", "reason": "Migration Complete", 
+             "stage": "Resource Cleanup", "resources": 45, "data_size": "2.3 TB", "target_date": "Dec 15, 2024"},
+            {"id": "OFF-2024-00154", "account": "test-sandbox-089", "reason": "POC Ended", 
+             "stage": "Pending Approval", "resources": 12, "data_size": "156 GB", "target_date": "Dec 10, 2024"},
+            {"id": "OFF-2024-00153", "account": "migration-temp-034", "reason": "Consolidation", 
+             "stage": "Data Backup", "resources": 89, "data_size": "5.7 TB", "target_date": "Dec 20, 2024"},
+            {"id": "OFF-2024-00152", "account": "poc-ml-sandbox-067", "reason": "Cost Optimization", 
+             "stage": "Validation", "resources": 23, "data_size": "890 GB", "target_date": "Dec 8, 2024"},
+        ]
+        
+        offboard_stages = ["Pending Approval", "Data Backup", "Resource Cleanup", "Validation", "Account Closure", "Complete"]
+        
+        for req in offboard_requests:
+            stage_idx = offboard_stages.index(req['stage'])
+            progress_pct = ((stage_idx + 1) / len(offboard_stages)) * 100
+            
+            st.markdown(f"""
+            <div style='background: #2E3440; padding: 1rem; border-radius: 8px; margin: 0.5rem 0; border-left: 4px solid #BF616A;'>
+                <div style='display: flex; justify-content: space-between; align-items: center;'>
+                    <div>
+                        <strong style='font-size: 1.1rem;'>{req['id']}</strong> - <strong>{req['account']}</strong><br/>
+                        <small>Reason: {req['reason']} | Resources: {req['resources']} | Data: {req['data_size']}</small>
+                    </div>
+                    <div style='text-align: right;'>
+                        <span style='background: #D08770; color: #2E3440; padding: 4px 12px; border-radius: 12px; font-weight: bold;'>{req['stage']}</span><br/>
+                        <small style='color: #BF616A;'>Target: {req['target_date']}</small>
+                    </div>
+                </div>
+                <div style='background: #4C566A; border-radius: 4px; height: 8px; margin-top: 10px;'>
+                    <div style='background: #D08770; width: {progress_pct}%; height: 100%; border-radius: 4px;'></div>
+                </div>
+                <small style='color: #D8DEE9;'>Stage {stage_idx + 1} of {len(offboard_stages)}</small>
+            </div>
+            """, unsafe_allow_html=True)
+        
+        st.markdown("---")
+        
+        # Offboarding Checklist
+        st.markdown("### ✅ Offboarding Checklist")
+        
+        col1, col2 = st.columns(2)
+        
+        with col1:
+            st.markdown("#### 📊 Pre-Offboarding")
+            pre_offboard = [
+                ("Account owner approval", True),
+                ("Manager approval", True),
+                ("Compliance review (if production)", True),
+                ("Data classification review", False),
+                ("Dependent services identified", False),
+                ("Migration plan confirmed", False),
+            ]
+            for item, default in pre_offboard:
+                st.checkbox(item, value=default, key=f"pre_off_{item}")
+            
+            st.markdown("#### 💾 Data & Backup")
+            data_backup = [
+                ("Final backup completed", True),
+                ("Backup verification passed", True),
+                ("Data retention policy applied", False),
+                ("S3 data archived/deleted", False),
+                ("RDS snapshots retained", False),
+                ("EBS snapshots cleaned", False),
+            ]
+            for item, default in data_backup:
+                st.checkbox(item, value=default, key=f"data_{item}")
+        
+        with col2:
+            st.markdown("#### 🔧 Resource Cleanup")
+            resource_cleanup = [
+                ("EC2 instances terminated", False),
+                ("RDS instances deleted", False),
+                ("Lambda functions removed", False),
+                ("S3 buckets emptied/deleted", False),
+                ("IAM roles/users removed", False),
+                ("VPC resources cleaned", False),
+                ("Secrets Manager cleanup", False),
+            ]
+            for item, default in resource_cleanup:
+                st.checkbox(item, value=default, key=f"cleanup_{item}")
+            
+            st.markdown("#### 📋 Finalization")
+            finalization = [
+                ("Cost allocation updated", False),
+                ("Billing alerts removed", False),
+                ("SSO access revoked", False),
+                ("Account moved to Suspended OU", False),
+                ("Closure documentation", False),
+                ("Stakeholders notified", False),
+            ]
+            for item, default in finalization:
+                st.checkbox(item, value=default, key=f"final_{item}")
+        
+        st.markdown("---")
+        
+        # Resource Assessment
+        st.markdown("### 🔍 Pre-Offboard Resource Assessment")
+        
+        with st.expander("View Resource Assessment for: legacy-crm-prod-012", expanded=True):
+            col1, col2, col3, col4 = st.columns(4)
+            with col1:
+                st.metric("Total Resources", "45")
+            with col2:
+                st.metric("Data Size", "2.3 TB")
+            with col3:
+                st.metric("Monthly Cost", "$4,200")
+            with col4:
+                st.metric("Dependencies", "3 accounts")
+            
+            st.markdown("#### Resource Breakdown")
+            resource_df = pd.DataFrame({
+                'Resource Type': ['EC2 Instances', 'RDS Databases', 'S3 Buckets', 'Lambda Functions', 'EBS Volumes', 'Secrets', 'IAM Roles'],
+                'Count': [8, 2, 12, 15, 18, 5, 12],
+                'Est. Data (GB)': [0, 450, 1800, 0, 120, 0, 0],
+                'Monthly Cost': ['$1,200', '$890', '$180', '$45', '$120', '$5', '$0'],
+                'Cleanup Status': ['⏳ Pending', '⏳ Pending', '🔄 In Progress', '⏳ Pending', '⏳ Pending', '✅ Done', '⏳ Pending']
+            })
+            
+            st.dataframe(resource_df, use_container_width=True, hide_index=True)
+            
+            st.warning("""
+            ⚠️ **Dependencies Detected**: 
+            - `payments-prod-045` - API integration (must update before closure)
+            - `data-lake-prod-001` - ETL pipeline source (migration required)
+            - `monitoring-central-001` - CloudWatch cross-account (update dashboards)
+            """)
+    
+    # ==================== LIFECYCLE TAB 4: REQUEST TRACKING ====================
+    with lifecycle_tab4:
+        st.subheader("📋 Request Tracking & History")
+        
+        st.markdown("""
+        **Track all account lifecycle requests** with real-time status updates, 
+        SLA monitoring, and complete audit history.
+        """)
+        
+        # Tracking metrics
+        col1, col2, col3, col4 = st.columns(4)
+        with col1:
+            st.metric("Open Requests", "12", "8 onboard, 4 offboard")
+        with col2:
+            st.metric("Avg Resolution", "2.8 days", "-0.3 days")
+        with col3:
+            st.metric("SLA Compliance", "96.4%", "+1.2%")
+        with col4:
+            st.metric("This Month", "16", "12 onboard, 4 offboard")
+        
+        st.markdown("---")
+        
+        # Filter controls
+        col1, col2, col3, col4 = st.columns(4)
+        with col1:
+            filter_type = st.selectbox("Request Type", ["All", "Onboarding", "Offboarding"])
+        with col2:
+            filter_status = st.selectbox("Status", ["All", "Pending", "In Progress", "Completed", "Cancelled"])
+        with col3:
+            filter_portfolio = st.selectbox("Portfolio", ["All", "Digital Banking", "Insurance", "Payments", "Capital Markets", "Wealth Management"])
+        with col4:
+            filter_period = st.selectbox("Period", ["Last 7 days", "Last 30 days", "Last 90 days", "All time"])
+        
+        st.markdown("---")
+        
+        # Request tracking table
+        st.markdown("### 📊 All Requests")
+        
+        tracking_data = []
+        request_types = ['Onboarding', 'Offboarding']
+        statuses = ['Completed', 'In Progress', 'Pending Approval', 'Cancelled']
+        portfolios = ['Digital Banking', 'Insurance', 'Payments', 'Capital Markets', 'Wealth Management']
+        
+        for i in range(20):
+            req_type = random.choice(request_types)
+            tracking_data.append({
+                'Request ID': f"{'REQ' if req_type == 'Onboarding' else 'OFF'}-2024-{random.randint(100, 999):05d}",
+                'Type': req_type,
+                'Account Name': f"{random.choice(['banking', 'payments', 'insurance', 'data'])}-{random.choice(['prod', 'dev', 'staging'])}-{random.randint(1, 200):03d}",
+                'Portfolio': random.choice(portfolios),
+                'Requestor': f"{random.choice(['john', 'jane', 'mike', 'sarah'])}.{random.choice(['smith', 'doe', 'wilson', 'chen'])}@company.com",
+                'Status': random.choice(statuses),
+                'Submitted': (datetime.now() - timedelta(days=random.randint(1, 60))).strftime('%Y-%m-%d'),
+                'SLA Status': random.choice(['🟢 On Track', '🟢 On Track', '🟢 On Track', '🟡 At Risk', '🔴 Breached'])
+            })
+        
+        df_tracking = pd.DataFrame(tracking_data)
+        
+        st.dataframe(
+            df_tracking,
+            use_container_width=True,
+            hide_index=True,
+            column_config={
+                'Request ID': st.column_config.TextColumn('Request ID', width='medium'),
+                'Type': st.column_config.TextColumn('Type', width='small'),
+                'Status': st.column_config.TextColumn('Status', width='medium')
+            }
+        )
+        
+        # Export options
+        col1, col2, col3 = st.columns(3)
+        with col1:
+            if st.button("📥 Export to CSV", use_container_width=True):
+                st.success("✅ Downloaded request_tracking.csv")
+        with col2:
+            if st.button("📊 Generate Report", use_container_width=True):
+                st.success("✅ Report generated")
+        with col3:
+            if st.button("📧 Email Summary", use_container_width=True):
+                st.success("✅ Summary sent to cloud-ops@company.com")
+        
+        st.markdown("---")
+        
+        # SLA Dashboard
+        st.markdown("### ⏱️ SLA Performance")
+        
+        col1, col2 = st.columns(2)
+        
+        with col1:
+            st.markdown("#### Onboarding SLA (Target: 3 days)")
+            
+            sla_data = pd.DataFrame({
+                'Month': ['Jul', 'Aug', 'Sep', 'Oct', 'Nov'],
+                'Avg Days': [2.8, 3.2, 2.5, 2.3, 2.1],
+                'Compliance %': [94, 89, 97, 98, 99]
+            })
+            
+            fig = go.Figure()
+            fig.add_trace(go.Bar(x=sla_data['Month'], y=sla_data['Avg Days'], name='Avg Days', marker_color='#88C0D0'))
+            fig.add_hline(y=3, line_dash="dash", line_color="#BF616A", annotation_text="SLA: 3 days")
+            fig.update_layout(template='plotly_dark', height=250, paper_bgcolor='rgba(0,0,0,0)')
+            st.plotly_chart(fig, use_container_width=True)
+        
+        with col2:
+            st.markdown("#### Offboarding SLA (Target: 7 days)")
+            
+            sla_data_off = pd.DataFrame({
+                'Month': ['Jul', 'Aug', 'Sep', 'Oct', 'Nov'],
+                'Avg Days': [6.2, 7.5, 5.8, 5.3, 4.9],
+                'Compliance %': [92, 85, 95, 97, 98]
+            })
+            
+            fig = go.Figure()
+            fig.add_trace(go.Bar(x=sla_data_off['Month'], y=sla_data_off['Avg Days'], name='Avg Days', marker_color='#D08770'))
+            fig.add_hline(y=7, line_dash="dash", line_color="#BF616A", annotation_text="SLA: 7 days")
+            fig.update_layout(template='plotly_dark', height=250, paper_bgcolor='rgba(0,0,0,0)')
+            st.plotly_chart(fig, use_container_width=True)
+        
+        st.markdown("---")
+        
+        # Audit Log
+        st.markdown("### 📜 Recent Activity Log")
+        
+        audit_entries = [
+            ("2024-11-24 14:32:15", "REQ-2024-00891", "Status changed to 'Approved'", "cloud-governance@company.com"),
+            ("2024-11-24 14:28:45", "OFF-2024-00155", "Resource cleanup started", "automation@system"),
+            ("2024-11-24 13:15:22", "REQ-2024-00890", "VPC provisioning completed", "automation@system"),
+            ("2024-11-24 12:45:00", "OFF-2024-00154", "Approval request sent", "jane.doe@company.com"),
+            ("2024-11-24 11:30:18", "REQ-2024-00889", "SSO configuration started", "automation@system"),
+            ("2024-11-24 10:22:45", "REQ-2024-00888", "Security baseline applied", "automation@system"),
+            ("2024-11-24 09:15:30", "OFF-2024-00153", "Data backup completed", "automation@system"),
+        ]
+        
+        for timestamp, req_id, action, actor in audit_entries:
+            st.markdown(f"""
+            <div style='background: #2E3440; padding: 0.5rem 1rem; border-radius: 5px; margin: 0.2rem 0; font-size: 0.9rem;'>
+                <span style='color: #88C0D0;'>{timestamp}</span> | 
+                <strong>{req_id}</strong> | 
+                {action} | 
+                <span style='color: #A3BE8C;'>{actor}</span>
+            </div>
+            """, unsafe_allow_html=True)
+    
+    # ==================== LIFECYCLE TAB 5: ACCOUNT INVENTORY ====================
+    with lifecycle_tab5:
+        st.subheader("📜 Complete Account Inventory")
+        
+        st.markdown("""
+        **Comprehensive inventory of all AWS accounts** with metadata, ownership, 
+        compliance status, and lifecycle information.
+        """)
+        
+        # Inventory metrics
+        col1, col2, col3, col4, col5 = st.columns(5)
+        with col1:
+            st.metric("Total Accounts", "640")
+        with col2:
+            st.metric("Active", "612")
+        with col3:
+            st.metric("Suspended", "24")
+        with col4:
+            st.metric("Pending Closure", "4")
+        with col5:
+            st.metric("Last Audit", "2 days ago")
+        
+        st.markdown("---")
+        
+        # Search and filters
+        col1, col2, col3, col4 = st.columns(4)
+        with col1:
+            search_term = st.text_input("🔍 Search accounts", placeholder="Account name or ID...")
+        with col2:
+            inv_filter_env = st.multiselect("Environment", ["Production", "Development", "Staging", "Sandbox", "DR"])
+        with col3:
+            inv_filter_portfolio = st.multiselect("Portfolio", ["Digital Banking", "Insurance", "Payments", "Capital Markets", "Wealth Management", "Shared Services"])
+        with col4:
+            inv_filter_status = st.multiselect("Status", ["Active", "Suspended", "Pending Closure"])
+        
+        st.markdown("---")
+        
+        # Account inventory table
+        inventory_data = []
+        envs = ['Production', 'Development', 'Staging', 'Sandbox', 'DR']
+        portfolios_inv = ['Digital Banking', 'Insurance', 'Payments', 'Capital Markets', 'Wealth Management', 'Shared Services']
+        statuses_inv = ['Active', 'Active', 'Active', 'Active', 'Active', 'Active', 'Active', 'Active', 'Suspended', 'Pending Closure']
+        
+        for i in range(50):
+            env = random.choice(envs)
+            portfolio = random.choice(portfolios_inv)
+            inventory_data.append({
+                'Account ID': f'{random.randint(100000000000, 999999999999)}',
+                'Account Name': f"{portfolio.lower().replace(' ', '-')[:8]}-{env.lower()[:4]}-{random.randint(1, 200):03d}",
+                'Environment': env,
+                'Portfolio': portfolio,
+                'Owner': f"{random.choice(['john', 'jane', 'mike', 'sarah', 'tom'])}.{random.choice(['smith', 'doe', 'wilson'])}@company.com",
+                'Status': random.choice(statuses_inv),
+                'Created': (datetime.now() - timedelta(days=random.randint(30, 1000))).strftime('%Y-%m-%d'),
+                'Monthly Cost': f"${random.randint(1000, 50000):,}",
+                'Compliance': random.choice(['✅ Compliant', '✅ Compliant', '✅ Compliant', '⚠️ Warning', '❌ Non-Compliant'])
+            })
+        
+        df_inventory = pd.DataFrame(inventory_data)
+        
+        st.dataframe(
+            df_inventory,
+            use_container_width=True,
+            hide_index=True,
+            height=400
+        )
+        
+        # Export and actions
+        col1, col2, col3, col4 = st.columns(4)
+        with col1:
+            if st.button("📥 Export Full Inventory", use_container_width=True):
+                st.success("✅ Downloaded account_inventory.csv")
+        with col2:
+            if st.button("🔄 Refresh Inventory", use_container_width=True):
+                st.info("🔄 Refreshing from AWS Organizations...")
+        with col3:
+            if st.button("📊 Compliance Report", use_container_width=True):
+                st.success("✅ Report generated")
+        with col4:
+            if st.button("📧 Send to Stakeholders", use_container_width=True):
+                st.success("✅ Sent to cloud-governance@company.com")
+        
+        st.markdown("---")
+        
+        # Account Details Viewer
+        st.markdown("### 🔍 Account Detail Viewer")
+        
+        selected_account = st.selectbox("Select Account", 
+            ["digital-banking-prod-089", "payments-dev-156", "insurance-staging-034", "data-platform-sandbox-078"])
+        
+        if selected_account:
+            col1, col2 = st.columns(2)
+            
+            with col1:
+                st.markdown("#### 📋 Account Information")
+                st.markdown(f"""
+                | Property | Value |
+                |----------|-------|
+                | **Account ID** | 123456789012 |
+                | **Account Name** | {selected_account} |
+                | **Environment** | Production |
+                | **Portfolio** | Digital Banking |
+                | **OU Path** | Root/Production/Banking |
+                | **Created** | 2023-06-15 |
+                | **Owner** | john.smith@company.com |
+                | **Cost Center** | CC-1001 |
+                """)
+            
+            with col2:
+                st.markdown("#### 📊 Account Metrics")
+                st.metric("Monthly Cost", "$12,450", "+5% MoM")
+                st.metric("Resources", "156", "+12 this month")
+                st.metric("Compliance Score", "98%", "+2%")
+                st.metric("Security Score", "96%", "+1%")
+            
+            st.markdown("#### 🔐 Applied Guardrails")
+            guardrails = [
+                ("SCP: DenyPublicS3", "✅ Active"),
+                ("SCP: RequireIMDSv2", "✅ Active"),
+                ("SCP: RestrictRegions", "✅ Active"),
+                ("Config: RequireEncryption", "✅ Active"),
+                ("Config: RequireTagging", "⚠️ 3 violations"),
+            ]
+            
+            for guardrail, status in guardrails:
+                color = "#A3BE8C" if "Active" in status else "#EBCB8B"
+                st.markdown(f"- **{guardrail}**: <span style='color: {color};'>{status}</span>", unsafe_allow_html=True)
 
 # Footer
 st.markdown("---")
