@@ -4218,11 +4218,12 @@ with tab4:
     st.markdown("---")
     
     # Create sub-tabs for different compliance views
-    compliance_tab1, compliance_tab2, compliance_tab3, compliance_tab4, compliance_tab5 = st.tabs([
+    compliance_tab1, compliance_tab2, compliance_tab3, compliance_tab4, compliance_tab5, compliance_tab6 = st.tabs([
         "📊 Account Compliance Overview",
         "⚙️ AWS Config Rules",
         "🔍 Security Hub Findings",
         "🦠 Vulnerability Management",
+        "🏷️ Tagging Governance",
         "🛡️ Compliance Frameworks"
     ])
     
@@ -4882,7 +4883,527 @@ with tab4:
         - 🔔 DevOps team notified via Slack
         """)
     
+    # ==================== COMPLIANCE TAB 5: TAGGING GOVERNANCE ====================
     with compliance_tab5:
+        st.subheader("🏷️ Tagging Governance & Policy Enforcement")
+        
+        st.markdown("""
+        **Enterprise-wide tag management** - Policy enforcement, compliance monitoring, 
+        cost allocation accuracy, and automated remediation across 640+ AWS accounts.
+        """)
+        
+        # Tagging metrics
+        col1, col2, col3, col4, col5, col6 = st.columns(6)
+        with col1:
+            st.metric("Total Resources", "156,847", "Across 640 accounts")
+        with col2:
+            st.metric("Tag Compliance", "94.2%", "+2.1% this month")
+        with col3:
+            st.metric("Fully Tagged", "147,823", "All required tags")
+        with col4:
+            st.metric("Missing Tags", "9,024", "-1,234 remediated")
+        with col5:
+            st.metric("Cost Allocation", "96.8%", "Attributable spend")
+        with col6:
+            st.metric("Auto-Remediated", "3,456", "This month")
+        
+        st.markdown("---")
+        
+        # Tagging sub-tabs
+        tag_tab1, tag_tab2, tag_tab3, tag_tab4, tag_tab5 = st.tabs([
+            "📊 Compliance Dashboard",
+            "📋 Tag Policies",
+            "⚠️ Violations",
+            "🔧 Auto-Remediation",
+            "💰 Cost Allocation"
+        ])
+        
+        with tag_tab1:
+            st.markdown("### 📊 Tag Compliance Dashboard")
+            
+            col1, col2 = st.columns(2)
+            
+            with col1:
+                st.markdown("#### Compliance by Required Tag")
+                
+                required_tags = ['Environment', 'CostCenter', 'Owner', 'Application', 'Portfolio', 'DataClassification']
+                compliance_pct = [98.5, 96.2, 94.8, 92.1, 97.3, 88.4]
+                
+                fig = go.Figure(data=[go.Bar(
+                    x=required_tags,
+                    y=compliance_pct,
+                    marker_color=['#A3BE8C' if c >= 95 else '#EBCB8B' if c >= 90 else '#BF616A' for c in compliance_pct],
+                    text=[f'{c}%' for c in compliance_pct],
+                    textposition='outside',
+                    textfont=dict(color='#FFFFFF')
+                )])
+                
+                fig.add_hline(y=95, line_dash="dash", line_color="#A3BE8C", annotation_text="Target: 95%")
+                
+                fig.update_layout(
+                    template='plotly_dark',
+                    height=350,
+                    yaxis_title='Compliance %',
+                    yaxis_range=[0, 105],
+                    paper_bgcolor='rgba(0,0,0,0)'
+                )
+                
+                st.plotly_chart(fig, use_container_width=True)
+            
+            with col2:
+                st.markdown("#### Compliance by Resource Type")
+                
+                resource_types = ['EC2', 'RDS', 'S3', 'Lambda', 'EBS', 'EKS', 'Other']
+                type_compliance = [96.2, 94.8, 98.1, 89.3, 92.4, 95.7, 91.2]
+                resource_counts = [12450, 2340, 8920, 45670, 23450, 890, 62127]
+                
+                fig = go.Figure()
+                
+                fig.add_trace(go.Bar(
+                    name='Compliance %',
+                    x=resource_types,
+                    y=type_compliance,
+                    marker_color='#88C0D0',
+                    text=[f'{c}%' for c in type_compliance],
+                    textposition='outside',
+                    textfont=dict(color='#FFFFFF'),
+                    yaxis='y'
+                ))
+                
+                fig.add_trace(go.Scatter(
+                    name='Resource Count',
+                    x=resource_types,
+                    y=resource_counts,
+                    mode='lines+markers',
+                    line=dict(color='#A3BE8C', width=2),
+                    yaxis='y2'
+                ))
+                
+                fig.update_layout(
+                    template='plotly_dark',
+                    height=350,
+                    yaxis=dict(title='Compliance %', range=[0, 105]),
+                    yaxis2=dict(title='Resource Count', overlaying='y', side='right'),
+                    legend=dict(orientation='h', yanchor='bottom', y=1.02),
+                    paper_bgcolor='rgba(0,0,0,0)'
+                )
+                
+                st.plotly_chart(fig, use_container_width=True)
+            
+            st.markdown("---")
+            
+            # Compliance by portfolio
+            st.markdown("#### Compliance by Portfolio")
+            
+            portfolio_compliance = pd.DataFrame({
+                'Portfolio': ['Digital Banking', 'Insurance', 'Payments', 'Capital Markets', 'Wealth Management', 'Shared Services'],
+                'Resources': [28450, 24320, 18920, 22670, 19450, 43037],
+                'Compliant': [27856, 23105, 18541, 21987, 18563, 41234],
+                'Non-Compliant': [594, 1215, 379, 683, 887, 1803],
+                'Compliance %': ['97.9%', '95.0%', '98.0%', '97.0%', '95.4%', '95.8%'],
+                'Trend': ['↑ +0.5%', '↑ +1.2%', '↔ 0%', '↑ +0.3%', '↓ -0.2%', '↑ +0.8%']
+            })
+            
+            st.dataframe(portfolio_compliance, use_container_width=True, hide_index=True)
+            
+            st.markdown("---")
+            
+            # Compliance trend
+            st.markdown("#### Compliance Trend (12 Months)")
+            
+            months = pd.date_range(end=datetime.now(), periods=12, freq='M')
+            overall_compliance = [87.2, 88.5, 89.1, 90.3, 91.2, 91.8, 92.4, 93.1, 93.5, 93.8, 94.0, 94.2]
+            
+            fig = go.Figure()
+            
+            fig.add_trace(go.Scatter(
+                x=months, y=overall_compliance,
+                mode='lines+markers',
+                line=dict(color='#A3BE8C', width=3),
+                fill='tozeroy',
+                fillcolor='rgba(163, 190, 140, 0.2)',
+                name='Overall Compliance'
+            ))
+            
+            fig.add_hline(y=95, line_dash="dash", line_color="#EBCB8B", annotation_text="Target: 95%")
+            
+            fig.update_layout(
+                template='plotly_dark',
+                height=300,
+                yaxis_title='Compliance %',
+                yaxis_range=[80, 100],
+                paper_bgcolor='rgba(0,0,0,0)'
+            )
+            
+            st.plotly_chart(fig, use_container_width=True)
+        
+        with tag_tab2:
+            st.markdown("### 📋 Tag Policies & Standards")
+            
+            st.markdown("#### Required Tags (Organization-Wide)")
+            
+            required_tag_policies = [
+                {
+                    "tag": "Environment",
+                    "description": "Deployment environment",
+                    "allowed_values": "Production, Staging, Development, Sandbox, DR",
+                    "enforcement": "Strict",
+                    "scope": "All resources"
+                },
+                {
+                    "tag": "CostCenter",
+                    "description": "Financial cost allocation",
+                    "allowed_values": "CC-XXXX format (e.g., CC-1001)",
+                    "enforcement": "Strict",
+                    "scope": "All resources"
+                },
+                {
+                    "tag": "Owner",
+                    "description": "Resource owner email",
+                    "allowed_values": "Valid company email",
+                    "enforcement": "Strict",
+                    "scope": "All resources"
+                },
+                {
+                    "tag": "Application",
+                    "description": "Application identifier",
+                    "allowed_values": "APP-XXXX format",
+                    "enforcement": "Strict",
+                    "scope": "All resources"
+                },
+                {
+                    "tag": "Portfolio",
+                    "description": "Business portfolio",
+                    "allowed_values": "Digital Banking, Insurance, Payments, Capital Markets, Wealth Management, Shared Services",
+                    "enforcement": "Strict",
+                    "scope": "All resources"
+                },
+                {
+                    "tag": "DataClassification",
+                    "description": "Data sensitivity level",
+                    "allowed_values": "Public, Internal, Confidential, Restricted",
+                    "enforcement": "Strict",
+                    "scope": "Data resources (S3, RDS, DynamoDB)"
+                },
+            ]
+            
+            for policy in required_tag_policies:
+                enforcement_color = "#A3BE8C" if policy['enforcement'] == "Strict" else "#EBCB8B"
+                st.markdown(f"""
+                <div style='background: #2E3440; padding: 1rem; border-radius: 8px; margin: 0.5rem 0; border-left: 4px solid {enforcement_color};'>
+                    <div style='display: flex; justify-content: space-between;'>
+                        <strong style='font-size: 1.1rem; color: #88C0D0;'>{policy['tag']}</strong>
+                        <span style='background: {enforcement_color}; color: #2E3440; padding: 2px 10px; border-radius: 10px; font-size: 0.8rem;'>{policy['enforcement']}</span>
+                    </div>
+                    <p style='margin: 0.5rem 0 0 0; color: #D8DEE9;'>{policy['description']}</p>
+                    <small style='color: #88C0D0;'><strong>Allowed:</strong> {policy['allowed_values']}</small><br/>
+                    <small style='color: #A3BE8C;'><strong>Scope:</strong> {policy['scope']}</small>
+                </div>
+                """, unsafe_allow_html=True)
+            
+            st.markdown("---")
+            
+            st.markdown("#### AWS Tag Policies (Organization SCPs)")
+            
+            col1, col2 = st.columns(2)
+            
+            with col1:
+                st.markdown("##### Active Tag Policies")
+                
+                active_policies = [
+                    ("RequireEnvironmentTag", "All OUs", "✅ Active"),
+                    ("RequireCostCenterTag", "All OUs", "✅ Active"),
+                    ("RequireOwnerTag", "Production OU", "✅ Active"),
+                    ("EnforceTagValues", "All OUs", "✅ Active"),
+                    ("RequireDataClassification", "Data OU", "✅ Active"),
+                ]
+                
+                for policy, scope, status in active_policies:
+                    st.markdown(f"""
+                    <div style='background: #2E3440; padding: 0.5rem 1rem; border-radius: 5px; margin: 0.3rem 0;'>
+                        <div style='display: flex; justify-content: space-between;'>
+                            <strong>{policy}</strong>
+                            <span style='color: #A3BE8C;'>{status}</span>
+                        </div>
+                        <small style='color: #88C0D0;'>Scope: {scope}</small>
+                    </div>
+                    """, unsafe_allow_html=True)
+            
+            with col2:
+                st.markdown("##### Policy Actions")
+                
+                if st.button("➕ Create New Tag Policy", use_container_width=True):
+                    st.info("📝 Opening tag policy editor...")
+                
+                if st.button("📋 Export Policy Report", use_container_width=True):
+                    st.success("✅ Downloaded tag_policies_report.json")
+                
+                if st.button("🔄 Sync with AWS Organizations", use_container_width=True):
+                    st.success("✅ Tag policies synced successfully")
+                
+                if st.button("📊 View Policy Effectiveness", use_container_width=True):
+                    st.info("📈 Generating effectiveness report...")
+        
+        with tag_tab3:
+            st.markdown("### ⚠️ Tag Violations")
+            
+            col1, col2, col3, col4 = st.columns(4)
+            with col1:
+                st.metric("Total Violations", "9,024", "-1,234 this week")
+            with col2:
+                st.metric("Critical (Prod)", "456", "Missing required tags")
+            with col3:
+                st.metric("Invalid Values", "1,234", "Non-compliant values")
+            with col4:
+                st.metric("Orphaned Resources", "567", "No owner tag")
+            
+            st.markdown("---")
+            
+            # Filter controls
+            col1, col2, col3, col4 = st.columns(4)
+            with col1:
+                viol_tag = st.selectbox("Tag", ["All Tags", "Environment", "CostCenter", "Owner", "Application", "DataClassification"])
+            with col2:
+                viol_type = st.selectbox("Violation Type", ["All", "Missing Tag", "Invalid Value", "Case Mismatch"])
+            with col3:
+                viol_portfolio = st.selectbox("Portfolio", ["All", "Digital Banking", "Insurance", "Payments", "Capital Markets"])
+            with col4:
+                viol_severity = st.selectbox("Severity", ["All", "Critical", "High", "Medium", "Low"])
+            
+            st.markdown("---")
+            
+            # Violations table
+            violations = []
+            resource_types_v = ['EC2', 'RDS', 'S3', 'Lambda', 'EBS']
+            missing_tags_v = ['CostCenter', 'Owner', 'Environment', 'Application', 'DataClassification']
+            
+            for i in range(20):
+                res_type = random.choice(resource_types_v)
+                violations.append({
+                    'Resource ID': f"{res_type.lower()}-{random.randint(10000, 99999)}",
+                    'Resource Type': res_type,
+                    'Account': f"prod-{random.choice(['banking', 'payments', 'insurance'])}-{random.randint(1,99):03d}",
+                    'Missing/Invalid Tag': random.choice(missing_tags_v),
+                    'Violation Type': random.choice(['Missing', 'Missing', 'Invalid Value', 'Case Mismatch']),
+                    'Age': f"{random.randint(1, 90)} days",
+                    'Severity': random.choice(['🔴 Critical', '🟠 High', '🟡 Medium', '🟢 Low']),
+                    'Est. Cost Impact': f"${random.randint(10, 500)}/mo"
+                })
+            
+            df_violations = pd.DataFrame(violations)
+            st.dataframe(df_violations, use_container_width=True, hide_index=True, height=400)
+            
+            col1, col2, col3 = st.columns(3)
+            with col1:
+                if st.button("🔧 Auto-Remediate Selected", type="primary", use_container_width=True):
+                    st.success("✅ Initiated remediation for selected resources")
+            with col2:
+                if st.button("📧 Notify Resource Owners", use_container_width=True):
+                    st.success("✅ Notifications sent to 45 owners")
+            with col3:
+                if st.button("📥 Export Violations", use_container_width=True):
+                    st.success("✅ Downloaded tag_violations.csv")
+        
+        with tag_tab4:
+            st.markdown("### 🔧 Auto-Remediation Engine")
+            
+            st.markdown("""
+            **Automated tag remediation** using AI-powered inference and rule-based defaults 
+            to automatically fix missing or invalid tags.
+            """)
+            
+            col1, col2, col3, col4 = st.columns(4)
+            with col1:
+                st.metric("Auto-Remediated (MTD)", "3,456", "+892 this week")
+            with col2:
+                st.metric("Success Rate", "98.7%", "+0.3%")
+            with col3:
+                st.metric("Pending Review", "123", "AI-uncertain")
+            with col4:
+                st.metric("Time Saved", "847 hours", "This month")
+            
+            st.markdown("---")
+            
+            col1, col2 = st.columns(2)
+            
+            with col1:
+                st.markdown("#### Remediation Rules")
+                
+                rules = [
+                    ("Environment Tag", "Infer from account name/OU", "✅ Enabled", "98.5%"),
+                    ("CostCenter Tag", "Map from account metadata", "✅ Enabled", "97.2%"),
+                    ("Owner Tag", "Lookup from resource creator", "✅ Enabled", "94.8%"),
+                    ("Application Tag", "Infer from resource naming", "✅ Enabled", "89.3%"),
+                    ("Portfolio Tag", "Map from OU structure", "✅ Enabled", "99.1%"),
+                    ("DataClassification", "AI content analysis", "⚠️ Review mode", "87.4%"),
+                ]
+                
+                for rule, method, status, accuracy in rules:
+                    status_color = "#A3BE8C" if "Enabled" in status else "#EBCB8B"
+                    st.markdown(f"""
+                    <div style='background: #2E3440; padding: 0.7rem 1rem; border-radius: 5px; margin: 0.3rem 0;'>
+                        <div style='display: flex; justify-content: space-between;'>
+                            <strong>{rule}</strong>
+                            <span style='color: {status_color};'>{status}</span>
+                        </div>
+                        <small style='color: #88C0D0;'>Method: {method} | Accuracy: {accuracy}</small>
+                    </div>
+                    """, unsafe_allow_html=True)
+            
+            with col2:
+                st.markdown("#### Recent Auto-Remediations")
+                
+                recent_remediations = [
+                    ("ec2-45678", "Environment=Production", "Inferred from OU", "2 min ago"),
+                    ("rds-12345", "CostCenter=CC-1001", "Account mapping", "5 min ago"),
+                    ("s3-bucket-xyz", "Owner=jane.doe@co.com", "Creator lookup", "8 min ago"),
+                    ("lambda-func-01", "Application=APP-2345", "Name pattern", "12 min ago"),
+                    ("ebs-vol-789", "Portfolio=Payments", "OU structure", "15 min ago"),
+                ]
+                
+                for resource, tag_applied, method, when in recent_remediations:
+                    st.markdown(f"""
+                    <div style='background: #2E3440; padding: 0.5rem 1rem; border-radius: 5px; margin: 0.3rem 0; border-left: 3px solid #A3BE8C;'>
+                        <code>{resource}</code><br/>
+                        <span style='color: #A3BE8C;'>+ {tag_applied}</span><br/>
+                        <small style='color: #88C0D0;'>{method} | {when}</small>
+                    </div>
+                    """, unsafe_allow_html=True)
+            
+            st.markdown("---")
+            
+            st.markdown("#### 🤖 AI-Powered Tag Inference")
+            
+            st.info("""
+            **Claude-Powered Tag Analysis**
+            
+            When rule-based remediation cannot determine a tag value with high confidence, 
+            Claude AI analyzes:
+            
+            - Resource naming patterns and conventions
+            - Associated resources and their tags
+            - CloudTrail activity and resource creators
+            - Cost allocation patterns
+            - Network topology and VPC associations
+            
+            **Current Queue**: 123 resources pending AI review
+            
+            **Confidence Threshold**: 90% (below this, tags are queued for human review)
+            """)
+            
+            col1, col2 = st.columns(2)
+            with col1:
+                if st.button("🤖 Run AI Analysis on Queue", type="primary", use_container_width=True):
+                    st.success("✅ AI analysis started for 123 resources")
+            with col2:
+                if st.button("📋 Review AI Suggestions", use_container_width=True):
+                    st.info("📝 Opening review queue...")
+        
+        with tag_tab5:
+            st.markdown("### 💰 Cost Allocation & Attribution")
+            
+            st.markdown("""
+            **Tag-based cost allocation accuracy** - Ensure every dollar of cloud spend 
+            is properly attributed to business units, applications, and cost centers.
+            """)
+            
+            col1, col2, col3, col4 = st.columns(4)
+            with col1:
+                st.metric("Total Monthly Spend", "$2.8M", "100%")
+            with col2:
+                st.metric("Allocated Spend", "$2.71M", "96.8%")
+            with col3:
+                st.metric("Unallocated", "$89K", "3.2%")
+            with col4:
+                st.metric("Allocation Accuracy", "96.8%", "+1.2% this month")
+            
+            st.markdown("---")
+            
+            col1, col2 = st.columns(2)
+            
+            with col1:
+                st.markdown("#### Cost Allocation by Tag")
+                
+                allocation_tags = ['CostCenter', 'Portfolio', 'Application', 'Environment', 'Owner']
+                allocation_pct = [96.8, 97.2, 92.4, 98.5, 94.2]
+                unallocated = [89000, 78000, 212000, 42000, 162000]
+                
+                fig = go.Figure()
+                
+                fig.add_trace(go.Bar(
+                    x=allocation_tags,
+                    y=allocation_pct,
+                    marker_color=['#A3BE8C' if p >= 95 else '#EBCB8B' if p >= 90 else '#BF616A' for p in allocation_pct],
+                    text=[f'{p}%' for p in allocation_pct],
+                    textposition='outside',
+                    textfont=dict(color='#FFFFFF')
+                ))
+                
+                fig.add_hline(y=95, line_dash="dash", line_color="#A3BE8C", annotation_text="Target: 95%")
+                
+                fig.update_layout(
+                    template='plotly_dark',
+                    height=350,
+                    yaxis_title='Allocation %',
+                    yaxis_range=[0, 105],
+                    paper_bgcolor='rgba(0,0,0,0)'
+                )
+                
+                st.plotly_chart(fig, use_container_width=True)
+            
+            with col2:
+                st.markdown("#### Unallocated Spend by Service")
+                
+                services_unalloc = ['EC2', 'RDS', 'S3', 'Data Transfer', 'Other']
+                unalloc_amounts = [34000, 22000, 12000, 15000, 6000]
+                
+                fig = go.Figure(data=[go.Pie(
+                    labels=services_unalloc,
+                    values=unalloc_amounts,
+                    hole=0.4,
+                    marker_colors=['#BF616A', '#D08770', '#EBCB8B', '#88C0D0', '#5E81AC'],
+                    textinfo='label+percent',
+                    textfont=dict(color='#FFFFFF')
+                )])
+                
+                fig.update_layout(
+                    template='plotly_dark',
+                    height=350,
+                    paper_bgcolor='rgba(0,0,0,0)',
+                    annotations=[dict(text=f'${sum(unalloc_amounts)/1000:.0f}K', x=0.5, y=0.5, font_size=20, font_color='#FFFFFF', showarrow=False)]
+                )
+                
+                st.plotly_chart(fig, use_container_width=True)
+            
+            st.markdown("---")
+            
+            st.markdown("#### 📋 Unallocated Resources (Top Impact)")
+            
+            unallocated_resources = []
+            for i in range(10):
+                unallocated_resources.append({
+                    'Resource': f"{random.choice(['ec2', 'rds', 's3'])}-{random.randint(10000, 99999)}",
+                    'Account': f"prod-{random.choice(['banking', 'payments', 'insurance'])}-{random.randint(1,99):03d}",
+                    'Monthly Cost': f"${random.randint(500, 5000):,}",
+                    'Missing Tags': random.choice(['CostCenter', 'CostCenter, Owner', 'Application', 'Portfolio']),
+                    'Age': f"{random.randint(7, 90)} days",
+                    'Suggested Action': random.choice(['Auto-tag', 'Owner review', 'AI inference'])
+                })
+            
+            st.dataframe(pd.DataFrame(unallocated_resources), use_container_width=True, hide_index=True)
+            
+            col1, col2, col3 = st.columns(3)
+            with col1:
+                if st.button("🔧 Auto-Tag High-Impact Resources", type="primary", use_container_width=True):
+                    st.success("✅ Auto-tagging initiated for 45 resources")
+            with col2:
+                if st.button("📧 Send Owner Notifications", use_container_width=True):
+                    st.success("✅ Sent to 23 resource owners")
+            with col3:
+                if st.button("📊 Generate Allocation Report", use_container_width=True):
+                    st.success("✅ Report generated for Finance team")
+    
+    with compliance_tab6:
         st.subheader("🏛️ Compliance Framework Status")
         
         st.markdown("""
@@ -5404,10 +5925,11 @@ with tab3:
     st.markdown("---")
     
     # Security sub-tabs
-    sec_tab1, sec_tab2, sec_tab3, sec_tab4 = st.tabs([
+    sec_tab1, sec_tab2, sec_tab3, sec_tab4, sec_tab5 = st.tabs([
         "🔍 Active Threats",
         "🛠️ Remediation Queue",
         "📊 Security Dashboard",
+        "🔐 IAM Analytics",
         "🤖 Claude Reasoning"
     ])
     
@@ -5522,7 +6044,517 @@ with tab3:
                 st.markdown(f"**{svc}**: {score}% secure")
                 st.progress(score/100)
     
+    # ==================== SEC TAB 4: IAM ANALYTICS ====================
     with sec_tab4:
+        st.subheader("🔐 IAM Analytics & Access Intelligence")
+        
+        st.markdown("""
+        **Comprehensive IAM analysis** - Permission insights, least privilege scoring, 
+        cross-account access mapping, and credential hygiene across 640+ AWS accounts.
+        """)
+        
+        # IAM Metrics
+        col1, col2, col3, col4, col5, col6 = st.columns(6)
+        with col1:
+            st.metric("Total IAM Users", "2,847", "+23 this month")
+        with col2:
+            st.metric("IAM Roles", "12,456", "+156")
+        with col3:
+            st.metric("Service Accounts", "847", "+12")
+        with col4:
+            st.metric("Least Privilege Score", "72%", "+3%")
+        with col5:
+            st.metric("Unused Credentials", "234", "-45 cleaned")
+        with col6:
+            st.metric("Policy Violations", "89", "-23 fixed")
+        
+        st.markdown("---")
+        
+        # IAM Sub-tabs
+        iam_tab1, iam_tab2, iam_tab3, iam_tab4, iam_tab5 = st.tabs([
+            "📊 Permission Analysis",
+            "🎯 Least Privilege",
+            "🔗 Cross-Account Access",
+            "🔑 Credential Hygiene",
+            "⚠️ IAM Risks"
+        ])
+        
+        with iam_tab1:
+            st.markdown("### 📊 Permission Analysis Dashboard")
+            
+            col1, col2 = st.columns(2)
+            
+            with col1:
+                st.markdown("#### Permission Distribution by Type")
+                
+                perm_types = ['Admin Access', 'Power User', 'Read/Write', 'Read Only', 'Custom Limited']
+                perm_counts = [45, 234, 567, 1245, 756]
+                perm_colors = ['#BF616A', '#D08770', '#EBCB8B', '#A3BE8C', '#88C0D0']
+                
+                fig = go.Figure(data=[go.Pie(
+                    labels=perm_types,
+                    values=perm_counts,
+                    hole=0.4,
+                    marker_colors=perm_colors,
+                    textinfo='label+percent',
+                    textfont=dict(color='#FFFFFF')
+                )])
+                
+                fig.update_layout(
+                    template='plotly_dark',
+                    height=350,
+                    paper_bgcolor='rgba(0,0,0,0)',
+                    legend=dict(font=dict(color='#FFFFFF'))
+                )
+                
+                st.plotly_chart(fig, use_container_width=True)
+            
+            with col2:
+                st.markdown("#### High-Risk Permissions")
+                
+                high_risk_perms = [
+                    ("iam:*", "45 principals", "🔴 Critical", "Full IAM control"),
+                    ("s3:*", "234 principals", "🟠 High", "Full S3 access"),
+                    ("ec2:*", "189 principals", "🟠 High", "Full EC2 control"),
+                    ("*:*", "12 principals", "🔴 Critical", "Full admin access"),
+                    ("kms:Decrypt", "567 principals", "🟡 Medium", "Can decrypt all KMS keys"),
+                    ("sts:AssumeRole", "1,245 principals", "🟡 Medium", "Cross-account capable"),
+                ]
+                
+                for perm, count, severity, desc in high_risk_perms:
+                    sev_color = "#BF616A" if "Critical" in severity else "#D08770" if "High" in severity else "#EBCB8B"
+                    st.markdown(f"""
+                    <div style='background: #2E3440; padding: 0.6rem; border-radius: 5px; margin: 0.3rem 0; border-left: 3px solid {sev_color};'>
+                        <div style='display: flex; justify-content: space-between;'>
+                            <code style='color: #88C0D0;'>{perm}</code>
+                            <span style='color: {sev_color};'>{severity}</span>
+                        </div>
+                        <small>{count} | {desc}</small>
+                    </div>
+                    """, unsafe_allow_html=True)
+            
+            st.markdown("---")
+            
+            st.markdown("#### 📋 Overprivileged Principals (Top 20)")
+            
+            overprivileged = []
+            for i in range(15):
+                principal_type = random.choice(['User', 'Role', 'Role', 'Role'])
+                overprivileged.append({
+                    'Principal': f"{'user/' if principal_type == 'User' else 'role/'}{random.choice(['admin', 'developer', 'svc', 'lambda'])}-{random.choice(['prod', 'dev', 'deploy'])}-{random.randint(1,99):02d}",
+                    'Type': principal_type,
+                    'Account': f"prod-{random.choice(['banking', 'payments', 'insurance'])}-{random.randint(1,99):03d}",
+                    'Permissions': random.randint(50, 500),
+                    'Used (30d)': random.randint(5, 50),
+                    'Unused %': f"{random.randint(60, 95)}%",
+                    'Risk Score': random.choice(['🔴 Critical', '🟠 High', '🟠 High', '🟡 Medium'])
+                })
+            
+            st.dataframe(pd.DataFrame(overprivileged), use_container_width=True, hide_index=True)
+        
+        with iam_tab2:
+            st.markdown("### 🎯 Least Privilege Analysis")
+            
+            # Overall score
+            col1, col2, col3 = st.columns([1, 2, 1])
+            with col2:
+                st.markdown("""
+                <div style='text-align: center; background: #2E3440; padding: 2rem; border-radius: 10px;'>
+                    <h1 style='color: #EBCB8B; font-size: 4rem; margin: 0;'>72%</h1>
+                    <p style='color: #D8DEE9; font-size: 1.2rem;'>Organization Least Privilege Score</p>
+                    <small style='color: #A3BE8C;'>↑ 3% improvement from last month</small>
+                </div>
+                """, unsafe_allow_html=True)
+            
+            st.markdown("---")
+            
+            col1, col2 = st.columns(2)
+            
+            with col1:
+                st.markdown("#### Least Privilege Score by Portfolio")
+                
+                portfolios_lp = ['Digital Banking', 'Insurance', 'Payments', 'Capital Markets', 'Wealth Mgmt', 'Shared Services']
+                lp_scores = [78, 65, 82, 71, 69, 75]
+                
+                fig = go.Figure(data=[go.Bar(
+                    x=portfolios_lp,
+                    y=lp_scores,
+                    marker_color=['#A3BE8C' if s >= 75 else '#EBCB8B' if s >= 65 else '#BF616A' for s in lp_scores],
+                    text=[f'{s}%' for s in lp_scores],
+                    textposition='outside',
+                    textfont=dict(color='#FFFFFF')
+                )])
+                
+                fig.add_hline(y=80, line_dash="dash", line_color="#A3BE8C", annotation_text="Target: 80%")
+                
+                fig.update_layout(
+                    template='plotly_dark',
+                    height=350,
+                    yaxis_title='Least Privilege Score (%)',
+                    yaxis_range=[0, 100],
+                    paper_bgcolor='rgba(0,0,0,0)'
+                )
+                
+                st.plotly_chart(fig, use_container_width=True)
+            
+            with col2:
+                st.markdown("#### Score Trend (6 Months)")
+                
+                months = ['Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov']
+                scores = [58, 62, 65, 68, 69, 72]
+                
+                fig = go.Figure()
+                fig.add_trace(go.Scatter(
+                    x=months, y=scores,
+                    mode='lines+markers',
+                    line=dict(color='#A3BE8C', width=3),
+                    fill='tozeroy',
+                    fillcolor='rgba(163, 190, 140, 0.2)'
+                ))
+                
+                fig.add_hline(y=80, line_dash="dash", line_color="#EBCB8B", annotation_text="Target: 80%")
+                
+                fig.update_layout(
+                    template='plotly_dark',
+                    height=350,
+                    yaxis_title='Score (%)',
+                    yaxis_range=[0, 100],
+                    paper_bgcolor='rgba(0,0,0,0)'
+                )
+                
+                st.plotly_chart(fig, use_container_width=True)
+            
+            st.markdown("---")
+            
+            st.markdown("#### 🤖 AI-Recommended Permission Reductions")
+            
+            recommendations = [
+                ("role/lambda-data-processor-prod", "Remove s3:DeleteBucket", "Never used in 90 days", "🟢 Safe to remove", "$0 impact"),
+                ("role/ecs-task-payments-01", "Scope down ec2:* to ec2:Describe*", "Only read operations used", "🟢 Safe to remove", "$0 impact"),
+                ("user/developer-john-smith", "Remove iam:CreateUser", "Used once 180 days ago", "🟡 Review first", "Low risk"),
+                ("role/glue-etl-insurance", "Remove kms:* - scope to specific keys", "Only 2 keys accessed", "🟢 Safe to remove", "$0 impact"),
+                ("role/sagemaker-training-ml", "Remove s3:* - scope to ml-* buckets", "Only ML buckets accessed", "🟢 Safe to remove", "$0 impact"),
+            ]
+            
+            for principal, action, reason, safety, impact in recommendations:
+                st.markdown(f"""
+                <div style='background: #2E3440; padding: 1rem; border-radius: 5px; margin: 0.5rem 0;'>
+                    <div style='display: flex; justify-content: space-between;'>
+                        <strong><code>{principal}</code></strong>
+                        <span>{safety}</span>
+                    </div>
+                    <div style='margin: 0.5rem 0;'>
+                        <span style='color: #BF616A;'>Action: {action}</span>
+                    </div>
+                    <small style='color: #88C0D0;'>Reason: {reason} | Impact: {impact}</small>
+                </div>
+                """, unsafe_allow_html=True)
+            
+            if st.button("🚀 Apply All Safe Recommendations", type="primary"):
+                st.success("✅ Applied 4 permission reductions. Estimated score improvement: +5%")
+        
+        with iam_tab3:
+            st.markdown("### 🔗 Cross-Account Access Map")
+            
+            st.markdown("""
+            **Visualize and manage cross-account IAM trust relationships** across your 640+ AWS accounts.
+            """)
+            
+            col1, col2, col3, col4 = st.columns(4)
+            with col1:
+                st.metric("Cross-Account Roles", "1,847", "Trust relationships")
+            with col2:
+                st.metric("External Trusts", "23", "3rd party access")
+            with col3:
+                st.metric("Circular Trusts", "4", "⚠️ Review needed")
+            with col4:
+                st.metric("Unused Trusts", "156", "90+ days inactive")
+            
+            st.markdown("---")
+            
+            col1, col2 = st.columns([2, 1])
+            
+            with col1:
+                st.markdown("#### Trust Relationship Matrix (Top Accounts)")
+                
+                # Create a heatmap-style matrix
+                accounts_matrix = ['banking-prod', 'payments-prod', 'insurance-prod', 'data-lake', 'security-hub', 'shared-svc']
+                trust_matrix = np.random.randint(0, 15, size=(6, 6))
+                np.fill_diagonal(trust_matrix, 0)
+                
+                fig = go.Figure(data=go.Heatmap(
+                    z=trust_matrix,
+                    x=accounts_matrix,
+                    y=accounts_matrix,
+                    colorscale='Blues',
+                    text=trust_matrix,
+                    texttemplate='%{text}',
+                    textfont=dict(color='white'),
+                    hovertemplate='From: %{y}<br>To: %{x}<br>Roles: %{z}<extra></extra>'
+                ))
+                
+                fig.update_layout(
+                    template='plotly_dark',
+                    height=400,
+                    xaxis_title='Trusting Account',
+                    yaxis_title='Trusted Account',
+                    paper_bgcolor='rgba(0,0,0,0)'
+                )
+                
+                st.plotly_chart(fig, use_container_width=True)
+            
+            with col2:
+                st.markdown("#### ⚠️ High-Risk Trusts")
+                
+                risky_trusts = [
+                    ("External: AWS Support", "🟡 Vendor access"),
+                    ("External: Datadog", "🟡 Monitoring"),
+                    ("External: Unknown-12345", "🔴 Investigate"),
+                    ("Circular: A→B→C→A", "🟠 Complexity risk"),
+                ]
+                
+                for trust, risk in risky_trusts:
+                    color = "#BF616A" if "🔴" in risk else "#D08770" if "🟠" in risk else "#EBCB8B"
+                    st.markdown(f"""
+                    <div style='background: #2E3440; padding: 0.7rem; border-radius: 5px; margin: 0.4rem 0; border-left: 3px solid {color};'>
+                        <strong>{trust}</strong><br/>
+                        <small style='color: {color};'>{risk}</small>
+                    </div>
+                    """, unsafe_allow_html=True)
+                
+                st.markdown("---")
+                
+                st.markdown("#### 📊 Trust by Type")
+                st.markdown("""
+                - **Internal Production**: 892 roles
+                - **Internal Dev/Test**: 634 roles  
+                - **Shared Services**: 298 roles
+                - **External Vendors**: 23 roles
+                """)
+            
+            st.markdown("---")
+            
+            st.markdown("#### 📋 Cross-Account Role Details")
+            
+            cross_account_roles = []
+            for i in range(12):
+                cross_account_roles.append({
+                    'Role Name': f"cross-account-{random.choice(['read', 'admin', 'deploy', 'audit'])}-{random.randint(1,99):02d}",
+                    'Source Account': f"prod-{random.choice(['banking', 'payments', 'insurance'])}-{random.randint(1,50):03d}",
+                    'Target Account': f"prod-{random.choice(['data-lake', 'security', 'shared'])}-{random.randint(1,20):03d}",
+                    'Trust Type': random.choice(['Internal', 'Internal', 'Internal', 'External']),
+                    'Last Used': f"{random.randint(1, 90)} days ago",
+                    'Sessions (30d)': random.randint(0, 500),
+                    'Risk': random.choice(['🟢 Low', '🟢 Low', '🟡 Medium', '🟠 High'])
+                })
+            
+            st.dataframe(pd.DataFrame(cross_account_roles), use_container_width=True, hide_index=True)
+        
+        with iam_tab4:
+            st.markdown("### 🔑 Credential Hygiene Dashboard")
+            
+            col1, col2, col3, col4 = st.columns(4)
+            with col1:
+                st.metric("Active Access Keys", "1,234", "IAM users")
+            with col2:
+                st.metric("Keys > 90 days", "456", "🟡 Rotate soon")
+            with col3:
+                st.metric("Keys > 180 days", "123", "🔴 Critical")
+            with col4:
+                st.metric("Unused Keys", "234", "Ready to delete")
+            
+            st.markdown("---")
+            
+            col1, col2 = st.columns(2)
+            
+            with col1:
+                st.markdown("#### Access Key Age Distribution")
+                
+                age_ranges = ['< 30 days', '30-90 days', '90-180 days', '180-365 days', '> 365 days']
+                key_counts = [345, 433, 289, 123, 44]
+                colors = ['#A3BE8C', '#88C0D0', '#EBCB8B', '#D08770', '#BF616A']
+                
+                fig = go.Figure(data=[go.Bar(
+                    x=age_ranges,
+                    y=key_counts,
+                    marker_color=colors,
+                    text=key_counts,
+                    textposition='outside',
+                    textfont=dict(color='#FFFFFF')
+                )])
+                
+                fig.update_layout(
+                    template='plotly_dark',
+                    height=300,
+                    yaxis_title='Number of Keys',
+                    paper_bgcolor='rgba(0,0,0,0)'
+                )
+                
+                st.plotly_chart(fig, use_container_width=True)
+            
+            with col2:
+                st.markdown("#### Password Policy Compliance")
+                
+                policies = ['Min Length 14+', 'Uppercase Required', 'Numbers Required', 
+                           'Symbols Required', 'MFA Enabled', 'Max Age 90 days']
+                compliance = [98, 99, 99, 95, 87, 78]
+                
+                for policy, pct in zip(policies, compliance):
+                    color = '#A3BE8C' if pct >= 95 else '#EBCB8B' if pct >= 85 else '#BF616A'
+                    st.markdown(f"""
+                    <div style='margin: 0.3rem 0;'>
+                        <div style='display: flex; justify-content: space-between;'>
+                            <span>{policy}</span>
+                            <span style='color: {color};'>{pct}%</span>
+                        </div>
+                        <div style='background: #4C566A; border-radius: 3px; height: 6px;'>
+                            <div style='background: {color}; width: {pct}%; height: 100%; border-radius: 3px;'></div>
+                        </div>
+                    </div>
+                    """, unsafe_allow_html=True)
+            
+            st.markdown("---")
+            
+            st.markdown("#### 🔴 Credentials Requiring Immediate Action")
+            
+            urgent_creds = [
+                ("user/svc-legacy-etl", "Access key 478 days old", "🔴 Critical", "Rotate immediately"),
+                ("user/admin-contractor-01", "No MFA enabled", "🔴 Critical", "Enable MFA"),
+                ("user/developer-jane-doe", "Password 245 days old", "🟠 High", "Force password reset"),
+                ("user/svc-monitoring", "2 active keys (should be 1)", "🟡 Medium", "Delete unused key"),
+                ("user/api-integration-prod", "Key unused 120 days", "🟡 Medium", "Verify or delete"),
+            ]
+            
+            for principal, issue, severity, action in urgent_creds:
+                sev_color = "#BF616A" if "Critical" in severity else "#D08770" if "High" in severity else "#EBCB8B"
+                st.markdown(f"""
+                <div style='background: #2E3440; padding: 0.8rem; border-radius: 5px; margin: 0.4rem 0; border-left: 4px solid {sev_color};'>
+                    <div style='display: flex; justify-content: space-between;'>
+                        <strong><code>{principal}</code></strong>
+                        <span style='color: {sev_color};'>{severity}</span>
+                    </div>
+                    <div>Issue: {issue}</div>
+                    <small style='color: #A3BE8C;'>Recommended: {action}</small>
+                </div>
+                """, unsafe_allow_html=True)
+            
+            col1, col2 = st.columns(2)
+            with col1:
+                if st.button("🔄 Rotate All Critical Keys", type="primary", use_container_width=True):
+                    st.success("✅ Initiated rotation for 123 critical access keys")
+            with col2:
+                if st.button("📧 Send Credential Reports", use_container_width=True):
+                    st.success("✅ Reports sent to account owners")
+        
+        with iam_tab5:
+            st.markdown("### ⚠️ IAM Risk Assessment")
+            
+            # Risk overview
+            col1, col2, col3, col4 = st.columns(4)
+            with col1:
+                st.metric("Critical Risks", "12", "Immediate action")
+            with col2:
+                st.metric("High Risks", "45", "This week")
+            with col3:
+                st.metric("Medium Risks", "156", "This month")
+            with col4:
+                st.metric("IAM Risk Score", "68/100", "+5 improved")
+            
+            st.markdown("---")
+            
+            st.markdown("#### 🔴 Critical IAM Risks")
+            
+            critical_risks = [
+                {
+                    "title": "Root Account Access Keys Exist",
+                    "accounts": "3 accounts",
+                    "detail": "Root access keys should never exist. Immediate deletion required.",
+                    "remediation": "Delete root access keys, enable MFA on root"
+                },
+                {
+                    "title": "Wildcard Principal in Resource Policies",
+                    "accounts": "7 S3 buckets, 2 KMS keys",
+                    "detail": "Resources accessible by any AWS principal (*)",
+                    "remediation": "Restrict to specific accounts/principals"
+                },
+                {
+                    "title": "IAM Users with Console + Programmatic Access",
+                    "accounts": "23 users",
+                    "detail": "Service accounts should not have console access",
+                    "remediation": "Remove console access or convert to SSO"
+                },
+                {
+                    "title": "Inactive IAM Users with Active Credentials",
+                    "accounts": "45 users",
+                    "detail": "Users not logged in 90+ days but credentials active",
+                    "remediation": "Disable or delete inactive users"
+                },
+            ]
+            
+            for risk in critical_risks:
+                st.markdown(f"""
+                <div style='background: #3B1E1E; padding: 1rem; border-radius: 8px; margin: 0.5rem 0; border: 1px solid #BF616A;'>
+                    <div style='display: flex; justify-content: space-between;'>
+                        <strong style='color: #BF616A; font-size: 1.1rem;'>🔴 {risk['title']}</strong>
+                        <span style='color: #D8DEE9;'>{risk['accounts']}</span>
+                    </div>
+                    <p style='margin: 0.5rem 0; color: #D8DEE9;'>{risk['detail']}</p>
+                    <small style='color: #A3BE8C;'><strong>Remediation:</strong> {risk['remediation']}</small>
+                </div>
+                """, unsafe_allow_html=True)
+            
+            st.markdown("---")
+            
+            col1, col2 = st.columns(2)
+            
+            with col1:
+                st.markdown("#### 📊 Risk Trend (6 Months)")
+                
+                months = ['Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov']
+                critical = [18, 16, 15, 14, 13, 12]
+                high = [67, 62, 58, 52, 48, 45]
+                medium = [189, 178, 172, 168, 162, 156]
+                
+                fig = go.Figure()
+                fig.add_trace(go.Scatter(x=months, y=critical, name='Critical', line=dict(color='#BF616A', width=2)))
+                fig.add_trace(go.Scatter(x=months, y=high, name='High', line=dict(color='#D08770', width=2)))
+                fig.add_trace(go.Scatter(x=months, y=medium, name='Medium', line=dict(color='#EBCB8B', width=2)))
+                
+                fig.update_layout(
+                    template='plotly_dark',
+                    height=300,
+                    yaxis_title='Risk Count',
+                    legend=dict(orientation='h', yanchor='bottom', y=1.02),
+                    paper_bgcolor='rgba(0,0,0,0)'
+                )
+                
+                st.plotly_chart(fig, use_container_width=True)
+            
+            with col2:
+                st.markdown("#### 🤖 Claude Risk Analysis")
+                
+                st.info("""
+                **AI Risk Assessment Summary**
+                
+                Based on analysis of 640 accounts:
+                
+                **Top Concerns:**
+                1. 3 root accounts have access keys (critical)
+                2. 23% of roles have unused admin permissions
+                3. Cross-account trust sprawl increasing
+                
+                **Positive Trends:**
+                - MFA adoption up 12% (now 87%)
+                - Key rotation compliance improving
+                - Least privilege score trending up
+                
+                **Recommendation:**
+                Focus on root account remediation and permission right-sizing this sprint.
+                
+                **Risk Reduction Potential:** 35% with recommended actions
+                """)
+    
+    with sec_tab5:
         st.subheader("🤖 Claude AI Security Reasoning")
         
         with st.expander("📋 Example: Exposed S3 Bucket Detection & Remediation", expanded=True):
