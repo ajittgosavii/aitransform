@@ -2431,11 +2431,16 @@ with tab7:
     st.header("💰 FinOps Intelligence & Cost Optimization")
     
     # Create sub-tabs for FinOps
-    finops_tab1, finops_tab2, finops_tab3, finops_tab4 = st.tabs([
+    finops_tab1, finops_tab2, finops_tab3, finops_tab4, finops_tab5, finops_tab6, finops_tab7, finops_tab8, finops_tab9 = st.tabs([
         "💵 Cost Overview",
-        "🤖 AI/ML Workload Costs",
-        "⚠️ Anomaly Detection",
-        "📊 Optimization Opportunities"
+        "🤖 AI/ML Costs",
+        "⚠️ Anomalies",
+        "📊 Optimization",
+        "📈 Budget & Forecast",
+        "🗑️ Waste Detection",
+        "💳 Chargeback",
+        "📉 Unit Economics",
+        "🌱 Sustainability"
     ])
     
     with finops_tab1:
@@ -3180,6 +3185,960 @@ with tab7:
                 <span style='color: #A3BE8C; font-size: 1.2rem;'>{savings}</span> | {confidence}
             </div>
             """, unsafe_allow_html=True)
+    
+    # ==================== FINOPS TAB 5: BUDGET & FORECASTING ====================
+    with finops_tab5:
+        st.subheader("📈 Budget Management & Forecasting")
+        
+        st.markdown("""
+        **AI-powered budget tracking and spend forecasting** with variance analysis, 
+        alerts, and predictive modeling across all portfolios and accounts.
+        """)
+        
+        # Budget metrics
+        col1, col2, col3, col4 = st.columns(4)
+        with col1:
+            st.metric("Monthly Budget", "$3.2M", "FY2024-Q4")
+        with col2:
+            st.metric("Current Spend", "$2.8M", "87.5% utilized")
+        with col3:
+            st.metric("Forecasted EOY", "$3.1M", "-$100K under budget")
+        with col4:
+            st.metric("Budget Alerts", "3 Active", "2 Warning, 1 Critical")
+        
+        st.markdown("---")
+        
+        # Budget vs Actual by Portfolio
+        col1, col2 = st.columns([2, 1])
+        
+        with col1:
+            st.markdown("### 📊 Budget vs Actual by Portfolio")
+            
+            portfolios = ['Digital Banking', 'Insurance', 'Payments', 'Capital Markets', 'Wealth Management', 'Data Platform']
+            budget = [850000, 620000, 480000, 520000, 380000, 350000]
+            actual = [820000, 680000, 450000, 490000, 410000, 330000]
+            
+            fig = go.Figure()
+            
+            fig.add_trace(go.Bar(
+                name='Budget',
+                x=portfolios,
+                y=budget,
+                marker_color='#5E81AC',
+                text=[f'${b/1000:.0f}K' for b in budget],
+                textposition='outside',
+                textfont=dict(color='#FFFFFF')
+            ))
+            
+            fig.add_trace(go.Bar(
+                name='Actual',
+                x=portfolios,
+                y=actual,
+                marker_color='#A3BE8C',
+                text=[f'${a/1000:.0f}K' for a in actual],
+                textposition='outside',
+                textfont=dict(color='#FFFFFF')
+            ))
+            
+            # Add variance indicators
+            for i, (b, a) in enumerate(zip(budget, actual)):
+                variance = ((a - b) / b) * 100
+                color = '#BF616A' if variance > 5 else '#A3BE8C' if variance < -5 else '#EBCB8B'
+            
+            fig.update_layout(
+                template='plotly_dark',
+                height=400,
+                barmode='group',
+                yaxis_title='Monthly Spend ($)',
+                legend=dict(orientation='h', yanchor='bottom', y=1.02),
+                paper_bgcolor='rgba(0,0,0,0)',
+                plot_bgcolor='rgba(0,0,0,0)'
+            )
+            
+            st.plotly_chart(fig, use_container_width=True)
+        
+        with col2:
+            st.markdown("### 🚨 Budget Alerts")
+            
+            alerts = [
+                ("🔴 CRITICAL", "Insurance Portfolio", "+9.7% over budget", "$680K vs $620K"),
+                ("🟡 WARNING", "Wealth Management", "+7.9% over budget", "$410K vs $380K"),
+                ("🟡 WARNING", "SageMaker Spend", "Approaching limit", "92% of ML budget"),
+            ]
+            
+            for severity, area, issue, detail in alerts:
+                color = "#BF616A" if "CRITICAL" in severity else "#EBCB8B"
+                st.markdown(f"""
+                <div style='background: #2E3440; padding: 0.8rem; border-radius: 5px; margin: 0.5rem 0; border-left: 4px solid {color};'>
+                    <strong style='color: {color};'>{severity}</strong><br/>
+                    <strong>{area}</strong><br/>
+                    <small>{issue}</small><br/>
+                    <small style='color: #88C0D0;'>{detail}</small>
+                </div>
+                """, unsafe_allow_html=True)
+            
+            st.markdown("---")
+            
+            st.markdown("### ✅ On Track")
+            on_track = [
+                ("Digital Banking", "-3.5%"),
+                ("Payments", "-6.3%"),
+                ("Capital Markets", "-5.8%"),
+                ("Data Platform", "-5.7%")
+            ]
+            for portfolio, variance in on_track:
+                st.success(f"**{portfolio}**: {variance} under budget")
+        
+        st.markdown("---")
+        
+        # Forecasting Section
+        st.markdown("### 🔮 AI-Powered Spend Forecasting")
+        
+        col1, col2 = st.columns([3, 1])
+        
+        with col1:
+            # Generate historical and forecast data
+            historical_dates = pd.date_range(end=datetime.now(), periods=90, freq='D')
+            forecast_dates = pd.date_range(start=datetime.now() + timedelta(days=1), periods=90, freq='D')
+            
+            # Historical spend with trend
+            base_spend = 93000
+            historical_spend = base_spend + np.cumsum(np.random.normal(100, 500, 90))
+            
+            # Forecast with confidence intervals
+            forecast_base = historical_spend[-1]
+            forecast_spend = forecast_base + np.cumsum(np.random.normal(150, 300, 90))
+            forecast_upper = forecast_spend + np.linspace(5000, 25000, 90)
+            forecast_lower = forecast_spend - np.linspace(5000, 25000, 90)
+            
+            fig = go.Figure()
+            
+            # Historical
+            fig.add_trace(go.Scatter(
+                x=historical_dates, y=historical_spend,
+                name='Historical Spend',
+                line=dict(color='#A3BE8C', width=2)
+            ))
+            
+            # Forecast
+            fig.add_trace(go.Scatter(
+                x=forecast_dates, y=forecast_spend,
+                name='Forecasted Spend',
+                line=dict(color='#88C0D0', width=2, dash='dash')
+            ))
+            
+            # Confidence interval
+            fig.add_trace(go.Scatter(
+                x=list(forecast_dates) + list(forecast_dates[::-1]),
+                y=list(forecast_upper) + list(forecast_lower[::-1]),
+                fill='toself',
+                fillcolor='rgba(136, 192, 208, 0.2)',
+                line=dict(color='rgba(255,255,255,0)'),
+                name='95% Confidence Interval'
+            ))
+            
+            # Budget line
+            budget_line = [105000] * len(historical_dates) + [105000] * len(forecast_dates)
+            fig.add_trace(go.Scatter(
+                x=list(historical_dates) + list(forecast_dates),
+                y=budget_line,
+                name='Monthly Budget',
+                line=dict(color='#EBCB8B', width=2, dash='dot')
+            ))
+            
+            fig.update_layout(
+                template='plotly_dark',
+                height=400,
+                yaxis_title='Daily Spend ($)',
+                xaxis_title='Date',
+                hovermode='x unified',
+                legend=dict(orientation='h', yanchor='bottom', y=1.02),
+                paper_bgcolor='rgba(0,0,0,0)'
+            )
+            
+            st.plotly_chart(fig, use_container_width=True)
+        
+        with col2:
+            st.markdown("### 📊 Forecast Summary")
+            
+            st.info("""
+            **Model**: ARIMA + ML Ensemble
+            **Accuracy**: 94.2%
+            **Last Updated**: 2 hours ago
+            """)
+            
+            st.metric("30-Day Forecast", "$3.05M", "+8.9% MoM")
+            st.metric("60-Day Forecast", "$3.18M", "+4.3% MoM")
+            st.metric("90-Day Forecast", "$3.24M", "+1.9% MoM")
+            
+            st.markdown("---")
+            
+            st.markdown("**Key Drivers:**")
+            st.markdown("""
+            - 📈 ML workload growth (+12%)
+            - 📈 New Bedrock agents (+3)
+            - 📉 RI expiration offset
+            - 📉 Optimization savings
+            """)
+        
+        st.markdown("---")
+        
+        # Variance Analysis
+        st.markdown("### 📉 Variance Analysis - Current Month")
+        
+        variance_data = pd.DataFrame({
+            'Category': ['EC2 Compute', 'RDS Database', 'SageMaker', 'Bedrock', 'S3 Storage', 'Data Transfer', 'Lambda', 'EKS'],
+            'Budget': [900000, 450000, 320000, 100000, 280000, 250000, 180000, 320000],
+            'Actual': [850000, 420000, 340000, 125000, 280000, 290000, 175000, 350000],
+            'Variance': [-50000, -30000, 20000, 25000, 0, 40000, -5000, 30000],
+            'Variance %': ['-5.6%', '-6.7%', '+6.3%', '+25.0%', '0.0%', '+16.0%', '-2.8%', '+9.4%']
+        })
+        
+        st.dataframe(
+            variance_data,
+            use_container_width=True,
+            hide_index=True,
+            column_config={
+                'Budget': st.column_config.NumberColumn('Budget', format='$%d'),
+                'Actual': st.column_config.NumberColumn('Actual', format='$%d'),
+                'Variance': st.column_config.NumberColumn('Variance', format='$%d')
+            }
+        )
+    
+    # ==================== FINOPS TAB 6: WASTE DETECTION ====================
+    with finops_tab6:
+        st.subheader("🗑️ Waste Detection & Idle Resources")
+        
+        st.markdown("""
+        **Automated identification of cloud waste** including idle resources, orphaned assets, 
+        and optimization opportunities across 640+ AWS accounts.
+        """)
+        
+        # Waste summary metrics
+        col1, col2, col3, col4 = st.columns(4)
+        with col1:
+            st.metric("Total Waste Identified", "$187K/month", "↓ $23K from last week")
+        with col2:
+            st.metric("Idle Resources", "1,847", "Ready for cleanup")
+        with col3:
+            st.metric("Auto-Cleaned", "342", "This week")
+        with col4:
+            st.metric("Waste Score", "7.2%", "Target: <5%")
+        
+        st.markdown("---")
+        
+        # Waste breakdown
+        col1, col2 = st.columns([2, 1])
+        
+        with col1:
+            st.markdown("### 📊 Waste by Category")
+            
+            waste_categories = ['Idle EC2', 'Unattached EBS', 'Old Snapshots', 'Unused EIPs', 'Idle RDS', 
+                              'Orphaned LBs', 'Stale AMIs', 'Unused NAT GW']
+            waste_amounts = [67000, 38000, 28000, 12000, 22000, 8000, 7000, 5000]
+            waste_counts = [234, 567, 1245, 89, 45, 23, 156, 12]
+            
+            fig = go.Figure()
+            
+            fig.add_trace(go.Bar(
+                x=waste_categories,
+                y=waste_amounts,
+                marker_color=['#BF616A', '#D08770', '#EBCB8B', '#A3BE8C', '#88C0D0', '#5E81AC', '#B48EAD', '#81A1C1'],
+                text=[f'${w/1000:.0f}K' for w in waste_amounts],
+                textposition='outside',
+                textfont=dict(color='#FFFFFF')
+            ))
+            
+            fig.update_layout(
+                template='plotly_dark',
+                height=350,
+                yaxis_title='Monthly Waste ($)',
+                paper_bgcolor='rgba(0,0,0,0)'
+            )
+            
+            st.plotly_chart(fig, use_container_width=True)
+        
+        with col2:
+            st.markdown("### 🎯 Quick Actions")
+            
+            if st.button("🧹 Clean Unattached EBS", use_container_width=True, type="primary"):
+                st.success("✅ Initiated cleanup of 567 unattached EBS volumes")
+            
+            if st.button("🗑️ Delete Old Snapshots", use_container_width=True):
+                st.success("✅ Queued 1,245 snapshots for deletion")
+            
+            if st.button("🔌 Release Unused EIPs", use_container_width=True):
+                st.success("✅ Released 89 unused Elastic IPs")
+            
+            if st.button("⏹️ Stop Idle EC2", use_container_width=True):
+                st.info("⚠️ Review required: 234 instances flagged")
+            
+            st.markdown("---")
+            
+            st.markdown("### 📅 Cleanup Schedule")
+            st.markdown("""
+            - **Daily**: EIP release, snapshot cleanup
+            - **Weekly**: Idle EC2 review
+            - **Monthly**: Full waste audit
+            """)
+        
+        st.markdown("---")
+        
+        # Detailed waste table
+        st.markdown("### 📋 Idle Resources Detail")
+        
+        idle_tab1, idle_tab2, idle_tab3, idle_tab4 = st.tabs([
+            "💻 Idle EC2", "💾 Unattached EBS", "📸 Old Snapshots", "🔗 Other"
+        ])
+        
+        with idle_tab1:
+            idle_ec2 = []
+            instance_types = ['t3.xlarge', 'm5.2xlarge', 'c5.4xlarge', 'r5.2xlarge', 't3.2xlarge']
+            for i in range(15):
+                idle_ec2.append({
+                    'Instance ID': f'i-{random.randint(10000000, 99999999):08x}',
+                    'Type': random.choice(instance_types),
+                    'Account': f'prod-{random.choice(["banking", "payments", "insurance", "data"])}-{random.randint(1,99):03d}',
+                    'Idle Days': random.randint(7, 90),
+                    'CPU Avg': f'{random.uniform(0.5, 5):.1f}%',
+                    'Monthly Cost': f'${random.randint(50, 800)}',
+                    'Owner': random.choice(['dev-team', 'data-science', 'platform', 'unknown'])
+                })
+            
+            st.dataframe(pd.DataFrame(idle_ec2), use_container_width=True, hide_index=True)
+            
+            col1, col2, col3 = st.columns(3)
+            with col1:
+                st.metric("Total Idle EC2", "234 instances")
+            with col2:
+                st.metric("Monthly Waste", "$67,000")
+            with col3:
+                st.metric("Avg Idle Time", "34 days")
+        
+        with idle_tab2:
+            unattached_ebs = []
+            for i in range(15):
+                unattached_ebs.append({
+                    'Volume ID': f'vol-{random.randint(10000000, 99999999):08x}',
+                    'Size': f'{random.choice([100, 200, 500, 1000, 2000])} GB',
+                    'Type': random.choice(['gp3', 'gp2', 'io1', 'st1']),
+                    'Account': f'prod-{random.choice(["banking", "payments", "insurance"])}-{random.randint(1,99):03d}',
+                    'Unattached Days': random.randint(14, 180),
+                    'Monthly Cost': f'${random.randint(10, 200)}',
+                    'Last Attached To': f'i-{random.randint(10000000, 99999999):08x}'
+                })
+            
+            st.dataframe(pd.DataFrame(unattached_ebs), use_container_width=True, hide_index=True)
+            
+            col1, col2, col3 = st.columns(3)
+            with col1:
+                st.metric("Unattached Volumes", "567 volumes")
+            with col2:
+                st.metric("Total Size", "245 TB")
+            with col3:
+                st.metric("Monthly Waste", "$38,000")
+        
+        with idle_tab3:
+            old_snapshots = []
+            for i in range(15):
+                old_snapshots.append({
+                    'Snapshot ID': f'snap-{random.randint(10000000, 99999999):08x}',
+                    'Size': f'{random.choice([50, 100, 200, 500])} GB',
+                    'Age': f'{random.randint(90, 365)} days',
+                    'Account': f'prod-{random.choice(["banking", "payments", "insurance"])}-{random.randint(1,99):03d}',
+                    'Description': random.choice(['Auto backup', 'Manual snapshot', 'Pre-migration', 'Unknown']),
+                    'Monthly Cost': f'${random.randint(2, 25)}'
+                })
+            
+            st.dataframe(pd.DataFrame(old_snapshots), use_container_width=True, hide_index=True)
+            
+            st.warning("""
+            **⚠️ Recommendation**: Implement lifecycle policy to auto-delete snapshots older than 90 days 
+            (excluding compliance-required backups). Expected savings: $28K/month.
+            """)
+        
+        with idle_tab4:
+            st.markdown("#### Other Waste Categories")
+            
+            other_waste = [
+                ("Unused Elastic IPs", "89 IPs", "$12,000/month", "EIPs not attached to running instances"),
+                ("Idle RDS Instances", "45 instances", "$22,000/month", "DB instances with <5% connections"),
+                ("Orphaned Load Balancers", "23 ALBs/NLBs", "$8,000/month", "LBs with no healthy targets"),
+                ("Stale AMIs", "156 AMIs", "$7,000/month", "AMIs not used in 180+ days"),
+                ("Unused NAT Gateways", "12 NAT GWs", "$5,000/month", "NAT GWs with zero data processed")
+            ]
+            
+            for resource, count, cost, description in other_waste:
+                st.markdown(f"""
+                <div style='background: #2E3440; padding: 1rem; border-radius: 5px; margin: 0.5rem 0;'>
+                    <div style='display: flex; justify-content: space-between;'>
+                        <strong>{resource}</strong>
+                        <span style='color: #A3BE8C;'>{cost}</span>
+                    </div>
+                    <small>{count} | {description}</small>
+                </div>
+                """, unsafe_allow_html=True)
+        
+        st.markdown("---")
+        
+        # Claude Analysis
+        st.markdown("### 🤖 Claude Waste Analysis")
+        
+        with st.expander("View AI-Generated Waste Report", expanded=False):
+            st.markdown("""
+**Weekly Waste Analysis Report** - Generated by Claude 4
+
+**Executive Summary:**
+Total identifiable waste: $187K/month across 1,847 resources. This represents 7.2% of total spend, 
+above our 5% target. Week-over-week improvement of $23K due to automated cleanup actions.
+
+**Top Findings:**
+
+1. **Idle EC2 Instances ($67K/month)**
+   - 234 instances averaging <5% CPU utilization
+   - 67% are in development accounts (expected for weekends)
+   - 33% in production accounts require investigation
+   - **Recommendation**: Implement scheduled scaling for dev environments
+   - **Confidence**: 94%
+
+2. **Unattached EBS Volumes ($38K/month)**
+   - 567 volumes totaling 245TB unattached storage
+   - Average unattached duration: 45 days
+   - 78% were created during instance terminations
+   - **Recommendation**: Enable "Delete on Termination" by default
+   - **Confidence**: 98%
+
+3. **Snapshot Sprawl ($28K/month)**
+   - 1,245 snapshots older than 90 days
+   - No lifecycle policy in 45% of accounts
+   - Many are pre-migration snapshots from 2023
+   - **Recommendation**: Deploy organization-wide lifecycle policy
+   - **Confidence**: 96%
+
+**Automated Actions Taken This Week:**
+- Released 89 unused Elastic IPs (saving $4K/month)
+- Deleted 342 snapshots >180 days old (saving $8K/month)
+- Stopped 23 dev instances over weekend (saving $2K)
+
+**Projected Savings if All Recommendations Implemented:** $142K/month (76% of identified waste)
+            """)
+    
+    # ==================== FINOPS TAB 7: SHOWBACK/CHARGEBACK ====================
+    with finops_tab7:
+        st.subheader("💳 Showback & Chargeback")
+        
+        st.markdown("""
+        **Cost allocation and internal billing** - Track cloud spending by business unit, 
+        application, team, and cost center with automated chargeback reports.
+        """)
+        
+        # Chargeback metrics
+        col1, col2, col3, col4 = st.columns(4)
+        with col1:
+            st.metric("Total Allocated", "$2.65M", "94.6% of spend")
+        with col2:
+            st.metric("Unallocated", "$150K", "5.4% - needs tagging")
+        with col3:
+            st.metric("Cost Centers", "47", "Active this month")
+        with col4:
+            st.metric("Chargeback Accuracy", "96.2%", "+1.8% improvement")
+        
+        st.markdown("---")
+        
+        # Cost allocation by business unit
+        col1, col2 = st.columns([2, 1])
+        
+        with col1:
+            st.markdown("### 📊 Cost Allocation by Business Unit")
+            
+            business_units = ['Digital Banking', 'Insurance', 'Payments', 'Capital Markets', 
+                            'Wealth Management', 'Data Platform', 'Shared Services', 'Unallocated']
+            bu_costs = [720000, 580000, 420000, 380000, 290000, 310000, 150000, 150000]
+            bu_colors = ['#A3BE8C', '#88C0D0', '#EBCB8B', '#B48EAD', '#5E81AC', '#D08770', '#81A1C1', '#4C566A']
+            
+            fig = go.Figure(data=[go.Pie(
+                labels=business_units,
+                values=bu_costs,
+                hole=0.4,
+                marker_colors=bu_colors,
+                textinfo='label+percent',
+                textfont=dict(color='#FFFFFF', size=11),
+                insidetextfont=dict(color='#FFFFFF'),
+                outsidetextfont=dict(color='#FFFFFF')
+            )])
+            
+            fig.update_layout(
+                template='plotly_dark',
+                height=400,
+                paper_bgcolor='rgba(0,0,0,0)',
+                legend=dict(font=dict(color='#FFFFFF'))
+            )
+            
+            st.plotly_chart(fig, use_container_width=True)
+        
+        with col2:
+            st.markdown("### 📋 Allocation Summary")
+            
+            for bu, cost in zip(business_units, bu_costs):
+                pct = (cost / sum(bu_costs)) * 100
+                color = "#BF616A" if bu == "Unallocated" else "#A3BE8C"
+                st.markdown(f"""
+                <div style='background: #2E3440; padding: 0.5rem; border-radius: 5px; margin: 0.3rem 0;'>
+                    <div style='display: flex; justify-content: space-between;'>
+                        <span>{bu}</span>
+                        <span style='color: {color};'>${cost/1000:.0f}K</span>
+                    </div>
+                    <small style='color: #88C0D0;'>{pct:.1f}% of total</small>
+                </div>
+                """, unsafe_allow_html=True)
+        
+        st.markdown("---")
+        
+        # Detailed chargeback table
+        st.markdown("### 📋 Monthly Chargeback Report")
+        
+        chargeback_period = st.selectbox(
+            "Select Period",
+            ["November 2024", "October 2024", "September 2024", "Q3 2024"],
+            key="chargeback_period"
+        )
+        
+        chargeback_data = []
+        cost_centers = ['CC-1001', 'CC-1002', 'CC-1003', 'CC-2001', 'CC-2002', 'CC-3001', 'CC-3002', 'CC-4001']
+        teams = ['Core Banking', 'Mobile App', 'API Platform', 'Claims Processing', 'Underwriting', 
+                'Payment Gateway', 'Fraud Detection', 'Trading Platform']
+        
+        for cc, team in zip(cost_centers, teams):
+            chargeback_data.append({
+                'Cost Center': cc,
+                'Team': team,
+                'Business Unit': random.choice(['Digital Banking', 'Insurance', 'Payments', 'Capital Markets']),
+                'EC2': random.randint(50000, 200000),
+                'RDS': random.randint(20000, 80000),
+                'S3': random.randint(10000, 50000),
+                'Other': random.randint(10000, 40000),
+                'Total': 0
+            })
+        
+        for row in chargeback_data:
+            row['Total'] = row['EC2'] + row['RDS'] + row['S3'] + row['Other']
+        
+        df_chargeback = pd.DataFrame(chargeback_data)
+        
+        st.dataframe(
+            df_chargeback,
+            use_container_width=True,
+            hide_index=True,
+            column_config={
+                'EC2': st.column_config.NumberColumn('EC2', format='$%d'),
+                'RDS': st.column_config.NumberColumn('RDS', format='$%d'),
+                'S3': st.column_config.NumberColumn('S3', format='$%d'),
+                'Other': st.column_config.NumberColumn('Other', format='$%d'),
+                'Total': st.column_config.NumberColumn('Total', format='$%d')
+            }
+        )
+        
+        col1, col2, col3 = st.columns(3)
+        with col1:
+            if st.button("📧 Email Report", use_container_width=True):
+                st.success("✅ Report sent to finance@company.com")
+        with col2:
+            if st.button("📥 Export CSV", use_container_width=True):
+                st.success("✅ Downloaded chargeback_nov2024.csv")
+        with col3:
+            if st.button("📊 Export to SAP", use_container_width=True):
+                st.success("✅ Exported to SAP FICO module")
+        
+        st.markdown("---")
+        
+        # Unallocated costs
+        st.markdown("### ⚠️ Unallocated Costs - Action Required")
+        
+        unallocated = [
+            ("i-0abc123def456", "EC2", "$4,200", "Missing 'CostCenter' tag", "prod-unknown-087"),
+            ("arn:aws:rds:...", "RDS", "$2,800", "Missing 'Team' tag", "dev-sandbox-023"),
+            ("prod-logs-bucket", "S3", "$1,500", "Missing 'BusinessUnit' tag", "logging-central"),
+        ]
+        
+        for resource, service, cost, issue, account in unallocated:
+            st.warning(f"""
+            **{service}**: {resource}  
+            Cost: {cost}/month | Issue: {issue} | Account: {account}
+            """)
+        
+        st.info("""
+        **💡 Tip**: Enable AWS Tag Policies in Organizations to enforce mandatory cost allocation tags 
+        (CostCenter, Team, BusinessUnit, Environment) on all new resources.
+        """)
+    
+    # ==================== FINOPS TAB 8: UNIT ECONOMICS ====================
+    with finops_tab8:
+        st.subheader("📉 Unit Economics & Efficiency Metrics")
+        
+        st.markdown("""
+        **Track cost efficiency at the unit level** - cost per transaction, API call, user, 
+        and business metric to understand true operational economics.
+        """)
+        
+        # Unit economics metrics
+        col1, col2, col3, col4 = st.columns(4)
+        with col1:
+            st.metric("Cost per Transaction", "$0.0023", "-12% MoM")
+        with col2:
+            st.metric("Cost per API Call", "$0.00004", "-8% MoM")
+        with col3:
+            st.metric("Cost per Active User", "$0.42", "-5% MoM")
+        with col4:
+            st.metric("Efficiency Score", "94.2%", "+2.3%")
+        
+        st.markdown("---")
+        
+        # Unit cost trends
+        col1, col2 = st.columns(2)
+        
+        with col1:
+            st.markdown("### 📈 Cost per Transaction Trend")
+            
+            dates = pd.date_range(end=datetime.now(), periods=90, freq='D')
+            cpt = 0.0032 - np.cumsum(np.random.normal(0.00003, 0.00005, 90))
+            cpt = np.maximum(cpt, 0.0020)  # Floor value
+            
+            fig = go.Figure()
+            
+            fig.add_trace(go.Scatter(
+                x=dates, y=cpt * 1000,  # Convert to millicents for readability
+                name='Cost per Transaction (millicents)',
+                line=dict(color='#A3BE8C', width=2),
+                fill='tozeroy',
+                fillcolor='rgba(163, 190, 140, 0.2)'
+            ))
+            
+            fig.add_hline(y=2.0, line_dash="dash", line_color="#EBCB8B", 
+                         annotation_text="Target: $0.002")
+            
+            fig.update_layout(
+                template='plotly_dark',
+                height=300,
+                yaxis_title='Cost (millicents)',
+                paper_bgcolor='rgba(0,0,0,0)'
+            )
+            
+            st.plotly_chart(fig, use_container_width=True)
+        
+        with col2:
+            st.markdown("### 📈 Cost per Active User Trend")
+            
+            dates = pd.date_range(end=datetime.now(), periods=90, freq='D')
+            cpu = 0.55 - np.cumsum(np.random.normal(0.001, 0.002, 90))
+            cpu = np.maximum(cpu, 0.35)
+            
+            fig = go.Figure()
+            
+            fig.add_trace(go.Scatter(
+                x=dates, y=cpu,
+                name='Cost per User',
+                line=dict(color='#88C0D0', width=2),
+                fill='tozeroy',
+                fillcolor='rgba(136, 192, 208, 0.2)'
+            ))
+            
+            fig.add_hline(y=0.40, line_dash="dash", line_color="#EBCB8B", 
+                         annotation_text="Target: $0.40")
+            
+            fig.update_layout(
+                template='plotly_dark',
+                height=300,
+                yaxis_title='Cost per User ($)',
+                paper_bgcolor='rgba(0,0,0,0)'
+            )
+            
+            st.plotly_chart(fig, use_container_width=True)
+        
+        st.markdown("---")
+        
+        # Unit economics by service
+        st.markdown("### 📊 Unit Economics by Application")
+        
+        app_economics = pd.DataFrame({
+            'Application': ['Mobile Banking', 'Payment Gateway', 'Fraud Detection', 'Trading Platform', 
+                          'Customer Portal', 'API Gateway', 'Data Pipeline', 'ML Inference'],
+            'Monthly Cost': [180000, 145000, 98000, 220000, 67000, 89000, 156000, 125000],
+            'Transactions (M)': [89.2, 234.5, 67.8, 12.4, 45.6, 567.8, 23.4, 34.5],
+            'Cost/Transaction': ['$0.0020', '$0.0006', '$0.0014', '$0.0177', '$0.0015', '$0.0002', '$0.0067', '$0.0036'],
+            'MoM Change': ['-8%', '-12%', '-5%', '+3%', '-15%', '-18%', '-2%', '-9%'],
+            'Efficiency': ['🟢 Good', '🟢 Excellent', '🟢 Good', '🟡 Fair', '🟢 Excellent', '🟢 Excellent', '🟡 Fair', '🟢 Good']
+        })
+        
+        st.dataframe(
+            app_economics,
+            use_container_width=True,
+            hide_index=True,
+            column_config={
+                'Monthly Cost': st.column_config.NumberColumn('Monthly Cost', format='$%d'),
+                'Transactions (M)': st.column_config.NumberColumn('Transactions (M)', format='%.1f')
+            }
+        )
+        
+        st.markdown("---")
+        
+        # Efficiency breakdown
+        col1, col2 = st.columns(2)
+        
+        with col1:
+            st.markdown("### 🎯 Efficiency Leaders")
+            
+            leaders = [
+                ("API Gateway", "$0.0002/call", "High cache hit rate (94%)"),
+                ("Payment Gateway", "$0.0006/txn", "Optimized Lambda concurrency"),
+                ("Customer Portal", "$0.0015/session", "CDN optimization effective")
+            ]
+            
+            for app, metric, reason in leaders:
+                st.success(f"""
+                **{app}**: {metric}  
+                _{reason}_
+                """)
+        
+        with col2:
+            st.markdown("### ⚠️ Optimization Opportunities")
+            
+            opportunities = [
+                ("Trading Platform", "$0.0177/txn", "Over-provisioned RDS instances"),
+                ("Data Pipeline", "$0.0067/record", "Inefficient Spark jobs"),
+                ("ML Inference", "$0.0036/prediction", "Consider SageMaker Serverless")
+            ]
+            
+            for app, metric, reason in opportunities:
+                st.warning(f"""
+                **{app}**: {metric}  
+                _{reason}_
+                """)
+        
+        st.markdown("---")
+        
+        # Business metrics correlation
+        st.markdown("### 📊 Cost vs Business Metrics")
+        
+        months = ['Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov']
+        revenue = [12.4, 13.1, 13.8, 14.2, 14.9, 15.6]
+        cloud_cost = [2.4, 2.5, 2.6, 2.7, 2.75, 2.8]
+        cost_ratio = [c/r*100 for c, r in zip(cloud_cost, revenue)]
+        
+        fig = go.Figure()
+        
+        fig.add_trace(go.Bar(
+            x=months, y=revenue,
+            name='Revenue ($M)',
+            marker_color='#A3BE8C',
+            yaxis='y'
+        ))
+        
+        fig.add_trace(go.Scatter(
+            x=months, y=cost_ratio,
+            name='Cloud Cost Ratio (%)',
+            line=dict(color='#BF616A', width=3),
+            yaxis='y2'
+        ))
+        
+        fig.update_layout(
+            template='plotly_dark',
+            height=350,
+            yaxis=dict(title='Revenue ($M)', side='left'),
+            yaxis2=dict(title='Cloud Cost as % of Revenue', side='right', overlaying='y'),
+            legend=dict(orientation='h', yanchor='bottom', y=1.02),
+            paper_bgcolor='rgba(0,0,0,0)'
+        )
+        
+        st.plotly_chart(fig, use_container_width=True)
+        
+        st.success("""
+        **📈 Key Insight**: Cloud cost ratio improved from 19.4% to 17.9% over 6 months, 
+        demonstrating increasing efficiency as revenue grows faster than infrastructure costs.
+        """)
+    
+    # ==================== FINOPS TAB 9: SUSTAINABILITY ====================
+    with finops_tab9:
+        st.subheader("🌱 Sustainability & Carbon Footprint")
+        
+        st.markdown("""
+        **Track and reduce your cloud carbon footprint** - Monitor CO2 emissions, 
+        optimize for sustainability, and support ESG reporting requirements.
+        """)
+        
+        # Sustainability metrics
+        col1, col2, col3, col4 = st.columns(4)
+        with col1:
+            st.metric("Monthly CO2e", "847 tons", "-12% MoM")
+        with col2:
+            st.metric("Carbon Intensity", "0.32 kg/$ ", "-8% improved")
+        with col3:
+            st.metric("Renewable Energy", "67%", "+5% (AWS regions)")
+        with col4:
+            st.metric("Sustainability Score", "B+", "↑ from B")
+        
+        st.markdown("---")
+        
+        # Carbon emissions trend
+        col1, col2 = st.columns([2, 1])
+        
+        with col1:
+            st.markdown("### 📊 Carbon Emissions Trend")
+            
+            dates = pd.date_range(end=datetime.now(), periods=12, freq='M')
+            emissions = [1050, 1020, 980, 960, 940, 920, 900, 880, 870, 860, 850, 847]
+            
+            fig = go.Figure()
+            
+            fig.add_trace(go.Scatter(
+                x=dates, y=emissions,
+                name='CO2e Emissions (tons)',
+                line=dict(color='#A3BE8C', width=3),
+                fill='tozeroy',
+                fillcolor='rgba(163, 190, 140, 0.3)'
+            ))
+            
+            fig.add_hline(y=750, line_dash="dash", line_color="#88C0D0", 
+                         annotation_text="2025 Target: 750 tons")
+            
+            fig.update_layout(
+                template='plotly_dark',
+                height=350,
+                yaxis_title='CO2e (metric tons)',
+                paper_bgcolor='rgba(0,0,0,0)'
+            )
+            
+            st.plotly_chart(fig, use_container_width=True)
+        
+        with col2:
+            st.markdown("### 🎯 2025 Goals")
+            
+            goals = [
+                ("Reduce emissions 25%", "847 → 750 tons", "67%"),
+                ("100% renewable regions", "67% → 100%", "67%"),
+                ("Carbon neutral by 2026", "In progress", "45%")
+            ]
+            
+            for goal, detail, progress in goals:
+                st.markdown(f"""
+                <div style='background: #2E3440; padding: 0.8rem; border-radius: 5px; margin: 0.5rem 0;'>
+                    <strong>{goal}</strong><br/>
+                    <small>{detail}</small>
+                    <div style='background: #4C566A; border-radius: 3px; height: 8px; margin-top: 5px;'>
+                        <div style='background: #A3BE8C; width: {progress}; height: 100%; border-radius: 3px;'></div>
+                    </div>
+                    <small style='color: #88C0D0;'>{progress} complete</small>
+                </div>
+                """, unsafe_allow_html=True)
+        
+        st.markdown("---")
+        
+        # Emissions by service
+        col1, col2 = st.columns(2)
+        
+        with col1:
+            st.markdown("### 📊 Emissions by Service")
+            
+            services = ['EC2', 'RDS', 'S3', 'SageMaker', 'Data Transfer', 'Other']
+            service_emissions = [380, 180, 85, 120, 52, 30]
+            
+            fig = go.Figure(data=[go.Pie(
+                labels=services,
+                values=service_emissions,
+                hole=0.4,
+                marker_colors=['#BF616A', '#D08770', '#EBCB8B', '#A3BE8C', '#88C0D0', '#5E81AC'],
+                textinfo='label+percent',
+                textfont=dict(color='#FFFFFF')
+            )])
+            
+            fig.update_layout(
+                template='plotly_dark',
+                height=300,
+                paper_bgcolor='rgba(0,0,0,0)'
+            )
+            
+            st.plotly_chart(fig, use_container_width=True)
+        
+        with col2:
+            st.markdown("### 📊 Emissions by Region")
+            
+            regions = ['us-east-1', 'us-west-2', 'eu-west-1', 'ap-southeast-1']
+            region_emissions = [420, 210, 140, 77]
+            renewable_pct = [52, 85, 78, 45]
+            
+            fig = go.Figure()
+            
+            fig.add_trace(go.Bar(
+                x=regions, y=region_emissions,
+                name='CO2e (tons)',
+                marker_color=['#D08770', '#A3BE8C', '#88C0D0', '#EBCB8B'],
+                text=[f'{e} tons' for e in region_emissions],
+                textposition='outside',
+                textfont=dict(color='#FFFFFF')
+            ))
+            
+            fig.update_layout(
+                template='plotly_dark',
+                height=300,
+                yaxis_title='CO2e (tons)',
+                paper_bgcolor='rgba(0,0,0,0)'
+            )
+            
+            st.plotly_chart(fig, use_container_width=True)
+        
+        st.markdown("---")
+        
+        # Green optimization recommendations
+        st.markdown("### 🌿 Green Optimization Recommendations")
+        
+        green_recommendations = [
+            ("Migrate us-east-1 workloads to us-west-2", "-85 tons/month", "🟢 High Impact",
+             "us-west-2 has 85% renewable energy vs 52% in us-east-1"),
+            ("Right-size over-provisioned EC2", "-42 tons/month", "🟢 High Impact",
+             "Reduce compute waste and associated emissions"),
+            ("Enable S3 Intelligent-Tiering", "-12 tons/month", "🟡 Medium Impact",
+             "Reduce storage footprint and energy consumption"),
+            ("Optimize SageMaker training jobs", "-28 tons/month", "🟢 High Impact",
+             "Use Spot instances and efficient instance types"),
+            ("Consolidate data transfer paths", "-8 tons/month", "🟡 Medium Impact",
+             "Reduce cross-region data movement")
+        ]
+        
+        for rec, impact, priority, detail in green_recommendations:
+            color = "#A3BE8C" if "High" in priority else "#EBCB8B"
+            st.markdown(f"""
+            <div style='background: #2E3440; padding: 1rem; border-radius: 5px; margin: 0.5rem 0; border-left: 4px solid {color};'>
+                <div style='display: flex; justify-content: space-between;'>
+                    <strong>{rec}</strong>
+                    <span style='color: #A3BE8C;'>{impact}</span>
+                </div>
+                <small>{priority} | {detail}</small>
+            </div>
+            """, unsafe_allow_html=True)
+        
+        st.success("""
+        **🌍 Total Potential Reduction: 175 tons/month (21% of current emissions)**
+        
+        Implementing all recommendations would put you on track for 2025 sustainability goals.
+        """)
+        
+        st.markdown("---")
+        
+        # ESG Report Export
+        st.markdown("### 📄 ESG Reporting")
+        
+        col1, col2, col3 = st.columns(3)
+        
+        with col1:
+            if st.button("📊 Generate ESG Report", use_container_width=True, type="primary"):
+                st.success("✅ ESG report generated for Q4 2024")
+        
+        with col2:
+            if st.button("📥 Export Carbon Data", use_container_width=True):
+                st.success("✅ Downloaded carbon_footprint_2024.csv")
+        
+        with col3:
+            if st.button("📧 Send to Sustainability Team", use_container_width=True):
+                st.success("✅ Report sent to sustainability@company.com")
     
     st.markdown("---")
     
