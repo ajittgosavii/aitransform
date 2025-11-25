@@ -1066,7 +1066,7 @@ header_col1, header_col2, header_col3 = st.columns([2, 1, 1])
 with header_col1:
     st.markdown("""
     <div style='padding: 10px 0;'>
-        <h2 style='color: #10B981; margin: 0; font-size: 1.8rem;'>🛡️ TechGuard Rails Platform</h2>
+        <h2 style='color: #10B981; margin: 0; font-size: 1.8rem;'>🛡️ Tech Guardrails Platform</h2>
         <p style='color: #94A3B8; margin: 5px 0 0 0; font-size: 14px;'>AI-Powered Cloud Operations | 640+ AWS Accounts</p>
     </div>
     """, unsafe_allow_html=True)
