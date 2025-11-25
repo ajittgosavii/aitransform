@@ -1790,8 +1790,9 @@ Tools: Organizations API, SCP API, Config,
                 
                 # Generate agent-specific reasoning
                 if "Security" in agent_choice:
-                    st.markdown("""
-**🛡️ Security Agent - Claude AI Reasoning**
+                    if scenario_type == "Exposed S3 Bucket":
+                        st.markdown("""
+**🛡️ Security Agent - Exposed S3 Bucket**
 
 ```
 THREAT ANALYSIS:
@@ -1816,10 +1817,72 @@ Action 5: Notify security team ✅ EXECUTED
 
 Total Response Time: 1.2 seconds
 ```
-                    """)
+                        """)
+                    elif scenario_type == "Compromised Credentials":
+                        st.markdown("""
+**🛡️ Security Agent - Compromised Credentials**
+
+```
+CREDENTIAL THREAT ANALYSIS:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Alert Source: AWS GuardDuty
+Finding: UnauthorizedAccess:IAMUser/InstanceCredentialExfiltration
+User: svc-deployment-prod
+Risk Score: 10/10 (CRITICAL)
+
+CONTEXT GATHERED:
+• Credentials used from IP: 185.143.xx.xx (Russia)
+• Normal usage: us-east-1, us-west-2 only
+• 47 API calls in last 5 minutes
+• Attempted actions: ListBuckets, GetObject, CreateUser
+
+DECISION: IMMEDIATE LOCKDOWN
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Action 1: Disable IAM user ✅ EXECUTED (0.3s)
+Action 2: Revoke all active sessions ✅ EXECUTED
+Action 3: Rotate all associated keys ✅ EXECUTED
+Action 4: Block source IP in WAF ✅ EXECUTED
+Action 5: Trigger incident response runbook ✅ EXECUTED
+Action 6: Page on-call security engineer ✅ EXECUTED
+
+Threat Contained: 4.7 seconds
+```
+                        """)
+                    else:  # Unpatched EC2
+                        st.markdown("""
+**🛡️ Security Agent - Unpatched EC2 Instance**
+
+```
+VULNERABILITY ANALYSIS:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Instance: i-0a1b2c3d4e5f (prod-web-server-03)
+Finding: CVE-2024-6387 (regreSSHion)
+CVSS Score: 8.1 (HIGH)
+Exposure: Internet-facing (port 22 open)
+
+CONTEXT GATHERED:
+• Instance running Amazon Linux 2023
+• OpenSSH version: 8.7p1 (vulnerable)
+• Patch available: openssh-8.7p1-8.amzn2023
+• Workload: Production API server
+• Traffic: 12,000 req/min
+
+DECISION: SCHEDULED PATCHING
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Action 1: Add to WAF rate limiting ✅ EXECUTED
+Action 2: Restrict SSH to bastion only ✅ EXECUTED
+Action 3: Create patching ticket (P1) ✅ EXECUTED
+Action 4: Schedule maintenance window ✅ Tonight 2AM EST
+Action 5: Prepare rollback AMI ✅ EXECUTED
+Action 6: Notify application team ✅ EXECUTED
+
+Risk Mitigated: 94% | Full patch: 6 hours
+```
+                        """)
                 elif "Compliance" in agent_choice:
-                    st.markdown("""
-**⚖️ Compliance Agent - Claude AI Reasoning**
+                    if scenario_type == "PCI DSS Violation":
+                        st.markdown("""
+**⚖️ Compliance Agent - PCI DSS Violation**
 
 ```
 COMPLIANCE ANALYSIS:
@@ -1844,10 +1907,76 @@ Action 4: Update compliance dashboard ✅ EXECUTED
 
 Compliance Score: 94.8% → 97.1%
 ```
-                    """)
+                        """)
+                    elif scenario_type == "Encryption Missing":
+                        st.markdown("""
+**⚖️ Compliance Agent - Encryption Missing**
+
+```
+ENCRYPTION COMPLIANCE ANALYSIS:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Frameworks Affected: SOC 2, HIPAA, ISO 27001
+Resource: ebs-vol-0abc123def456
+Type: EBS Volume (500GB gp3)
+Attached To: i-prod-healthcare-app-01
+Risk: CRITICAL
+
+CONTEXT GATHERED:
+• Volume contains PHI (Protected Health Info)
+• Created 2 days ago during migration
+• Encryption was not enabled at creation
+• Cannot enable encryption on existing volume
+• Workload: 24/7 production application
+
+DECISION: MIGRATE TO ENCRYPTED VOLUME
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Action 1: Create encrypted snapshot ✅ IN PROGRESS
+Action 2: Create new encrypted volume ✅ PENDING
+Action 3: Schedule migration window ✅ Saturday 3AM
+Action 4: Update HIPAA evidence log ✅ EXECUTED
+Action 5: Notify compliance officer ✅ EXECUTED
+
+Compliance Gap: Resolved in 72 hours
+```
+                        """)
+                    else:  # Tagging Non-Compliance
+                        st.markdown("""
+**⚖️ Compliance Agent - Tagging Non-Compliance**
+
+```
+TAGGING COMPLIANCE ANALYSIS:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Policy: Mandatory Resource Tagging
+Resources Scanned: 12,847
+Non-Compliant: 234 resources (1.8%)
+Risk: MEDIUM
+
+NON-COMPLIANT BREAKDOWN:
+• Missing 'Environment' tag: 89 resources
+• Missing 'CostCenter' tag: 156 resources
+• Missing 'Owner' tag: 67 resources
+• Invalid tag values: 23 resources
+
+TOP OFFENDING ACCOUNTS:
+1. dev-sandbox-team-a (78 resources)
+2. prod-data-analytics (52 resources)
+3. staging-platform (41 resources)
+
+DECISION: AUTO-TAG + NOTIFY
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Action 1: Apply default tags to dev resources ✅ EXECUTED
+Action 2: Generate owner report for prod ✅ EXECUTED
+Action 3: Send Slack notification to teams ✅ EXECUTED
+Action 4: Create Jira tickets for manual review ✅ EXECUTED
+Action 5: Schedule follow-up scan (7 days) ✅ EXECUTED
+
+Expected Compliance: 98.5% after remediation
+```
+                        """)
                 elif "DevOps" in agent_choice:
-                    st.markdown("""
-**⚙️ DevOps Agent - Claude AI Reasoning**
+                    if scenario_type == "Pipeline Optimization":
+                        st.markdown("""
+**⚙️ DevOps Agent - Pipeline Optimization**
 
 ```
 PIPELINE ANALYSIS:
@@ -1871,10 +2000,80 @@ Action 4: Implement test splitting ✅
 Expected Improvement: 14m 32s → 5m 05s (-65%)
 Monthly Savings: $2,400 in build minutes
 ```
-                    """)
+                        """)
+                    elif scenario_type == "Build Failure":
+                        st.markdown("""
+**⚙️ DevOps Agent - Build Failure Analysis**
+
+```
+BUILD FAILURE ANALYSIS:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Pipeline: frontend-webapp-prod
+Build ID: #4521
+Failed Stage: Unit Tests
+Duration Before Failure: 6m 43s
+
+ERROR DETECTED:
+TypeError: Cannot read property 'map' of undefined
+  at UserList.render (src/components/UserList.jsx:45)
+  at processChild (node_modules/react-dom/...)
+
+ROOT CAUSE ANALYSIS:
+• Recent commit: a]9f2c3d by dev@company.com
+• Changed: UserList component props
+• Missing null check for users array
+• 3 similar failures in last 24 hours
+
+DECISION: AUTO-FIX + NOTIFY
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Action 1: Identify breaking commit ✅ EXECUTED
+Action 2: Generate fix suggestion ✅ EXECUTED
+Action 3: Create PR with fix ✅ PR #892 opened
+Action 4: Notify developer via Slack ✅ EXECUTED
+Action 5: Block merge to main ✅ EXECUTED
+
+Suggested Fix: Add optional chaining (users?.map)
+```
+                        """)
+                    else:  # Security Scan Finding
+                        st.markdown("""
+**⚙️ DevOps Agent - Security Scan Finding**
+
+```
+SECURITY SCAN ANALYSIS:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Scanner: Snyk + Trivy
+Pipeline: microservices-deploy
+Findings: 12 vulnerabilities detected
+
+CRITICAL FINDINGS:
+┌─────────────────────────────────────────────────┐
+│ CVE-2024-1234 | lodash < 4.17.21 | CRITICAL    │
+│ CVE-2024-5678 | axios < 1.6.0   | HIGH        │
+│ CVE-2024-9012 | express < 4.18  | HIGH        │
+└─────────────────────────────────────────────────┘
+
+CONTEXT:
+• 8 dependencies need updates
+• 4 findings are in dev dependencies only
+• No known exploits in production path
+• Last security scan: 3 days ago
+
+DECISION: REMEDIATE + GATE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Action 1: Block deployment (critical vuln) ✅ EXECUTED
+Action 2: Auto-generate dependency PR ✅ PR #893
+Action 3: Run compatibility tests ✅ IN PROGRESS
+Action 4: Notify security team ✅ EXECUTED
+Action 5: Update vulnerability dashboard ✅ EXECUTED
+
+Pipeline Status: BLOCKED until PR merged
+```
+                        """)
                 elif "Database" in agent_choice:
-                    st.markdown("""
-**🗄️ Database Agent - Claude AI Reasoning**
+                    if scenario_type == "Access Request":
+                        st.markdown("""
+**🗄️ Database Agent - Access Request**
 
 ```
 ACCESS REQUEST ANALYSIS:
@@ -1901,9 +2100,89 @@ Action 3: Enable query logging ✅
 Action 4: Set auto-revocation timer ✅
 Action 5: Notify user via Slack ✅
 ```
-                    """)
+                        """)
+                    elif scenario_type == "Performance Issue":
+                        st.markdown("""
+**🗄️ Database Agent - Performance Issue**
+
+```
+PERFORMANCE ANALYSIS:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Database: prod-mysql-orders
+Alert: High CPU utilization (94%)
+Duration: Last 15 minutes
+Impact: API latency increased 340%
+
+QUERY ANALYSIS:
+• Slow query detected (12.4s execution)
+• Query: SELECT * FROM orders WHERE...
+• Missing index on 'customer_id' column
+• Full table scan: 2.3M rows
+• Executed 847 times in last hour
+
+ROOT CAUSE:
+• New feature deployed 2 hours ago
+• Query pattern not optimized
+• No index coverage for new filter
+
+DECISION: OPTIMIZE + ALERT
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Action 1: Create index recommendation ✅ EXECUTED
+Action 2: Apply index (online DDL) ✅ IN PROGRESS
+Action 3: Kill long-running queries ✅ EXECUTED
+Action 4: Enable query result caching ✅ EXECUTED
+Action 5: Notify dev team ✅ EXECUTED
+
+Expected Improvement: 12.4s → 0.02s (-99.8%)
+```
+                        """)
+                    else:  # Session Audit
+                        st.markdown("""
+**🗄️ Database Agent - Session Audit**
+
+```
+SESSION AUDIT ANALYSIS:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Database: prod-postgres-analytics
+Audit Period: Last 24 hours
+Total Sessions: 1,247
+Flagged Sessions: 3
+
+ANOMALY DETECTED:
+┌─────────────────────────────────────────────────┐
+│ Session ID: sess_8a7b6c5d                       │
+│ User: svc-etl-pipeline                          │
+│ Duration: 18 hours (unusual)                    │
+│ Queries: 47,000+ (10x normal)                   │
+│ Data Exported: 2.3GB                            │
+└─────────────────────────────────────────────────┘
+
+CONTEXT GATHERED:
+• Service account for ETL jobs
+• Normal runtime: 2-3 hours
+• Query pattern: Sequential table scans
+• No matching scheduled job found
+
+RISK ASSESSMENT: MEDIUM (6/10)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+DECISION: INVESTIGATE + CONTAIN
+
+Action 1: Terminate suspicious session ✅ EXECUTED
+Action 2: Rotate service account creds ✅ EXECUTED
+Action 3: Export session logs ✅ EXECUTED
+Action 4: Create Security Hub finding ✅ EXECUTED
+Action 5: Page data engineering team ✅ EXECUTED
+
+Status: Under investigation
+```
+                        """)
                 elif "FinOps" in agent_choice:
-                    st.markdown(simulate_claude_reasoning('cost_optimization'))
+                    if scenario_type == "Cost Optimization":
+                        st.markdown(simulate_claude_reasoning('cost_optimization'))
+                    elif scenario_type == "Anomaly Detection":
+                        st.markdown(simulate_claude_reasoning('anomaly'))
+                    else:  # Commitment Analysis
+                        st.markdown(simulate_claude_reasoning('commitment'))
                 else:
                     # Policy Engine scenarios - check which scenario is selected
                     if scenario_type == "Policy Generation":
